@@ -1,0 +1,530 @@
+@startuml
+left to right direction
+object "License:SmartContract" as License
+License : annotation = TRADEMARK LICENSE AGREEMENT
+License : clauses = [grantPermission,superviseQualityRight,provideSamples,terminationOfAgreementByCondition,ReturnOfItems]
+License : participants = [name1,name2]
+License : data = [specSolveTime,goodId,ifContractIsValid,signDate,duration,goodInformation,appointReturnTime,needReturnGoodsNum,allNeedReturnGood,needReturnGood,licenseeIfCanTerminate,licensorIfCanTerminate,problemId,problemNum,allProblems,problem,sampleId,document,provideGoodsNum,provideGood,allProvideGood,receiveGoodsNum,receiveGood,allReceiveGood,licensor_address,licensee_address,licensor,licensee,allMonitorRightNum,allMonitorRight,permissionRightStart,permissionRightEnd,addr,current_licensee,allPermissionPartyNum,allPermissionParty]
+object "name1:Participant" as name1
+name1 : address = null
+name1 : roleNames = [licensor]
+object "name2:Participant" as name2
+name2 : address = null
+name2 : roleNames = [licensee]
+object "grantPermission:ClauseInfo" as grantPermission
+grantPermission : domain = Authentic right
+grantPermission : exector = [licensor,licensee]
+grantPermission : processes = [grantPermissionToLicensee]
+object "superviseQualityRight:ClauseInfo" as superviseQualityRight
+superviseQualityRight : domain = Authentic right
+superviseQualityRight : exector = [licensor]
+superviseQualityRight : processes = [superviseQualityRightByLicensor]
+object "provideSamples:ClauseInfo" as provideSamples
+provideSamples : domain = Record items sent
+provideSamples : exector = [licensor,licensee]
+provideSamples : processes = [provideSamplesByLicensee]
+object "terminationOfAgreementByCondition:ClauseInfo" as terminationOfAgreementByCondition
+terminationOfAgreementByCondition : domain = Termination of agreement
+terminationOfAgreementByCondition : exector = [licensor,licensee]
+terminationOfAgreementByCondition : processes = [TerminateAgreementDueToBreach]
+object "ReturnOfItems:ClauseInfo" as ReturnOfItems
+ReturnOfItems : domain = Record items sent
+ReturnOfItems : exector = [licensor,licensee]
+ReturnOfItems : processes = [ReturnConfidentialInformation]
+object "grantPermissionToLicensee:Process" as grantPermissionToLicensee
+grantPermissionToLicensee : description = The license grants licensee worldwide royalty-free rights
+grantPermissionToLicensee : functions = [oneAuthorizePermissionOther,ifPermissionAuthorization]
+object "superviseQualityRightByLicensor:Process" as superviseQualityRightByLicensor
+superviseQualityRightByLicensor : description = Licensor has the right to monitor the quality
+superviseQualityRightByLicensor : functions = [InitializeRights,ifMonitorAuthorization]
+object "provideSamplesByLicensee:Process" as provideSamplesByLicensee
+provideSamplesByLicensee : description = The Licensor sends samples to the Licensee
+provideSamplesByLicensee : functions = [provideGoods,receiveGoods]
+object "TerminateAgreementDueToBreach:Process" as TerminateAgreementDueToBreach
+TerminateAgreementDueToBreach : description = If one party breaches this agreement, the other party shall have the right to terminate this agreement
+TerminateAgreementDueToBreach : functions = [finishContractByLicensor,finishContractByLicensee,sendProblemNotificationByLicensor,sendProblemNotificationByLicensee,resolveProblemByLicensee,resolveProblemByLicensor,checkSolveInSpecTimeByLicensor,checkSolveInSpecTimeByLicensee]
+object "ReturnConfidentialInformation:Process" as ReturnConfidentialInformation
+ReturnConfidentialInformation : description = Licensee returns the Confidential Information to Licensor
+ReturnConfidentialInformation : functions = [setNeedReturnGood,returnGood]
+object "oneAuthorizePermissionOther:Function" as oneAuthorizePermissionOther
+oneAuthorizePermissionOther : annotation = One party grants a permission right to another
+oneAuthorizePermissionOther : right = [licensor]
+oneAuthorizePermissionOther : ifConstructor = false
+oneAuthorizePermissionOther : ifUpdateData = true
+oneAuthorizePermissionOther : ifGenerateTransaction = false
+oneAuthorizePermissionOther : dataNames = ['allPermissionPartyNum', 'allPermissionParty']
+oneAuthorizePermissionOther : params = ['current_licensee']
+oneAuthorizePermissionOther : logs = null
+oneAuthorizePermissionOther : output = null
+oneAuthorizePermissionOther : functionRestriction = ['validity']
+object "ifPermissionAuthorization:Function" as ifPermissionAuthorization
+ifPermissionAuthorization : annotation = Determine if permission is granted
+ifPermissionAuthorization : right = [licensor]
+ifPermissionAuthorization : ifConstructor = false
+ifPermissionAuthorization : ifUpdateData = false
+ifPermissionAuthorization : ifGenerateTransaction = false
+ifPermissionAuthorization : dataNames = ['allPermissionPartyNum', 'allPermissionParty']
+ifPermissionAuthorization : params = ['addr']
+ifPermissionAuthorization : logs = null
+ifPermissionAuthorization : output = [bool]
+ifPermissionAuthorization : functionRestriction = ['checkIfWithinTimePeriod', 'validity']
+object "InitializeRights:Function" as InitializeRights
+InitializeRights : annotation = Initialize the addresses and rights of both parties
+InitializeRights : right = null
+InitializeRights : ifConstructor = true
+InitializeRights : ifUpdateData = true
+InitializeRights : ifGenerateTransaction = false
+InitializeRights : dataNames = ['allMonitorRight', 'licensor_address', 'licensee_address']
+InitializeRights : params = ['licensor', 'licensee']
+InitializeRights : logs = null
+InitializeRights : output = null
+InitializeRights : functionRestriction = null
+object "ifMonitorAuthorization:Function" as ifMonitorAuthorization
+ifMonitorAuthorization : annotation = Determine if monitor right is granted
+ifMonitorAuthorization : right = null
+ifMonitorAuthorization : ifConstructor = false
+ifMonitorAuthorization : ifUpdateData = false
+ifMonitorAuthorization : ifGenerateTransaction = false
+ifMonitorAuthorization : dataNames = ['allMonitorRightNum', 'allMonitorRight']
+ifMonitorAuthorization : params = ['addr']
+ifMonitorAuthorization : logs = null
+ifMonitorAuthorization : output = [bool]
+ifMonitorAuthorization : functionRestriction = ['validity']
+object "provideGoods:Function" as provideGoods
+provideGoods : annotation = The licensee records the shipment of the item
+provideGoods : right = [licensee]
+provideGoods : ifConstructor = false
+provideGoods : ifUpdateData = true
+provideGoods : ifGenerateTransaction = false
+provideGoods : dataNames = ['provideGoodsNum', 'provideGood', 'allProvideGood']
+provideGoods : params = ['sampleId', 'document']
+provideGoods : logs = null
+provideGoods : output = null
+provideGoods : functionRestriction = ['validity']
+object "receiveGoods:Function" as receiveGoods
+receiveGoods : annotation = The licensor records the receipt of the item
+receiveGoods : right = [licensor]
+receiveGoods : ifConstructor = false
+receiveGoods : ifUpdateData = true
+receiveGoods : ifGenerateTransaction = false
+receiveGoods : dataNames = ['receiveGoodsNum', 'receiveGood', 'allReceiveGood']
+receiveGoods : params = ['sampleId']
+receiveGoods : logs = null
+receiveGoods : output = null
+receiveGoods : functionRestriction = ['validity']
+object "sendProblemNotificationByLicensor:Function" as sendProblemNotificationByLicensor
+sendProblemNotificationByLicensor : annotation = Licensor sends notice of breach of contract
+sendProblemNotificationByLicensor : right = [licensor]
+sendProblemNotificationByLicensor : ifConstructor = false
+sendProblemNotificationByLicensor : ifUpdateData = true
+sendProblemNotificationByLicensor : ifGenerateTransaction = false
+sendProblemNotificationByLicensor : dataNames = ['problemNum', 'allProblems', 'problem']
+sendProblemNotificationByLicensor : params = ['document']
+sendProblemNotificationByLicensor : logs = null
+sendProblemNotificationByLicensor : output = [int]
+sendProblemNotificationByLicensor : functionRestriction = ['validity']
+object "sendProblemNotificationByLicensee:Function" as sendProblemNotificationByLicensee
+sendProblemNotificationByLicensee : annotation = Licensee sends notice of breach of contract
+sendProblemNotificationByLicensee : right = [licensee]
+sendProblemNotificationByLicensee : ifConstructor = false
+sendProblemNotificationByLicensee : ifUpdateData = true
+sendProblemNotificationByLicensee : ifGenerateTransaction = false
+sendProblemNotificationByLicensee : dataNames = ['problemNum', 'allProblems', 'problem']
+sendProblemNotificationByLicensee : params = ['document']
+sendProblemNotificationByLicensee : logs = null
+sendProblemNotificationByLicensee : output = [int]
+sendProblemNotificationByLicensee : functionRestriction = ['validity']
+object "resolveProblemByLicensee:Function" as resolveProblemByLicensee
+resolveProblemByLicensee : annotation = The licensee resolves the breach of contract
+resolveProblemByLicensee : right = [licensee]
+resolveProblemByLicensee : ifConstructor = false
+resolveProblemByLicensee : ifUpdateData = true
+resolveProblemByLicensee : ifGenerateTransaction = false
+resolveProblemByLicensee : dataNames = ['allProblems', 'problem']
+resolveProblemByLicensee : params = ['problemId', 'document']
+resolveProblemByLicensee : logs = null
+resolveProblemByLicensee : output = null
+resolveProblemByLicensee : functionRestriction = ['validity']
+object "resolveProblemByLicensor:Function" as resolveProblemByLicensor
+resolveProblemByLicensor : annotation = The licensor resolves the breach of contract
+resolveProblemByLicensor : right = [licensor]
+resolveProblemByLicensor : ifConstructor = false
+resolveProblemByLicensor : ifUpdateData = true
+resolveProblemByLicensor : ifGenerateTransaction = false
+resolveProblemByLicensor : dataNames = ['allProblems', 'problem']
+resolveProblemByLicensor : params = ['problemId', 'document']
+resolveProblemByLicensor : logs = null
+resolveProblemByLicensor : output = null
+resolveProblemByLicensor : functionRestriction = ['validity']
+object "checkSolveInSpecTimeByLicensor:Function" as checkSolveInSpecTimeByLicensor
+checkSolveInSpecTimeByLicensor : annotation = The licensor check if the default is resolved within the time limit
+checkSolveInSpecTimeByLicensor : right = [licensor]
+checkSolveInSpecTimeByLicensor : ifConstructor = false
+checkSolveInSpecTimeByLicensor : ifUpdateData = true
+checkSolveInSpecTimeByLicensor : ifGenerateTransaction = false
+checkSolveInSpecTimeByLicensor : dataNames = ['specSolveTime', 'allProblems', 'problem', 'licensorIfCanTerminate']
+checkSolveInSpecTimeByLicensor : params = ['problemId']
+checkSolveInSpecTimeByLicensor : logs = null
+checkSolveInSpecTimeByLicensor : output = null
+checkSolveInSpecTimeByLicensor : functionRestriction = ['validity']
+object "checkSolveInSpecTimeByLicensee:Function" as checkSolveInSpecTimeByLicensee
+checkSolveInSpecTimeByLicensee : annotation = The licensee check if the default is resolved within the time limit
+checkSolveInSpecTimeByLicensee : right = [licensee]
+checkSolveInSpecTimeByLicensee : ifConstructor = false
+checkSolveInSpecTimeByLicensee : ifUpdateData = true
+checkSolveInSpecTimeByLicensee : ifGenerateTransaction = false
+checkSolveInSpecTimeByLicensee : dataNames = ['specSolveTime', 'allProblems', 'problem', 'licenseeIfCanTerminate']
+checkSolveInSpecTimeByLicensee : params = ['problemId']
+checkSolveInSpecTimeByLicensee : logs = null
+checkSolveInSpecTimeByLicensee : output = null
+checkSolveInSpecTimeByLicensee : functionRestriction = ['validity']
+object "finishContractByLicensor:Function" as finishContractByLicensor
+finishContractByLicensor : annotation = Licensor terminates the contract
+finishContractByLicensor : right = [licensor]
+finishContractByLicensor : ifConstructor = false
+finishContractByLicensor : ifUpdateData = true
+finishContractByLicensor : ifGenerateTransaction = false
+finishContractByLicensor : dataNames = ['ifContractIsValid']
+finishContractByLicensor : params = null
+finishContractByLicensor : logs = null
+finishContractByLicensor : output = null
+finishContractByLicensor : functionRestriction = ['checkIfLicensorIfCanTerminate', 'validity']
+object "finishContractByLicensee:Function" as finishContractByLicensee
+finishContractByLicensee : annotation = Licensee terminates the contract
+finishContractByLicensee : right = [licensee]
+finishContractByLicensee : ifConstructor = false
+finishContractByLicensee : ifUpdateData = true
+finishContractByLicensee : ifGenerateTransaction = false
+finishContractByLicensee : dataNames = ['ifContractIsValid']
+finishContractByLicensee : params = null
+finishContractByLicensee : logs = null
+finishContractByLicensee : output = null
+finishContractByLicensee : functionRestriction = ['checkIfLicenseeIfCanTerminate', 'validity']
+object "setNeedReturnGood:Function" as setNeedReturnGood
+setNeedReturnGood : annotation = The Licensor sets the items to be returned
+setNeedReturnGood : right = [licensor]
+setNeedReturnGood : ifConstructor = false
+setNeedReturnGood : ifUpdateData = true
+setNeedReturnGood : ifGenerateTransaction = false
+setNeedReturnGood : dataNames = ['needReturnGoodsNum', 'allNeedReturnGood', 'needReturnGood']
+setNeedReturnGood : params = ['goodInformation', 'appointReturnTime']
+setNeedReturnGood : logs = null
+setNeedReturnGood : output = [int]
+setNeedReturnGood : functionRestriction = ['validity', 'checkContractIsValid']
+object "returnGood:Function" as returnGood
+returnGood : annotation = The licensee returns an item
+returnGood : right = [licensee]
+returnGood : ifConstructor = false
+returnGood : ifUpdateData = true
+returnGood : ifGenerateTransaction = false
+returnGood : dataNames = ['allNeedReturnGood', 'needReturnGood']
+returnGood : params = ['goodId', 'document']
+returnGood : logs = null
+returnGood : output = [int]
+returnGood : functionRestriction = ['validity', 'checkContractIsValid']
+object "validity:Restriction" as validity
+validity : description = Verify the validity of the contract
+validity : dataNames = ['signDate', 'duration']
+validity : params = null
+object "checkContractIsValid:Restriction" as checkContractIsValid
+checkContractIsValid : description = Check if the contract has been terminated
+checkContractIsValid : dataNames = ['ifContractIsValid']
+checkContractIsValid : params = null
+object "checkIfWithinTimePeriod:Restriction" as checkIfWithinTimePeriod
+checkIfWithinTimePeriod : description = Check if it is within the specified time period
+checkIfWithinTimePeriod : dataNames = ['permissionRightStart', 'permissionRightEnd']
+checkIfWithinTimePeriod : params = null
+object "checkIfLicensorIfCanTerminate:Restriction" as checkIfLicensorIfCanTerminate
+checkIfLicensorIfCanTerminate : description = Check if licensor are eligible to terminate the contract
+checkIfLicensorIfCanTerminate : dataNames = ['licensorIfCanTerminate']
+checkIfLicensorIfCanTerminate : params = null
+object "checkIfLicenseeIfCanTerminate:Restriction" as checkIfLicenseeIfCanTerminate
+checkIfLicenseeIfCanTerminate : description = Check if licensee are eligible to terminate the contract
+checkIfLicenseeIfCanTerminate : dataNames = ['licenseeIfCanTerminate']
+checkIfLicenseeIfCanTerminate : params = null
+object "duration:ContractData" as duration
+duration : type = uint
+duration : description = Validity of the contract
+duration : value = 365
+duration : visibility = private
+duration : ifConstant = false
+object "ifContractIsValid:ContractData" as ifContractIsValid
+ifContractIsValid : type = bool
+ifContractIsValid : description = If the contract is terminated
+ifContractIsValid : value = true
+ifContractIsValid : visibility = private
+ifContractIsValid : ifConstant = false
+object "needReturnGoodsNum:ContractData" as needReturnGoodsNum
+needReturnGoodsNum : type = int
+needReturnGoodsNum : description = The number of items to be returned
+needReturnGoodsNum : value = 0
+needReturnGoodsNum : visibility = private
+needReturnGoodsNum : ifConstant = false
+object "allNeedReturnGood:ContractData" as allNeedReturnGood
+allNeedReturnGood : type = mapping(int=>needReturnGood)
+allNeedReturnGood : description = Id map of all items that need to be returned
+allNeedReturnGood : value = null
+allNeedReturnGood : visibility = private
+allNeedReturnGood : ifConstant = false
+object "licenseeIfCanTerminate:ContractData" as licenseeIfCanTerminate
+licenseeIfCanTerminate : type = bool
+licenseeIfCanTerminate : description = If the licensee can terminate the contract
+licenseeIfCanTerminate : value = false
+licenseeIfCanTerminate : visibility = private
+licenseeIfCanTerminate : ifConstant = false
+object "licensorIfCanTerminate:ContractData" as licensorIfCanTerminate
+licensorIfCanTerminate : type = bool
+licensorIfCanTerminate : description = If the licensor can terminate the contract
+licensorIfCanTerminate : value = false
+licensorIfCanTerminate : visibility = private
+licensorIfCanTerminate : ifConstant = false
+object "problemNum:ContractData" as problemNum
+problemNum : type = int
+problemNum : description = The number of default issues
+problemNum : value = 0
+problemNum : visibility = private
+problemNum : ifConstant = false
+object "allProblems:ContractData" as allProblems
+allProblems : type = mapping(int=>problem)
+allProblems : description = Information id mapping for the default problem
+allProblems : value = null
+allProblems : visibility = private
+allProblems : ifConstant = false
+object "provideGoodsNum:ContractData" as provideGoodsNum
+provideGoodsNum : type = int
+provideGoodsNum : description = The number of goods to need provide
+provideGoodsNum : value = 0
+provideGoodsNum : visibility = private
+provideGoodsNum : ifConstant = false
+object "allProvideGood:ContractData" as allProvideGood
+allProvideGood : type = mapping(int=>provideGood)
+allProvideGood : description = Mapping of the id to the item to be provided
+allProvideGood : value = null
+allProvideGood : visibility = private
+allProvideGood : ifConstant = false
+object "receiveGoodsNum:ContractData" as receiveGoodsNum
+receiveGoodsNum : type = int
+receiveGoodsNum : description = The number of goods to need receive
+receiveGoodsNum : value = 0
+receiveGoodsNum : visibility = private
+receiveGoodsNum : ifConstant = false
+object "allReceiveGood:ContractData" as allReceiveGood
+allReceiveGood : type = mapping(int=>receiveGood)
+allReceiveGood : description = Mapping of the id to the item to be received
+allReceiveGood : value = null
+allReceiveGood : visibility = private
+allReceiveGood : ifConstant = false
+object "allMonitorRightNum:ContractData" as allMonitorRightNum
+allMonitorRightNum : type = int
+allMonitorRightNum : description = The number of parties with the right to monitor quality
+allMonitorRightNum : value = 1
+allMonitorRightNum : visibility = private
+allMonitorRightNum : ifConstant = false
+object "allMonitorRight:ContractData" as allMonitorRight
+allMonitorRight : type = mapping(int=>address)
+allMonitorRight : description = All those who have the right to monitor quality
+allMonitorRight : value = null
+allMonitorRight : visibility = private
+allMonitorRight : ifConstant = false
+object "permissionRightStart:ContractData" as permissionRightStart
+permissionRightStart : type = uint
+permissionRightStart : description = The start time of the permission
+permissionRightStart : value = 0
+permissionRightStart : visibility = private
+permissionRightStart : ifConstant = false
+object "permissionRightEnd:ContractData" as permissionRightEnd
+permissionRightEnd : type = uint
+permissionRightEnd : description = The end time of the permission
+permissionRightEnd : value = 0
+permissionRightEnd : visibility = private
+permissionRightEnd : ifConstant = false
+object "allPermissionPartyNum:ContractData" as allPermissionPartyNum
+allPermissionPartyNum : type = int
+allPermissionPartyNum : description = The number of parties with the right of permission
+allPermissionPartyNum : value = 0
+allPermissionPartyNum : visibility = private
+allPermissionPartyNum : ifConstant = false
+object "allPermissionParty:ContractData" as allPermissionParty
+allPermissionParty : type = mapping(int=>address)
+allPermissionParty : description = All those who have the right of permission
+allPermissionParty : value = null
+allPermissionParty : visibility = private
+allPermissionParty : ifConstant = false
+object "licensor_address:ContractData" as licensor_address
+licensor_address : type = address
+licensor_address : description = Account address on the blockchain of licensor
+licensor_address : value = null
+licensor_address : visibility = private
+licensor_address : ifConstant = false
+object "licensee_address:ContractData" as licensee_address
+licensee_address : type = address
+licensee_address : description = Account address on the blockchain of licensee
+licensee_address : value = null
+licensee_address : visibility = private
+licensee_address : ifConstant = false
+object "specSolveTime:ContractData" as specSolveTime
+specSolveTime : type = uint
+specSolveTime : description = A prescribed time to solve the problem
+specSolveTime : value = 120 days
+specSolveTime : visibility = private
+specSolveTime : ifConstant = false
+object "needReturnGood:CombinedData" as needReturnGood
+needReturnGood : type = struct
+needReturnGood : description = Full information about items that need to be returned
+needReturnGood : allTypeName = [string information,uint appointReturnTime,bool ifReturn,uint realReturnTime,string returnDocument]
+needReturnGood : value = null
+needReturnGood : visibility = null
+needReturnGood : ifConstant = null
+object "problem:CombinedData" as problem
+problem : type = struct
+problem : description = Full information about the default problem
+problem : allTypeName = [address sender,uint time,string problemDocument,bool ifExist,uint resolveTime,string resolveDocument]
+problem : value = null
+problem : visibility = null
+problem : ifConstant = null
+object "provideGood:CombinedData" as provideGood
+provideGood : type = struct
+provideGood : description = Full information about the goods to be provided
+provideGood : allTypeName = [int goodId,uint time,string ipfsDocument]
+provideGood : value = null
+provideGood : visibility = null
+provideGood : ifConstant = null
+object "receiveGood:CombinedData" as receiveGood
+receiveGood : type = struct
+receiveGood : description = Full information about the goods to be received
+receiveGood : allTypeName = [int goodId,uint time]
+receiveGood : value = null
+receiveGood : visibility = null
+receiveGood : ifConstant = null
+object "signDate:Date" as signDate
+signDate : type = uint
+signDate : description = The date of signing the contract
+signDate : value = 2020-06-07 17:16:53
+signDate : visibility = private
+signDate : ifConstant = true
+signDate : unixTime = 1591521413
+object "goodInformation:Param" as goodInformation
+goodInformation : type = string memory
+goodInformation : source = null
+goodInformation : description = A detailed description of the item
+object "appointReturnTime:Param" as appointReturnTime
+appointReturnTime : type = uint
+appointReturnTime : source = null
+appointReturnTime : description = The agreed time of return
+object "problemId:Param" as problemId
+problemId : type = int
+problemId : source = null
+problemId : description = The id of the default problem
+object "sampleId:Param" as sampleId
+sampleId : type = int
+sampleId : source = null
+sampleId : description = The id of the sample
+object "document:Param" as document
+document : type = string memory
+document : source = null
+document : description = The hash value of the proof document
+object "licensor:Param" as licensor
+licensor : type = address
+licensor : source = null
+licensor : description = Address of Licensor
+object "licensee:Param" as licensee
+licensee : type = address
+licensee : source = null
+licensee : description = Address of Licensee
+object "addr:Param" as addr
+addr : type = address
+addr : source = null
+addr : description = Account address on the blockchain
+object "current_licensee:Param" as current_licensee
+current_licensee : type = address
+current_licensee : source = null
+current_licensee : description = The address to which the permission is granted
+object "goodId:Param" as goodId
+goodId : type = int
+goodId : source = null
+goodId : description = The id of the good
+name1<.. License: Partof
+name2<.. License: Partof
+grantPermission<.. License: Partof
+grantPermissionToLicensee<.. grantPermission: Partof
+oneAuthorizePermissionOther<.. grantPermissionToLicensee: Partof
+ifPermissionAuthorization<.. grantPermissionToLicensee: Partof
+checkIfWithinTimePeriod<.. ifPermissionAuthorization: Call
+superviseQualityRight<.. License: Partof
+superviseQualityRightByLicensor<.. superviseQualityRight: Partof
+InitializeRights<.. superviseQualityRightByLicensor: Partof
+ifMonitorAuthorization<.. superviseQualityRightByLicensor: Partof
+provideSamples<.. License: Partof
+provideSamplesByLicensee<.. provideSamples: Partof
+provideGoods<.. provideSamplesByLicensee: Partof
+receiveGoods<.. provideSamplesByLicensee: Partof
+terminationOfAgreementByCondition<.. License: Partof
+TerminateAgreementDueToBreach<.. terminationOfAgreementByCondition: Partof
+sendProblemNotificationByLicensor<.. TerminateAgreementDueToBreach: Partof
+sendProblemNotificationByLicensee<.. TerminateAgreementDueToBreach: Partof
+resolveProblemByLicensee<.. TerminateAgreementDueToBreach: Partof
+resolveProblemByLicensor<.. TerminateAgreementDueToBreach: Partof
+checkSolveInSpecTimeByLicensor<.. TerminateAgreementDueToBreach: Partof
+checkSolveInSpecTimeByLicensee<.. TerminateAgreementDueToBreach: Partof
+finishContractByLicensor<.. TerminateAgreementDueToBreach: Partof
+finishContractByLicensee<.. TerminateAgreementDueToBreach: Partof
+checkIfLicensorIfCanTerminate<.. finishContractByLicensor: Call
+checkIfLicenseeIfCanTerminate<.. finishContractByLicensee: Call
+ReturnOfItems<.. License: Partof
+ReturnConfidentialInformation<.. ReturnOfItems: Partof
+setNeedReturnGood<.. ReturnConfidentialInformation: Partof
+returnGood<.. ReturnConfidentialInformation: Partof
+duration<.. License: Partof
+signDate<.. License: Partof
+ifContractIsValid<.. License: Partof
+goodInformation<.. License: Partof
+appointReturnTime<.. License: Partof
+needReturnGoodsNum<.. License: Partof
+allNeedReturnGood<.. License: Partof
+needReturnGood<.. License: Partof
+licenseeIfCanTerminate<.. License: Partof
+licensorIfCanTerminate<.. License: Partof
+problemId<.. License: Partof
+problemNum<.. License: Partof
+problem<.. License: Partof
+allProblems<.. License: Partof
+sampleId<.. License: Partof
+document<.. License: Partof
+provideGoodsNum<.. License: Partof
+provideGood<.. License: Partof
+allProvideGood<.. License: Partof
+receiveGoodsNum<.. License: Partof
+receiveGood<.. License: Partof
+allReceiveGood<.. License: Partof
+licensor<.. License: Partof
+licensee<.. License: Partof
+allMonitorRightNum<.. License: Partof
+allMonitorRight<.. License: Partof
+permissionRightStart<.. License: Partof
+permissionRightEnd<.. License: Partof
+addr<.. License: Partof
+current_licensee<.. License: Partof
+allPermissionPartyNum<.. License: Partof
+allPermissionParty<.. License: Partof
+licensor_address<.. License: Partof
+licensee_address<.. License: Partof
+goodId<.. License: Partof
+specSolveTime<.. License: Partof
+validity<.. oneAuthorizePermissionOther: Call
+validity<.. ifPermissionAuthorization: Call
+validity<.. ifMonitorAuthorization: Call
+validity<.. provideGoods: Call
+validity<.. receiveGoods: Call
+validity<.. sendProblemNotificationByLicensor: Call
+validity<.. sendProblemNotificationByLicensee: Call
+validity<.. resolveProblemByLicensee: Call
+validity<.. resolveProblemByLicensor: Call
+validity<.. checkSolveInSpecTimeByLicensor: Call
+validity<.. checkSolveInSpecTimeByLicensee: Call
+validity<.. finishContractByLicensor: Call
+validity<.. finishContractByLicensee: Call
+validity<.. setNeedReturnGood: Call
+validity<.. returnGood: Call
+checkContractIsValid<.. setNeedReturnGood: Call
+checkContractIsValid<.. returnGood: Call
+@enduml

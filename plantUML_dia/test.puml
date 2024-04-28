@@ -1,0 +1,511 @@
+@startuml
+'https://plantuml.com/object-diagram
+left to right direction
+object "License:Contract" as o1
+o1 : description = TRADEMARK LICENSE AGREEMENT
+o1 : clauses = [grantPermission,superviseQualityRight,provideSamples,terminationOfAgreementByCondition,ReturnOfItems]
+o1 : participants = [name1,name2]
+o1 : data = [specSolveTime,goodId,ifContractIsValid,signDate,duration,goodInformation,appointReturnTime,needReturnGoodsNum,allNeedReturnGood,needReturnGood,licenseeIfCanTerminate,licensorIfCanTerminate,problemId,problemNum,allProblems,problem,sampleId,document,provideGoodsNum,provideGood,allProvideGood,receiveGoodsNum,receiveGood,allReceiveGood,licensor_address,licensee_address,licensor,licensee,allMonitorRightNum,allMonitorRight,permissionRightStart,permissionRightEnd,addr,current_licensee,allPermissionPartyNum,allPermissionParty]
+o1 : globalRestrictions = [validity]
+object "name1:Participant" as o2
+o2 : roleNames = [licensor]
+o2<..o1 : Partof
+object "name2:Participant" as o3
+o3 : roleNames = [licensee]
+o3<..o1 : Partof
+object "grantPermission:Clause" as o4
+o4 : domain = Authentic right
+o4 : exector = [licensor,licensee]
+o4 : activities = [grantPermissionToLicensee]
+o4<..o1 : Partof
+object "grantPermissionToLicensee:Activity" as o5
+o5 : description = The license grants licensee worldwide royalty-free rights
+o5 : actions = [oneAuthorizePermissionOther,ifPermissionAuthorization]
+o5<..o4 : Partof
+object "oneAuthorizePermissionOther:Action" as o6
+o6 : description = One party grants a permission right to another
+o6 : restricts = null
+o6 : GlobalRestrictionNames = [validity]
+o6 : roleRight = [licensor]
+o6 : ifInitializeContract = false
+o6 : ifUpdateData = true
+o6 : ifGenerateTransaction = false
+o6 : dataName = [current_licensee,allPermissionPartyNum,allPermissionParty]
+o6 : logs = null
+o6 : result = null
+o6<..o5 : Partof
+object "ifPermissionAuthorization:Action" as o7
+o7 : description = Determine if permission is granted
+o7 : restricts = [checkIfWithinTimePeriod]
+o7 : GlobalRestrictionNames = [validity]
+o7 : roleRight = [licensor]
+o7 : ifInitializeContract = false
+o7 : ifUpdateData = false
+o7 : ifGenerateTransaction = false
+o7 : dataName = [addr,allPermissionPartyNum,allPermissionParty]
+o7 : logs = null
+o7 : result = [bool]
+o7<..o5 : Partof
+object "checkIfWithinTimePeriod:ActionRestriction" as o8
+o8 : description = Check if it is within the specified time period
+o8 : dataNames = [permissionRightStart,permissionRightEnd]
+o8<..o7 : Call
+object "superviseQualityRight:Clause" as o9
+o9 : domain = Authentic right
+o9 : exector = [licensor]
+o9 : activities = [superviseQualityRightByLicensor]
+o9<..o1 : Partof
+object "superviseQualityRightByLicensor:Activity" as o10
+o10 : description = Licensor has the right to monitor the quality
+o10 : actions = [InitializeRights,ifMonitorAuthorization]
+o10<..o9 : Partof
+object "InitializeRights:Action" as o11
+o11 : description = Initialize the addresses and rights of both parties
+o11 : restricts = null
+o11 : GlobalRestrictionNames = null
+o11 : roleRight = null
+o11 : ifInitializeContract = true
+o11 : ifUpdateData = true
+o11 : ifGenerateTransaction = false
+o11 : dataName = [licensor,licensee,allMonitorRight,licensor_address,licensee_address]
+o11 : logs = null
+o11 : result = null
+o11<..o10 : Partof
+object "ifMonitorAuthorization:Action" as o12
+o12 : description = Determine if monitor right is granted
+o12 : restricts = null
+o12 : GlobalRestrictionNames = [validity]
+o12 : roleRight = null
+o12 : ifInitializeContract = false
+o12 : ifUpdateData = false
+o12 : ifGenerateTransaction = false
+o12 : dataName = [addr,allMonitorRightNum,allMonitorRight]
+o12 : logs = null
+o12 : result = [bool]
+o12<..o10 : Partof
+object "provideSamples:Clause" as o13
+o13 : domain = Record items sent
+o13 : exector = [licensor,licensee]
+o13 : activities = [provideSamplesByLicensee]
+o13<..o1 : Partof
+object "provideSamplesByLicensee:Activity" as o14
+o14 : description = The Licensor sends samples to the Licensee
+o14 : actions = [provideGoods,receiveGoods]
+o14<..o13 : Partof
+object "provideGoods:Action" as o15
+o15 : description = The licensee records the shipment of the item
+o15 : restricts = null
+o15 : GlobalRestrictionNames = [validity]
+o15 : roleRight = [licensee]
+o15 : ifInitializeContract = false
+o15 : ifUpdateData = true
+o15 : ifGenerateTransaction = false
+o15 : dataName = [sampleId,document,provideGoodsNum,provideGood,allProvideGood]
+o15 : logs = null
+o15 : result = null
+o15<..o14 : Partof
+object "receiveGoods:Action" as o16
+o16 : description = The licensor records the receipt of the item
+o16 : restricts = null
+o16 : GlobalRestrictionNames = [validity]
+o16 : roleRight = [licensor]
+o16 : ifInitializeContract = false
+o16 : ifUpdateData = true
+o16 : ifGenerateTransaction = false
+o16 : dataName = [sampleId,receiveGoodsNum,receiveGood,allReceiveGood]
+o16 : logs = null
+o16 : result = null
+o16<..o14 : Partof
+object "terminationOfAgreementByCondition:Clause" as o17
+o17 : domain = Termination of agreement
+o17 : exector = [licensor,licensee]
+o17 : activities = [TerminateAgreementDueToBreach]
+o17<..o1 : Partof
+object "TerminateAgreementDueToBreach:Activity" as o18
+o18 : description = If one party breaches this agreement, the other party shall have the right to terminate this agreement
+o18 : actions = [finishContractByLicensor,finishContractByLicensee,sendProblemNotificationByLicensor,sendProblemNotificationByLicensee,resolveProblemByLicensee,resolveProblemByLicensor,checkSolveInSpecTimeByLicensor,checkSolveInSpecTimeByLicensee]
+o18<..o17 : Partof
+object "sendProblemNotificationByLicensor:Action" as o19
+o19 : description = Licensor sends notice of breach of contract
+o19 : restricts = null
+o19 : GlobalRestrictionNames = [validity]
+o19 : roleRight = [licensor]
+o19 : ifInitializeContract = false
+o19 : ifUpdateData = true
+o19 : ifGenerateTransaction = false
+o19 : dataName = [document,problemNum,allProblems,problem]
+o19 : logs = null
+o19 : result = [int]
+o19<..o18 : Partof
+object "sendProblemNotificationByLicensee:Action" as o20
+o20 : description = Licensee sends notice of breach of contract
+o20 : restricts = null
+o20 : GlobalRestrictionNames = [validity]
+o20 : roleRight = [licensee]
+o20 : ifInitializeContract = false
+o20 : ifUpdateData = true
+o20 : ifGenerateTransaction = false
+o20 : dataName = [document,problemNum,allProblems,problem]
+o20 : logs = null
+o20 : result = [int]
+o20<..o18 : Partof
+object "resolveProblemByLicensee:Action" as o21
+o21 : description = The licensee resolves the breach of contract
+o21 : restricts = null
+o21 : GlobalRestrictionNames = [validity]
+o21 : roleRight = [licensee]
+o21 : ifInitializeContract = false
+o21 : ifUpdateData = true
+o21 : ifGenerateTransaction = false
+o21 : dataName = [problemId,document,allProblems,problem]
+o21 : logs = null
+o21 : result = null
+o21<..o18 : Partof
+object "resolveProblemByLicensor:Action" as o22
+o22 : description = The licensor resolves the breach of contract
+o22 : restricts = null
+o22 : GlobalRestrictionNames = [validity]
+o22 : roleRight = [licensor]
+o22 : ifInitializeContract = false
+o22 : ifUpdateData = true
+o22 : ifGenerateTransaction = false
+o22 : dataName = [problemId,document,allProblems,problem]
+o22 : logs = null
+o22 : result = null
+o22<..o18 : Partof
+object "checkSolveInSpecTimeByLicensor:Action" as o23
+o23 : description = The licensor check if the default is resolved within the time limit
+o23 : restricts = null
+o23 : GlobalRestrictionNames = [validity]
+o23 : roleRight = [licensor]
+o23 : ifInitializeContract = false
+o23 : ifUpdateData = true
+o23 : ifGenerateTransaction = false
+o23 : dataName = [specSolveTime,problemId,allProblems,problem,licensorIfCanTerminate]
+o23 : logs = null
+o23 : result = null
+o23<..o18 : Partof
+object "checkSolveInSpecTimeByLicensee:Action" as o24
+o24 : description = The licensee check if the default is resolved within the time limit
+o24 : restricts = null
+o24 : GlobalRestrictionNames = [validity]
+o24 : roleRight = [licensee]
+o24 : ifInitializeContract = false
+o24 : ifUpdateData = true
+o24 : ifGenerateTransaction = false
+o24 : dataName = [specSolveTime,problemId,allProblems,problem,licenseeIfCanTerminate]
+o24 : logs = null
+o24 : result = null
+o24<..o18 : Partof
+object "finishContractByLicensor:Action" as o25
+o25 : description = Licensor terminates the contract
+o25 : restricts = [checkIfLicensorIfCanTerminate]
+o25 : GlobalRestrictionNames = [validity]
+o25 : roleRight = [licensor]
+o25 : ifInitializeContract = false
+o25 : ifUpdateData = true
+o25 : ifGenerateTransaction = false
+o25 : dataName = [ifContractIsValid]
+o25 : logs = null
+o25 : result = null
+o25<..o18 : Partof
+object "finishContractByLicensee:Action" as o26
+o26 : description = Licensee terminates the contract
+o26 : restricts = [checkIfLicenseeIfCanTerminate]
+o26 : GlobalRestrictionNames = [validity]
+o26 : roleRight = [licensee]
+o26 : ifInitializeContract = false
+o26 : ifUpdateData = true
+o26 : ifGenerateTransaction = false
+o26 : dataName = [ifContractIsValid]
+o26 : logs = null
+o26 : result = null
+o26<..o18 : Partof
+object "checkIfLicensorIfCanTerminate:ActionRestriction" as o27
+o27 : description = Check if licensor are eligible to terminate the contract
+o27 : dataNames = [licensorIfCanTerminate]
+o27<..o25 : Call
+object "checkIfLicenseeIfCanTerminate:ActionRestriction" as o28
+o28 : description = Check if licensee are eligible to terminate the contract
+o28 : dataNames = [licenseeIfCanTerminate]
+o28<..o26 : Call
+object "ReturnOfItems:Clause" as o29
+o29 : domain = Record items sent
+o29 : exector = [licensor,licensee]
+o29 : activities = [ReturnConfidentialInformation]
+o29<..o1 : Partof
+object "ReturnConfidentialInformation:Activity" as o30
+o30 : description = Licensee returns the Confidential Information to Licensor
+o30 : actions = [setNeedReturnGood,returnGood]
+o30<..o29 : Partof
+object "setNeedReturnGood:Action" as o31
+o31 : description = The Licensor sets the items to be returned
+o31 : restricts = null
+o31 : GlobalRestrictionNames = [validity,checkContractIsValid]
+o31 : roleRight = [licensor]
+o31 : ifInitializeContract = false
+o31 : ifUpdateData = true
+o31 : ifGenerateTransaction = false
+o31 : dataName = [goodInformation,appointReturnTime,needReturnGoodsNum,allNeedReturnGood,needReturnGood]
+o31 : logs = null
+o31 : result = [int]
+o31<..o30 : Partof
+object "returnGood:Action" as o32
+o32 : description = The licensee returns an item
+o32 : restricts = null
+o32 : GlobalRestrictionNames = [validity,checkContractIsValid]
+o32 : roleRight = [licensee]
+o32 : ifInitializeContract = false
+o32 : ifUpdateData = true
+o32 : ifGenerateTransaction = false
+o32 : dataName = [goodId,document,allNeedReturnGood,needReturnGood]
+o32 : logs = null
+o32 : result = [int]
+o32<..o30 : Partof
+object "validity:GlobalRestriction" as o33
+o33 : description = Verify the validity of the contract
+o33 : dataNames = [signDate,duration]
+o33<..o1 : Partof
+object "checkContractIsValid:GlobalRestriction" as o34
+o34 : description = Check if the contract has been terminated
+o34 : dataNames = [ifContractIsValid]
+o34<..o1 : Partof
+object "duration:OnChainData" as o35
+o35 : type = uint
+o35 : description = Validity of the contract
+o35 : initialValue = 365
+o35 : ifPrivate = true
+o35 : ifMutable = true
+o35<..o1 : Partof
+object "signDate:Date" as o36
+o36 : type = uint
+o36 : description = The date of signing the contract
+o36 : initialValue = 2020-06-07 17:16:53
+o36 : ifPrivate = true
+o36 : ifMutable = false
+o36 : standardTime = 2020-06-07 17:16:53
+o36<..o1 : Partof
+object "ifContractIsValid:OnChainData" as o37
+o37 : type = bool
+o37 : description = If the contract is terminated
+o37 : initialValue = true
+o37 : ifPrivate = true
+o37 : ifMutable = true
+o37<..o1 : Partof
+object "goodInformation:OffChainData" as o38
+o38 : type = string memory
+o38 : source = null
+o38 : description = A detailed description of the item
+o38<..o1 : Partof
+object "appointReturnTime:OffChainData" as o39
+o39 : type = uint
+o39 : source = null
+o39 : description = The agreed time of return
+o39<..o1 : Partof
+object "needReturnGoodsNum:OnChainData" as o40
+o40 : type = int
+o40 : description = The number of items to be returned
+o40 : initialValue = 0
+o40 : ifPrivate = true
+o40 : ifMutable = true
+o40<..o1 : Partof
+object "allNeedReturnGood:OnChainData" as o41
+o41 : type = mapping(int=>needReturnGood)
+o41 : description = Id map of all items that need to be returned
+o41 : initialValue = null
+o41 : ifPrivate = true
+o41 : ifMutable = true
+o41<..o1 : Partof
+object "needReturnGood:CombinedData" as o42
+o42 : type = struct
+o42 : description = Full information about items that need to be returned
+o42 : allTypeName = [string information,uint appointReturnTime,bool ifReturn,uint realReturnTime,string returnDocument]
+o42 : initialValue = null
+o42 : ifPrivate = null
+o42 : ifMutable = true
+o42<..o1 : Partof
+object "licenseeIfCanTerminate:OnChainData" as o43
+o43 : type = bool
+o43 : description = If the licensee can terminate the contract
+o43 : initialValue = false
+o43 : ifPrivate = true
+o43 : ifMutable = true
+o43<..o1 : Partof
+object "licensorIfCanTerminate:OnChainData" as o44
+o44 : type = bool
+o44 : description = If the licensor can terminate the contract
+o44 : initialValue = false
+o44 : ifPrivate = true
+o44 : ifMutable = true
+o44<..o1 : Partof
+object "problemId:OffChainData" as o45
+o45 : type = int
+o45 : source = null
+o45 : description = The id of the default problem
+o45<..o1 : Partof
+object "problemNum:OnChainData" as o46
+o46 : type = int
+o46 : description = The number of default issues
+o46 : initialValue = 0
+o46 : ifPrivate = true
+o46 : ifMutable = true
+o46<..o1 : Partof
+object "problem:CombinedData" as o47
+o47 : type = struct
+o47 : description = Full information about the default problem
+o47 : allTypeName = [address sender,uint time,string problemDocument,bool ifExist,uint resolveTime,string resolveDocument]
+o47 : initialValue = null
+o47 : ifPrivate = null
+o47 : ifMutable = true
+o47<..o1 : Partof
+object "allProblems:OnChainData" as o48
+o48 : type = mapping(int=>problem)
+o48 : description = Information id mapping for the default problem
+o48 : initialValue = null
+o48 : ifPrivate = true
+o48 : ifMutable = true
+o48<..o1 : Partof
+object "sampleId:OffChainData" as o49
+o49 : type = int
+o49 : source = null
+o49 : description = The id of the sample
+o49<..o1 : Partof
+object "document:OffChainData" as o50
+o50 : type = string memory
+o50 : source = null
+o50 : description = The hash value of the proof document
+o50<..o1 : Partof
+object "provideGoodsNum:OnChainData" as o51
+o51 : type = int
+o51 : description = The number of goods to need provide
+o51 : initialValue = 0
+o51 : ifPrivate = true
+o51 : ifMutable = true
+o51<..o1 : Partof
+object "provideGood:CombinedData" as o52
+o52 : type = struct
+o52 : description = Full information about the goods to be provided
+o52 : allTypeName = [int goodId,uint time,string ipfsDocument]
+o52 : initialValue = null
+o52 : ifPrivate = null
+o52 : ifMutable = true
+o52<..o1 : Partof
+object "allProvideGood:OnChainData" as o53
+o53 : type = mapping(int=>provideGood)
+o53 : description = Mapping of the id to the item to be provided
+o53 : initialValue = null
+o53 : ifPrivate = true
+o53 : ifMutable = true
+o53<..o1 : Partof
+object "receiveGoodsNum:OnChainData" as o54
+o54 : type = int
+o54 : description = The number of goods to need receive
+o54 : initialValue = 0
+o54 : ifPrivate = true
+o54 : ifMutable = true
+o54<..o1 : Partof
+object "receiveGood:CombinedData" as o55
+o55 : type = struct
+o55 : description = Full information about the goods to be received
+o55 : allTypeName = [int goodId,uint time]
+o55 : initialValue = null
+o55 : ifPrivate = null
+o55 : ifMutable = true
+o55<..o1 : Partof
+object "allReceiveGood:OnChainData" as o56
+o56 : type = mapping(int=>receiveGood)
+o56 : description = Mapping of the id to the item to be received
+o56 : initialValue = null
+o56 : ifPrivate = true
+o56 : ifMutable = true
+o56<..o1 : Partof
+object "licensor:OffChainData" as o57
+o57 : type = address
+o57 : source = null
+o57 : description = Address of Licensor
+o57<..o1 : Partof
+object "licensee:OffChainData" as o58
+o58 : type = address
+o58 : source = null
+o58 : description = Address of Licensee
+o58<..o1 : Partof
+object "allMonitorRightNum:OnChainData" as o59
+o59 : type = int
+o59 : description = The number of parties with the right to monitor quality
+o59 : initialValue = 1
+o59 : ifPrivate = true
+o59 : ifMutable = true
+o59<..o1 : Partof
+object "allMonitorRight:OnChainData" as o60
+o60 : type = mapping(int=>address)
+o60 : description = All those who have the right to monitor quality
+o60 : initialValue = null
+o60 : ifPrivate = true
+o60 : ifMutable = true
+o60<..o1 : Partof
+object "permissionRightStart:OnChainData" as o61
+o61 : type = uint
+o61 : description = The start time of the permission
+o61 : initialValue = 0
+o61 : ifPrivate = true
+o61 : ifMutable = true
+o61<..o1 : Partof
+object "permissionRightEnd:OnChainData" as o62
+o62 : type = uint
+o62 : description = The end time of the permission
+o62 : initialValue = 0
+o62 : ifPrivate = true
+o62 : ifMutable = true
+o62<..o1 : Partof
+object "addr:OffChainData" as o63
+o63 : type = address
+o63 : source = null
+o63 : description = Account address on the blockchain
+o63<..o1 : Partof
+object "current_licensee:OffChainData" as o64
+o64 : type = address
+o64 : source = null
+o64 : description = The address to which the permission is granted
+o64<..o1 : Partof
+object "allPermissionPartyNum:OnChainData" as o65
+o65 : type = int
+o65 : description = The number of parties with the right of permission
+o65 : initialValue = 0
+o65 : ifPrivate = true
+o65 : ifMutable = true
+o65<..o1 : Partof
+object "allPermissionParty:OnChainData" as o66
+o66 : type = mapping(int=>address)
+o66 : description = All those who have the right of permission
+o66 : initialValue = null
+o66 : ifPrivate = true
+o66 : ifMutable = true
+o66<..o1 : Partof
+object "licensor_address:OnChainData" as o67
+o67 : type = address
+o67 : description = Account address on the blockchain of licensor
+o67 : initialValue = null
+o67 : ifPrivate = true
+o67 : ifMutable = true
+o67<..o1 : Partof
+object "licensee_address:OnChainData" as o68
+o68 : type = address
+o68 : description = Account address on the blockchain of licensee
+o68 : initialValue = null
+o68 : ifPrivate = true
+o68 : ifMutable = true
+o68<..o1 : Partof
+object "goodId:OffChainData" as o69
+o69 : type = int
+o69 : source = null
+o69 : description = The id of the good
+o69<..o1 : Partof
+object "specSolveTime:OnChainData" as o70
+o70 : type = uint
+o70 : description = A prescribed time to solve the problem
+o70 : initialValue = 120 days
+o70 : ifPrivate = true
+o70 : ifMutable = true
+o70<..o1 : Partof
+
+@enduml

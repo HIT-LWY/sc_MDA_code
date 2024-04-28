@@ -1,0 +1,187 @@
+@startuml
+@startuml
+object "Renting:SmartContract" as Renting
+Renting : annotation = House rental contract
+Renting : clauses = [renewContract]
+Renting : participants = [name1,name2]
+Renting : data = [ifAgreeRenew,renewalTime,duration,advanceNoticetime,ifNotice]
+object "name1:Participant" as name1
+name1 : address = null
+name1 : roleNames = [tenant]
+object "name2:Participant" as name2
+name2 : address = null
+name2 : roleNames = [landlord]
+object "renewContract:ClauseInfo" as renewContract
+renewContract : domain = rent
+renewContract : exector = [landlord,tenant]
+renewContract : processes = [renewContract]
+object "renewCurrentContract:Process" as renewCurrentContract
+renewCurrentContract : description = Renew the contract according to the intention of both parties. If neither party gives notice, the contract will be renewed automatically
+renewCurrentContract : functions = [agreeRenew,renewByConsult,autoRenew,sendMessage,finishContract]
+object "agreeRenew:Function" as agreeRenew
+agreeRenew : annotation = Agree to renew contract
+agreeRenew : right = [landlord,tenant]
+agreeRenew : ifConstructor = false
+agreeRenew : ifUpdateData = true
+agreeRenew : ifGenerateTransaction = false
+agreeRenew : dataNames = ['ifAgreeRenew']
+agreeRenew : params = null
+agreeRenew : logs = null
+agreeRenew : output = null
+agreeRenew : functionRestriction = ['checkNotice', 'validity']
+object "agreeFinish:Function" as agreeFinish
+agreeFinish : annotation = Agree to finish contract
+agreeFinish : right = [landlord,tenant]
+agreeFinish : ifConstructor = false
+agreeFinish : ifUpdateData = true
+agreeFinish : ifGenerateTransaction = false
+agreeFinish : dataNames = ['ifAgreeFinish']
+agreeFinish : params = null
+agreeFinish : logs = null
+agreeFinish : output = null
+agreeFinish : functionRestriction = ['checkNotice', 'validity']
+object "renewByConsult:Function" as renewByConsult
+renewByConsult : annotation = The contract is renewed after negotiation between the parties concerned
+renewByConsult : right = [landlord]
+renewByConsult : ifConstructor = false
+renewByConsult : ifUpdateData = true
+renewByConsult : ifGenerateTransaction = false
+renewByConsult : dataNames = ['duration']
+renewByConsult : params = ['renewalTime']
+renewByConsult : logs = null
+renewByConsult : output = null
+renewByConsult : functionRestriction = ['checkIfAgreeRenew']
+object "autoRenew:Function" as autoRenew
+autoRenew : annotation = Automatic renewal upon expiration
+autoRenew : right = [landlord,tenant]
+autoRenew : ifConstructor = false
+autoRenew : ifUpdateData = true
+autoRenew : ifGenerateTransaction = false
+autoRenew : dataNames = ['autoRenewTime', 'duration']
+autoRenew : params = null
+autoRenew : logs = null
+autoRenew : output = null
+autoRenew : functionRestriction = ['checkNoNotice']
+object "sendMessage:Function" as sendMessage
+sendMessage : annotation = Notify other contracting parties
+sendMessage : right = [landlord,tenant]
+sendMessage : ifConstructor = false
+sendMessage : ifUpdateData = true
+sendMessage : ifGenerateTransaction = false
+sendMessage : dataNames = ['ifNotice']
+sendMessage : params = null
+sendMessage : logs = null
+sendMessage : output = null
+sendMessage : functionRestriction = ['checkNoticeTime', 'validity']
+object "finishContract:Function" as finishContract
+finishContract : annotation = Terminate a contract
+finishContract : right = [landlord]
+finishContract : ifConstructor = false
+finishContract : ifUpdateData = true
+finishContract : ifGenerateTransaction = false
+finishContract : logs = null
+finishContract : output = null
+finishContract : functionRestriction = ['checkIfAgreeFinish']
+object "validity:Restriction" as validity
+validity : description = Verify the validity of the contract
+validity : dataNames = ['signDate', 'duration']
+validity : params = null
+object "checkNotice:Restriction" as checkNotice
+checkNotice : description = Check the notification is sent
+checkNotice : dataNames = ['ifNotice']
+checkNotice : params = null
+object "checkNoNotice:Restriction" as checkNoNotice
+checkNoNotice : description = Check the notification is not sent
+checkNoNotice : dataNames = ['ifNotice']
+checkNoNotice : params = null
+object "checkNoticeTime:Restriction" as checkNoticeTime
+checkNoticeTime : description = Check the notification is not sent
+checkNoticeTime : dataNames = ['signDate', 'duration', 'advanceNoticeTime']
+checkNoticeTime : params = null
+object "checkIfAgreeRenew:Restriction" as checkIfAgreeRenew
+checkIfAgreeRenew : description = Check if the renewal is approved
+checkIfAgreeRenew : dataNames = ['ifAgreeRenew', 'needAgreeRenewNum']
+checkIfAgreeRenew : params = null
+object "checkIfAgreeFinish:Restriction" as checkIfAgreeFinish
+checkIfAgreeFinish : description = Check if agree to terminate the contract
+checkIfAgreeFinish : dataNames = ['ifAgreeFinish', 'needAgreeFinishNum']
+checkIfAgreeFinish : params = null
+object "ifAgreeRenew:ContractData" as ifAgreeRenew
+ifAgreeRenew : type = int
+ifAgreeRenew : value = 0
+ifAgreeRenew : visibility = public
+ifAgreeRenew : ifConstant = false
+object "duration:ContractData" as duration
+duration : type = int
+duration : value = 365
+duration : visibility = public
+duration : ifConstant = false
+object "advanceNoticeTime:ContractData" as advanceNoticeTime
+advanceNoticeTime : type = int
+advanceNoticeTime : value = 30
+advanceNoticeTime : visibility = public
+advanceNoticeTime : ifConstant = true
+object "ifNotice:ContractData" as ifNotice
+ifNotice : type = int
+ifNotice : value = 0
+ifNotice : visibility = public
+ifNotice : ifConstant = false
+object "autoRenewTime:ContractData" as autoRenewTime
+autoRenewTime : type = int
+autoRenewTime : value = 365
+autoRenewTime : visibility = public
+autoRenewTime : ifConstant = false
+object "ifAgreeFinish:ContractData" as ifAgreeFinish
+ifAgreeFinish : type = int
+ifAgreeFinish : value = 0
+ifAgreeFinish : visibility = public
+ifAgreeFinish : ifConstant = false
+object "needAgreeRenewNum:ContractData" as needAgreeRenewNum
+needAgreeRenewNum : type = int
+needAgreeRenewNum : value = 2
+needAgreeRenewNum : visibility = public
+needAgreeRenewNum : ifConstant = true
+object "needAgreeFinishNum:ContractData" as needAgreeFinishNum
+needAgreeFinishNum : type = int
+needAgreeFinishNum : value = 1
+needAgreeFinishNum : visibility = public
+needAgreeFinishNum : ifConstant = true
+object "signDate:TimeData" as signDate
+signDate : type = int
+signDate : value = 2020-06-07 17:16:53
+signDate : visibility = public
+signDate : ifConstant = true
+signDate : unixTime = 1591521413
+object "renewalTime:Param" as renewalTime
+renewalTime : type = int
+renewalTime : source = null
+name1<.. Renting: Partof
+name2<.. Renting: Partof
+renewContract<.. Renting: Partof
+ifAgreeRenew<.. Renting: Partof
+renewalTime<.. Renting: Partof
+duration<.. Renting: Partof
+advanceNoticeTime<.. Renting: Partof
+ifNotice<.. Renting: Partof
+autoRenewTime<.. Renting: Partof
+ifAgreeFinish<.. Renting: Partof
+needAgreeRenewNum<.. Renting: Partof
+needAgreeFinishNum<.. Renting: Partof
+signDate<.. Renting: Partof
+renewCurrentContract<.. renewContract: Partof
+agreeRenew<.. renewCurrentContract: Partof
+agreeFinish<.. renewCurrentContract: Partof
+renewByConsult<.. renewCurrentContract: Partof
+autoRenew<.. renewCurrentContract: Partof
+sendMessage<.. renewCurrentContract: Partof
+finishContract<.. renewCurrentContract: Partof
+checkNotice<.. agreeRenew: Call
+checkNotice<.. agreeFinish: Call
+checkNoNotice<.. autoRenew: Call
+checkNoticeTime<.. sendMessage: Call
+checkIfAgreeRenew<.. renewByConsult: Call
+checkIfAgreeFinish<.. finishContract: Call
+validity<.. agreeRenew: Call
+validity<.. agreeFinish: Call
+validity<.. sendMessage: Call
+@enduml

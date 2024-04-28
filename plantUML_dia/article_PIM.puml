@@ -1,0 +1,90 @@
+@startuml
+'https://plantuml.com/object-diagram
+'left to right direction
+object "License:SmartContract" as o1
+o1 : annotation = TRADEMARK LICENSE AGREEMENT
+o1 : clauses = [grantPermission]
+o1 : participants = [name1,name2]
+o1 : data = [current_licensee,allPermissionPartyNum,allPermissionParty,addr,permissionRightStart,permissionRightEnd]
+object "name1:Participant" as o2
+o2 : address = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
+o2 : roleNames = [licensor]
+o2<..o1 : Partof
+object "name2:Participant" as o3
+o3 : address = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
+o3 : roleNames = [licensee]
+o3<..o1 : Partof
+object "grantPermission:Clause" as o4
+o4 : domain = Authentic right
+o4 : exector = [licensor,licensee]
+o4 : activities = [grantPermissionToLicensee]
+o4<..o1 : Partof
+object "grantPermissionToLicensee:Process" as o5
+o5 : annotation = The licensor Grants licensee worldwide royalty-free rights
+o5 : function = [oneAuthorizePermissionOther,ifPermissionAuthorization]
+o5<..o4 : Partof
+object "oneAuthorizePermissionOther:Function" as o6
+o6 : annotation = Granting a permission right
+o6 : functionRestricts = null
+o6 : right = [licensor]
+o6 : ifConstructor = false
+o6 : ifUpdateData = true
+o6 : ifGenerateTransaction = false
+o6 : dataName = [allPermissionPartyNum,allPermissionParty]
+o6 : params = [current_licensee]
+o6 : logs = null
+o6<..o5 : Partof
+object "ifPermissionAuthorization:Function" as o7
+o7 : annotation = Determine if permission is granted
+o7 : functionRestricts = [checkIfWithinTimePeriod]
+o7 : right = [licensor]
+o7 : ifConstructor = false
+o7 : ifUpdateData = false
+o7 : ifGenerateTransaction = false
+o7 : dataName = [allPermissionPartyNum,allPermissionParty]
+o7 : params = [addr]
+o7 : logs = null
+o7<..o5 : Partof
+object "checkIfWithinTimePeriod:Restriction" as o8
+o8 : annotation = Check if it is within the specified time period
+o8 : dataNames = [permissionRightStart,permissionRightEnd]
+o8 : params = null
+o8<..o7 : Call
+object "addr:Param" as o63
+o63 : type = address
+o63 : description = Account address on the blockchain
+o63<..o1 : Partof
+object "current_licensee:Param" as o64
+o64 : type = address
+o64 : description = The address to which the permission is granted
+o1..>o64 : Partof
+object "allPermissionPartyNum:ContractData" as o65
+o65 : type = int
+o65 : description = The number of parties with the right of permission
+o65 : value = 0
+o65 : visibility = private
+o65 : ifConstant = false
+o65<..o1 : Partof
+object "allPermissionParty:CombineData" as o66
+o66 : type = mapping(int=>address)
+o66 : description = All those who have the right of permission
+o66 : allTypeName = [int,address]
+o66 : value = null
+o66 : visibility = private
+o66 : ifConstant = false
+o1..>o66 : Partof
+object "permissionRightStart:ContractData" as o61
+o61 : type = uint
+o61 : description = The start time of the permission
+o61 : value = 0
+o61 : visibility = private
+o61 : ifConstant = false
+o1..>o61 : Partof
+object "permissionRightEnd:ContractData" as o62
+o62 : type = uint
+o62 : description = The end time of the permission
+o62 : value = 0
+o62 : visibility = private
+o62 : ifConstant = false
+o1<..o62 : Partof
+@enduml

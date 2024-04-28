@@ -1,0 +1,1358 @@
+<?xml version="1.0" encoding="UTF-8"?><XMI xmlns:UML="href://org.omg/UML/1.3" xmi.version="1.1">
+    <XMI.header>
+        <XMI.documentation>
+            <XMI.exporter>PlantUML</XMI.exporter>
+            <XMI.exporterVersion>1.2023.7</XMI.exporterVersion>
+        </XMI.documentation>
+        <XMI.metamodel xmi.name="UML" xmi.version="1.4"/>
+    </XMI.header>
+    <XMI.content>
+        <UML:Model name="PlantUML" xmi.id="model1">
+            <UML:Namespace.ownedElement>
+                <UML:Class name="License:Contract" xmi.id="cl0002">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = TRADEMARK LICENSE AGREEMENT" xmi.id="att141"/>
+                        <UML:Attribute name="clauses = [grantPermission,superviseQualityRight,provideSamples,terminationOfAgreementByCondition,ReturnOfItems]" xmi.id="att142"/>
+                        <UML:Attribute name="participants = [name1,name2]" xmi.id="att143"/>
+                        <UML:Attribute name="data = [specSolveTime,goodId,ifContractIsValid,signDate,duration,goodInformation,appointReturnTime,needReturnGoodsNum,allNeedReturnGood,needReturnGood,licenseeIfCanTerminate,licensorIfCanTerminate,problemId,problemNum,allProblems,problem,sampleId,document,provideGoodsNum,provideGood,allProvideGood,receiveGoodsNum,receiveGood,allReceiveGood,licensor_address,licensee_address,licensor,licensee,allMonitorRightNum,allMonitorRight,permissionRightStart,permissionRightEnd,addr,current_licensee,allPermissionPartyNum,allPermissionParty]" xmi.id="att144"/>
+                        <UML:Attribute name="globalRestrictions = [validity]" xmi.id="att145"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="name1:Participant" xmi.id="cl0003">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="roleNames = [licensor]" xmi.id="att146"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="name2:Participant" xmi.id="cl0005">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="roleNames = [licensee]" xmi.id="att147"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="grantPermission:Clause" xmi.id="cl0007">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="domain = Authentic right" xmi.id="att148"/>
+                        <UML:Attribute name="exector = [licensor,licensee]" xmi.id="att149"/>
+                        <UML:Attribute name="activities = [grantPermissionToLicensee]" xmi.id="att150"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="grantPermissionToLicensee:Activity" xmi.id="cl0009">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The license grants licensee worldwide royalty-free rights" xmi.id="att151"/>
+                        <UML:Attribute name="actions = [oneAuthorizePermissionOther,ifPermissionAuthorization]" xmi.id="att152"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="oneAuthorizePermissionOther:Action" xmi.id="cl0011">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = One party grants a permission right to another" xmi.id="att153"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att154"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att155"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att156"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att157"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att158"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att159"/>
+                        <UML:Attribute name="dataName = [current_licensee,allPermissionPartyNum,allPermissionParty]" xmi.id="att160"/>
+                        <UML:Attribute name="logs = null" xmi.id="att161"/>
+                        <UML:Attribute name="result = null" xmi.id="att162"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="ifPermissionAuthorization:Action" xmi.id="cl0013">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Determine if permission is granted" xmi.id="att163"/>
+                        <UML:Attribute name="restricts = [checkIfWithinTimePeriod]" xmi.id="att164"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att165"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att166"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att167"/>
+                        <UML:Attribute name="ifUpdateData = false" xmi.id="att168"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att169"/>
+                        <UML:Attribute name="dataName = [addr,allPermissionPartyNum,allPermissionParty]" xmi.id="att170"/>
+                        <UML:Attribute name="logs = null" xmi.id="att171"/>
+                        <UML:Attribute name="result = [bool]" xmi.id="att172"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkIfWithinTimePeriod:ActionRestriction" xmi.id="cl0015">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Check if it is within the specified time period" xmi.id="att173"/>
+                        <UML:Attribute name="dataNames = [permissionRightStart,permissionRightEnd]" xmi.id="att174"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="superviseQualityRight:Clause" xmi.id="cl0017">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="domain = Authentic right" xmi.id="att175"/>
+                        <UML:Attribute name="exector = [licensor]" xmi.id="att176"/>
+                        <UML:Attribute name="activities = [superviseQualityRightByLicensor]" xmi.id="att177"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="superviseQualityRightByLicensor:Activity" xmi.id="cl0019">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensor has the right to monitor the quality" xmi.id="att178"/>
+                        <UML:Attribute name="actions = [InitializeRights,ifMonitorAuthorization]" xmi.id="att179"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="InitializeRights:Action" xmi.id="cl0021">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Initialize the addresses and rights of both parties" xmi.id="att180"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att181"/>
+                        <UML:Attribute name="GlobalRestrictionNames = null" xmi.id="att182"/>
+                        <UML:Attribute name="roleRight = null" xmi.id="att183"/>
+                        <UML:Attribute name="ifInitializeContract = true" xmi.id="att184"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att185"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att186"/>
+                        <UML:Attribute name="dataName = [licensor,licensee,allMonitorRight,licensor_address,licensee_address]" xmi.id="att187"/>
+                        <UML:Attribute name="logs = null" xmi.id="att188"/>
+                        <UML:Attribute name="result = null" xmi.id="att189"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="ifMonitorAuthorization:Action" xmi.id="cl0023">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Determine if monitor right is granted" xmi.id="att190"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att191"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att192"/>
+                        <UML:Attribute name="roleRight = null" xmi.id="att193"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att194"/>
+                        <UML:Attribute name="ifUpdateData = false" xmi.id="att195"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att196"/>
+                        <UML:Attribute name="dataName = [addr,allMonitorRightNum,allMonitorRight]" xmi.id="att197"/>
+                        <UML:Attribute name="logs = null" xmi.id="att198"/>
+                        <UML:Attribute name="result = [bool]" xmi.id="att199"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="provideSamples:Clause" xmi.id="cl0025">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="domain = Record items sent" xmi.id="att200"/>
+                        <UML:Attribute name="exector = [licensor,licensee]" xmi.id="att201"/>
+                        <UML:Attribute name="activities = [provideSamplesByLicensee]" xmi.id="att202"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="provideSamplesByLicensee:Activity" xmi.id="cl0027">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The Licensor sends samples to the Licensee" xmi.id="att203"/>
+                        <UML:Attribute name="actions = [provideGoods,receiveGoods]" xmi.id="att204"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="provideGoods:Action" xmi.id="cl0029">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensee records the shipment of the item" xmi.id="att205"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att206"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att207"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att208"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att209"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att210"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att211"/>
+                        <UML:Attribute name="dataName = [sampleId,document,provideGoodsNum,provideGood,allProvideGood]" xmi.id="att212"/>
+                        <UML:Attribute name="logs = null" xmi.id="att213"/>
+                        <UML:Attribute name="result = null" xmi.id="att214"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="receiveGoods:Action" xmi.id="cl0031">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensor records the receipt of the item" xmi.id="att215"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att216"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att217"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att218"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att219"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att220"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att221"/>
+                        <UML:Attribute name="dataName = [sampleId,receiveGoodsNum,receiveGood,allReceiveGood]" xmi.id="att222"/>
+                        <UML:Attribute name="logs = null" xmi.id="att223"/>
+                        <UML:Attribute name="result = null" xmi.id="att224"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="terminationOfAgreementByCondition:Clause" xmi.id="cl0033">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="domain = Termination of agreement" xmi.id="att225"/>
+                        <UML:Attribute name="exector = [licensor,licensee]" xmi.id="att226"/>
+                        <UML:Attribute name="activities = [TerminateAgreementDueToBreach]" xmi.id="att227"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="TerminateAgreementDueToBreach:Activity" xmi.id="cl0035">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = If one party breaches this agreement, the other party shall have the right to terminate this agreement" xmi.id="att228"/>
+                        <UML:Attribute name="actions = [finishContractByLicensor,finishContractByLicensee,sendProblemNotificationByLicensor,sendProblemNotificationByLicensee,resolveProblemByLicensee,resolveProblemByLicensor,checkSolveInSpecTimeByLicensor,checkSolveInSpecTimeByLicensee]" xmi.id="att229"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="sendProblemNotificationByLicensor:Action" xmi.id="cl0037">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensor sends notice of breach of contract" xmi.id="att230"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att231"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att232"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att233"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att234"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att235"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att236"/>
+                        <UML:Attribute name="dataName = [document,problemNum,allProblems,problem]" xmi.id="att237"/>
+                        <UML:Attribute name="logs = null" xmi.id="att238"/>
+                        <UML:Attribute name="result = [int]" xmi.id="att239"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="sendProblemNotificationByLicensee:Action" xmi.id="cl0039">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensee sends notice of breach of contract" xmi.id="att240"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att241"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att242"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att243"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att244"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att245"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att246"/>
+                        <UML:Attribute name="dataName = [document,problemNum,allProblems,problem]" xmi.id="att247"/>
+                        <UML:Attribute name="logs = null" xmi.id="att248"/>
+                        <UML:Attribute name="result = [int]" xmi.id="att249"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="resolveProblemByLicensee:Action" xmi.id="cl0041">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensee resolves the breach of contract" xmi.id="att250"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att251"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att252"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att253"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att254"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att255"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att256"/>
+                        <UML:Attribute name="dataName = [problemId,document,allProblems,problem]" xmi.id="att257"/>
+                        <UML:Attribute name="logs = null" xmi.id="att258"/>
+                        <UML:Attribute name="result = null" xmi.id="att259"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="resolveProblemByLicensor:Action" xmi.id="cl0043">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensor resolves the breach of contract" xmi.id="att260"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att261"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att262"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att263"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att264"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att265"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att266"/>
+                        <UML:Attribute name="dataName = [problemId,document,allProblems,problem]" xmi.id="att267"/>
+                        <UML:Attribute name="logs = null" xmi.id="att268"/>
+                        <UML:Attribute name="result = null" xmi.id="att269"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkSolveInSpecTimeByLicensor:Action" xmi.id="cl0045">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensor check if the default is resolved within the time limit" xmi.id="att270"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att271"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att272"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att273"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att274"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att275"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att276"/>
+                        <UML:Attribute name="dataName = [specSolveTime,problemId,allProblems,problem,licensorIfCanTerminate]" xmi.id="att277"/>
+                        <UML:Attribute name="logs = null" xmi.id="att278"/>
+                        <UML:Attribute name="result = null" xmi.id="att279"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkSolveInSpecTimeByLicensee:Action" xmi.id="cl0047">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensee check if the default is resolved within the time limit" xmi.id="att280"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att281"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att282"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att283"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att284"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att285"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att286"/>
+                        <UML:Attribute name="dataName = [specSolveTime,problemId,allProblems,problem,licenseeIfCanTerminate]" xmi.id="att287"/>
+                        <UML:Attribute name="logs = null" xmi.id="att288"/>
+                        <UML:Attribute name="result = null" xmi.id="att289"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="finishContractByLicensor:Action" xmi.id="cl0049">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensor terminates the contract" xmi.id="att290"/>
+                        <UML:Attribute name="restricts = [checkIfLicensorIfCanTerminate]" xmi.id="att291"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att292"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att293"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att294"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att295"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att296"/>
+                        <UML:Attribute name="dataName = [ifContractIsValid]" xmi.id="att297"/>
+                        <UML:Attribute name="logs = null" xmi.id="att298"/>
+                        <UML:Attribute name="result = null" xmi.id="att299"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="finishContractByLicensee:Action" xmi.id="cl0051">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensee terminates the contract" xmi.id="att300"/>
+                        <UML:Attribute name="restricts = [checkIfLicenseeIfCanTerminate]" xmi.id="att301"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity]" xmi.id="att302"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att303"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att304"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att305"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att306"/>
+                        <UML:Attribute name="dataName = [ifContractIsValid]" xmi.id="att307"/>
+                        <UML:Attribute name="logs = null" xmi.id="att308"/>
+                        <UML:Attribute name="result = null" xmi.id="att309"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkIfLicensorIfCanTerminate:ActionRestriction" xmi.id="cl0053">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Check if licensor are eligible to terminate the contract" xmi.id="att310"/>
+                        <UML:Attribute name="dataNames = [licensorIfCanTerminate]" xmi.id="att311"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkIfLicenseeIfCanTerminate:ActionRestriction" xmi.id="cl0055">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Check if licensee are eligible to terminate the contract" xmi.id="att312"/>
+                        <UML:Attribute name="dataNames = [licenseeIfCanTerminate]" xmi.id="att313"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="ReturnOfItems:Clause" xmi.id="cl0057">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="domain = Record items sent" xmi.id="att314"/>
+                        <UML:Attribute name="exector = [licensor,licensee]" xmi.id="att315"/>
+                        <UML:Attribute name="activities = [ReturnConfidentialInformation]" xmi.id="att316"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="ReturnConfidentialInformation:Activity" xmi.id="cl0059">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Licensee returns the Confidential Information to Licensor" xmi.id="att317"/>
+                        <UML:Attribute name="actions = [setNeedReturnGood,returnGood]" xmi.id="att318"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="setNeedReturnGood:Action" xmi.id="cl0061">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The Licensor sets the items to be returned" xmi.id="att319"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att320"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity,checkContractIsValid]" xmi.id="att321"/>
+                        <UML:Attribute name="roleRight = [licensor]" xmi.id="att322"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att323"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att324"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att325"/>
+                        <UML:Attribute name="dataName = [goodInformation,appointReturnTime,needReturnGoodsNum,allNeedReturnGood,needReturnGood]" xmi.id="att326"/>
+                        <UML:Attribute name="logs = null" xmi.id="att327"/>
+                        <UML:Attribute name="result = [int]" xmi.id="att328"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="returnGood:Action" xmi.id="cl0063">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = The licensee returns an item" xmi.id="att329"/>
+                        <UML:Attribute name="restricts = null" xmi.id="att330"/>
+                        <UML:Attribute name="GlobalRestrictionNames = [validity,checkContractIsValid]" xmi.id="att331"/>
+                        <UML:Attribute name="roleRight = [licensee]" xmi.id="att332"/>
+                        <UML:Attribute name="ifInitializeContract = false" xmi.id="att333"/>
+                        <UML:Attribute name="ifUpdateData = true" xmi.id="att334"/>
+                        <UML:Attribute name="ifGenerateTransaction = false" xmi.id="att335"/>
+                        <UML:Attribute name="dataName = [goodId,document,allNeedReturnGood,needReturnGood]" xmi.id="att336"/>
+                        <UML:Attribute name="logs = null" xmi.id="att337"/>
+                        <UML:Attribute name="result = [int]" xmi.id="att338"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="validity:GlobalRestriction" xmi.id="cl0065">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Verify the validity of the contract" xmi.id="att339"/>
+                        <UML:Attribute name="dataNames = [signDate,duration]" xmi.id="att340"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="checkContractIsValid:GlobalRestriction" xmi.id="cl0067">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="description = Check if the contract has been terminated" xmi.id="att341"/>
+                        <UML:Attribute name="dataNames = [ifContractIsValid]" xmi.id="att342"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="duration:OnChainData" xmi.id="cl0069">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att343"/>
+                        <UML:Attribute name="description = Validity of the contract" xmi.id="att344"/>
+                        <UML:Attribute name="initialValue = 365" xmi.id="att345"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att346"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att347"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="signDate:Date" xmi.id="cl0071">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att348"/>
+                        <UML:Attribute name="description = The date of signing the contract" xmi.id="att349"/>
+                        <UML:Attribute name="initialValue = 2020-06-07 17:16:53" xmi.id="att350"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att351"/>
+                        <UML:Attribute name="ifMutable = false" xmi.id="att352"/>
+                        <UML:Attribute name="standardTime = 2020-06-07 17:16:53" xmi.id="att353"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="ifContractIsValid:OnChainData" xmi.id="cl0073">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = bool" xmi.id="att354"/>
+                        <UML:Attribute name="description = If the contract is terminated" xmi.id="att355"/>
+                        <UML:Attribute name="initialValue = true" xmi.id="att356"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att357"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att358"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="goodInformation:OffChainData" xmi.id="cl0075">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = string memory" xmi.id="att359"/>
+                        <UML:Attribute name="source = null" xmi.id="att360"/>
+                        <UML:Attribute name="description = A detailed description of the item" xmi.id="att361"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="appointReturnTime:OffChainData" xmi.id="cl0077">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att362"/>
+                        <UML:Attribute name="source = null" xmi.id="att363"/>
+                        <UML:Attribute name="description = The agreed time of return" xmi.id="att364"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="needReturnGoodsNum:OnChainData" xmi.id="cl0079">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att365"/>
+                        <UML:Attribute name="description = The number of items to be returned" xmi.id="att366"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att367"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att368"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att369"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allNeedReturnGood:OnChainData" xmi.id="cl0081">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;needReturnGood)" xmi.id="att370"/>
+                        <UML:Attribute name="description = Id map of all items that need to be returned" xmi.id="att371"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att372"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att373"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att374"/>
+                        <UML:Operation name="type = mapping(int=&gt;needReturnGood)" xmi.id="att375"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="needReturnGood:CombinedData" xmi.id="cl0083">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = struct" xmi.id="att376"/>
+                        <UML:Attribute name="description = Full information about items that need to be returned" xmi.id="att377"/>
+                        <UML:Attribute name="allTypeName = [string information,uint appointReturnTime,bool ifReturn,uint realReturnTime,string returnDocument]" xmi.id="att378"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att379"/>
+                        <UML:Attribute name="ifPrivate = null" xmi.id="att380"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att381"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licenseeIfCanTerminate:OnChainData" xmi.id="cl0085">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = bool" xmi.id="att382"/>
+                        <UML:Attribute name="description = If the licensee can terminate the contract" xmi.id="att383"/>
+                        <UML:Attribute name="initialValue = false" xmi.id="att384"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att385"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att386"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licensorIfCanTerminate:OnChainData" xmi.id="cl0087">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = bool" xmi.id="att387"/>
+                        <UML:Attribute name="description = If the licensor can terminate the contract" xmi.id="att388"/>
+                        <UML:Attribute name="initialValue = false" xmi.id="att389"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att390"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att391"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="problemId:OffChainData" xmi.id="cl0089">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att392"/>
+                        <UML:Attribute name="source = null" xmi.id="att393"/>
+                        <UML:Attribute name="description = The id of the default problem" xmi.id="att394"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="problemNum:OnChainData" xmi.id="cl0091">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att395"/>
+                        <UML:Attribute name="description = The number of default issues" xmi.id="att396"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att397"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att398"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att399"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="problem:CombinedData" xmi.id="cl0093">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = struct" xmi.id="att400"/>
+                        <UML:Attribute name="description = Full information about the default problem" xmi.id="att401"/>
+                        <UML:Attribute name="allTypeName = [address sender,uint time,string problemDocument,bool ifExist,uint resolveTime,string resolveDocument]" xmi.id="att402"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att403"/>
+                        <UML:Attribute name="ifPrivate = null" xmi.id="att404"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att405"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allProblems:OnChainData" xmi.id="cl0095">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;problem)" xmi.id="att406"/>
+                        <UML:Attribute name="description = Information id mapping for the default problem" xmi.id="att407"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att408"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att409"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att410"/>
+                        <UML:Operation name="type = mapping(int=&gt;problem)" xmi.id="att411"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="sampleId:OffChainData" xmi.id="cl0097">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att412"/>
+                        <UML:Attribute name="source = null" xmi.id="att413"/>
+                        <UML:Attribute name="description = The id of the sample" xmi.id="att414"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="document:OffChainData" xmi.id="cl0099">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = string memory" xmi.id="att415"/>
+                        <UML:Attribute name="source = null" xmi.id="att416"/>
+                        <UML:Attribute name="description = The hash value of the proof document" xmi.id="att417"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="provideGoodsNum:OnChainData" xmi.id="cl0101">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att418"/>
+                        <UML:Attribute name="description = The number of goods to need provide" xmi.id="att419"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att420"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att421"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att422"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="provideGood:CombinedData" xmi.id="cl0103">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = struct" xmi.id="att423"/>
+                        <UML:Attribute name="description = Full information about the goods to be provided" xmi.id="att424"/>
+                        <UML:Attribute name="allTypeName = [int goodId,uint time,string ipfsDocument]" xmi.id="att425"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att426"/>
+                        <UML:Attribute name="ifPrivate = null" xmi.id="att427"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att428"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allProvideGood:OnChainData" xmi.id="cl0105">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;provideGood)" xmi.id="att429"/>
+                        <UML:Attribute name="description = Mapping of the id to the item to be provided" xmi.id="att430"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att431"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att432"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att433"/>
+                        <UML:Operation name="type = mapping(int=&gt;provideGood)" xmi.id="att434"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="receiveGoodsNum:OnChainData" xmi.id="cl0107">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att435"/>
+                        <UML:Attribute name="description = The number of goods to need receive" xmi.id="att436"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att437"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att438"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att439"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="receiveGood:CombinedData" xmi.id="cl0109">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = struct" xmi.id="att440"/>
+                        <UML:Attribute name="description = Full information about the goods to be received" xmi.id="att441"/>
+                        <UML:Attribute name="allTypeName = [int goodId,uint time]" xmi.id="att442"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att443"/>
+                        <UML:Attribute name="ifPrivate = null" xmi.id="att444"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att445"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allReceiveGood:OnChainData" xmi.id="cl0111">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;receiveGood)" xmi.id="att446"/>
+                        <UML:Attribute name="description = Mapping of the id to the item to be received" xmi.id="att447"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att448"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att449"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att450"/>
+                        <UML:Operation name="type = mapping(int=&gt;receiveGood)" xmi.id="att451"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licensor:OffChainData" xmi.id="cl0113">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att452"/>
+                        <UML:Attribute name="source = null" xmi.id="att453"/>
+                        <UML:Attribute name="description = Address of Licensor" xmi.id="att454"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licensee:OffChainData" xmi.id="cl0115">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att455"/>
+                        <UML:Attribute name="source = null" xmi.id="att456"/>
+                        <UML:Attribute name="description = Address of Licensee" xmi.id="att457"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allMonitorRightNum:OnChainData" xmi.id="cl0117">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att458"/>
+                        <UML:Attribute name="description = The number of parties with the right to monitor quality" xmi.id="att459"/>
+                        <UML:Attribute name="initialValue = 1" xmi.id="att460"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att461"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att462"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allMonitorRight:OnChainData" xmi.id="cl0119">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;address)" xmi.id="att463"/>
+                        <UML:Attribute name="description = All those who have the right to monitor quality" xmi.id="att464"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att465"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att466"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att467"/>
+                        <UML:Operation name="type = mapping(int=&gt;address)" xmi.id="att468"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="permissionRightStart:OnChainData" xmi.id="cl0121">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att469"/>
+                        <UML:Attribute name="description = The start time of the permission" xmi.id="att470"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att471"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att472"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att473"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="permissionRightEnd:OnChainData" xmi.id="cl0123">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att474"/>
+                        <UML:Attribute name="description = The end time of the permission" xmi.id="att475"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att476"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att477"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att478"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="addr:OffChainData" xmi.id="cl0125">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att479"/>
+                        <UML:Attribute name="source = null" xmi.id="att480"/>
+                        <UML:Attribute name="description = Account address on the blockchain" xmi.id="att481"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="current_licensee:OffChainData" xmi.id="cl0127">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att482"/>
+                        <UML:Attribute name="source = null" xmi.id="att483"/>
+                        <UML:Attribute name="description = The address to which the permission is granted" xmi.id="att484"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allPermissionPartyNum:OnChainData" xmi.id="cl0129">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att485"/>
+                        <UML:Attribute name="description = The number of parties with the right of permission" xmi.id="att486"/>
+                        <UML:Attribute name="initialValue = 0" xmi.id="att487"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att488"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att489"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="allPermissionParty:OnChainData" xmi.id="cl0131">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = mapping(int=&gt;address)" xmi.id="att490"/>
+                        <UML:Attribute name="description = All those who have the right of permission" xmi.id="att491"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att492"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att493"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att494"/>
+                        <UML:Operation name="type = mapping(int=&gt;address)" xmi.id="att495"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licensor_address:OnChainData" xmi.id="cl0133">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att496"/>
+                        <UML:Attribute name="description = Account address on the blockchain of licensor" xmi.id="att497"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att498"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att499"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att500"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="licensee_address:OnChainData" xmi.id="cl0135">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = address" xmi.id="att501"/>
+                        <UML:Attribute name="description = Account address on the blockchain of licensee" xmi.id="att502"/>
+                        <UML:Attribute name="initialValue = null" xmi.id="att503"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att504"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att505"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="goodId:OffChainData" xmi.id="cl0137">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = int" xmi.id="att506"/>
+                        <UML:Attribute name="source = null" xmi.id="att507"/>
+                        <UML:Attribute name="description = The id of the good" xmi.id="att508"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Class name="specSolveTime:OnChainData" xmi.id="cl0139">
+                    <UML:Classifier.feature>
+                        <UML:Attribute name="type = uint" xmi.id="att509"/>
+                        <UML:Attribute name="description = A prescribed time to solve the problem" xmi.id="att510"/>
+                        <UML:Attribute name="initialValue = 120 days" xmi.id="att511"/>
+                        <UML:Attribute name="ifPrivate = true" xmi.id="att512"/>
+                        <UML:Attribute name="ifMutable = true" xmi.id="att513"/>
+                    </UML:Classifier.feature>
+                </UML:Class>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass514">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass514" type="cl0003" xmi.id="end515">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass514" type="cl0002" xmi.id="end516">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass517">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass517" type="cl0005" xmi.id="end518">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass517" type="cl0002" xmi.id="end519">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass520">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass520" type="cl0007" xmi.id="end521">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass520" type="cl0002" xmi.id="end522">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass523">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass523" type="cl0009" xmi.id="end524">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass523" type="cl0007" xmi.id="end525">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass526">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass526" type="cl0011" xmi.id="end527">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass526" type="cl0009" xmi.id="end528">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass529">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass529" type="cl0013" xmi.id="end530">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass529" type="cl0009" xmi.id="end531">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Call" namespace="model1" xmi.id="ass532">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass532" type="cl0015" xmi.id="end533">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass532" type="cl0013" xmi.id="end534">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass535">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass535" type="cl0017" xmi.id="end536">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass535" type="cl0002" xmi.id="end537">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass538">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass538" type="cl0019" xmi.id="end539">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass538" type="cl0017" xmi.id="end540">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass541">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass541" type="cl0021" xmi.id="end542">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass541" type="cl0019" xmi.id="end543">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass544">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass544" type="cl0023" xmi.id="end545">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass544" type="cl0019" xmi.id="end546">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass547">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass547" type="cl0025" xmi.id="end548">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass547" type="cl0002" xmi.id="end549">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass550">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass550" type="cl0027" xmi.id="end551">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass550" type="cl0025" xmi.id="end552">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass553">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass553" type="cl0029" xmi.id="end554">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass553" type="cl0027" xmi.id="end555">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass556">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass556" type="cl0031" xmi.id="end557">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass556" type="cl0027" xmi.id="end558">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass559">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass559" type="cl0033" xmi.id="end560">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass559" type="cl0002" xmi.id="end561">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass562">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass562" type="cl0035" xmi.id="end563">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass562" type="cl0033" xmi.id="end564">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass565">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass565" type="cl0037" xmi.id="end566">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass565" type="cl0035" xmi.id="end567">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass568">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass568" type="cl0039" xmi.id="end569">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass568" type="cl0035" xmi.id="end570">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass571">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass571" type="cl0041" xmi.id="end572">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass571" type="cl0035" xmi.id="end573">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass574">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass574" type="cl0043" xmi.id="end575">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass574" type="cl0035" xmi.id="end576">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass577">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass577" type="cl0045" xmi.id="end578">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass577" type="cl0035" xmi.id="end579">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass580">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass580" type="cl0047" xmi.id="end581">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass580" type="cl0035" xmi.id="end582">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass583">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass583" type="cl0049" xmi.id="end584">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass583" type="cl0035" xmi.id="end585">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass586">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass586" type="cl0051" xmi.id="end587">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass586" type="cl0035" xmi.id="end588">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Call" namespace="model1" xmi.id="ass589">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass589" type="cl0053" xmi.id="end590">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass589" type="cl0049" xmi.id="end591">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Call" namespace="model1" xmi.id="ass592">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass592" type="cl0055" xmi.id="end593">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass592" type="cl0051" xmi.id="end594">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass595">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass595" type="cl0057" xmi.id="end596">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass595" type="cl0002" xmi.id="end597">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass598">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass598" type="cl0059" xmi.id="end599">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass598" type="cl0057" xmi.id="end600">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass601">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass601" type="cl0061" xmi.id="end602">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass601" type="cl0059" xmi.id="end603">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass604">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass604" type="cl0063" xmi.id="end605">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass604" type="cl0059" xmi.id="end606">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass607">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass607" type="cl0065" xmi.id="end608">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass607" type="cl0002" xmi.id="end609">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass610">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass610" type="cl0067" xmi.id="end611">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass610" type="cl0002" xmi.id="end612">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass613">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass613" type="cl0069" xmi.id="end614">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass613" type="cl0002" xmi.id="end615">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass616">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass616" type="cl0071" xmi.id="end617">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass616" type="cl0002" xmi.id="end618">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass619">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass619" type="cl0073" xmi.id="end620">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass619" type="cl0002" xmi.id="end621">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass622">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass622" type="cl0075" xmi.id="end623">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass622" type="cl0002" xmi.id="end624">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass625">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass625" type="cl0077" xmi.id="end626">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass625" type="cl0002" xmi.id="end627">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass628">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass628" type="cl0079" xmi.id="end629">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass628" type="cl0002" xmi.id="end630">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass631">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass631" type="cl0081" xmi.id="end632">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass631" type="cl0002" xmi.id="end633">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass634">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass634" type="cl0083" xmi.id="end635">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass634" type="cl0002" xmi.id="end636">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass637">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass637" type="cl0085" xmi.id="end638">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass637" type="cl0002" xmi.id="end639">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass640">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass640" type="cl0087" xmi.id="end641">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass640" type="cl0002" xmi.id="end642">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass643">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass643" type="cl0089" xmi.id="end644">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass643" type="cl0002" xmi.id="end645">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass646">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass646" type="cl0091" xmi.id="end647">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass646" type="cl0002" xmi.id="end648">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass649">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass649" type="cl0093" xmi.id="end650">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass649" type="cl0002" xmi.id="end651">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass652">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass652" type="cl0095" xmi.id="end653">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass652" type="cl0002" xmi.id="end654">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass655">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass655" type="cl0097" xmi.id="end656">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass655" type="cl0002" xmi.id="end657">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass658">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass658" type="cl0099" xmi.id="end659">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass658" type="cl0002" xmi.id="end660">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass661">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass661" type="cl0101" xmi.id="end662">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass661" type="cl0002" xmi.id="end663">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass664">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass664" type="cl0103" xmi.id="end665">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass664" type="cl0002" xmi.id="end666">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass667">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass667" type="cl0105" xmi.id="end668">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass667" type="cl0002" xmi.id="end669">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass670">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass670" type="cl0107" xmi.id="end671">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass670" type="cl0002" xmi.id="end672">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass673">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass673" type="cl0109" xmi.id="end674">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass673" type="cl0002" xmi.id="end675">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass676">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass676" type="cl0111" xmi.id="end677">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass676" type="cl0002" xmi.id="end678">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass679">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass679" type="cl0113" xmi.id="end680">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass679" type="cl0002" xmi.id="end681">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass682">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass682" type="cl0115" xmi.id="end683">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass682" type="cl0002" xmi.id="end684">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass685">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass685" type="cl0117" xmi.id="end686">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass685" type="cl0002" xmi.id="end687">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass688">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass688" type="cl0119" xmi.id="end689">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass688" type="cl0002" xmi.id="end690">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass691">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass691" type="cl0121" xmi.id="end692">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass691" type="cl0002" xmi.id="end693">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass694">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass694" type="cl0123" xmi.id="end695">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass694" type="cl0002" xmi.id="end696">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass697">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass697" type="cl0125" xmi.id="end698">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass697" type="cl0002" xmi.id="end699">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass700">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass700" type="cl0127" xmi.id="end701">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass700" type="cl0002" xmi.id="end702">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass703">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass703" type="cl0129" xmi.id="end704">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass703" type="cl0002" xmi.id="end705">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass706">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass706" type="cl0131" xmi.id="end707">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass706" type="cl0002" xmi.id="end708">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass709">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass709" type="cl0133" xmi.id="end710">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass709" type="cl0002" xmi.id="end711">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass712">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass712" type="cl0135" xmi.id="end713">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass712" type="cl0002" xmi.id="end714">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass715">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass715" type="cl0137" xmi.id="end716">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass715" type="cl0002" xmi.id="end717">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+                <UML:Association name="Partof" namespace="model1" xmi.id="ass718">
+                    <UML:Association.connection>
+                        <UML:AssociationEnd association="ass718" type="cl0139" xmi.id="end719">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                        <UML:AssociationEnd association="ass718" type="cl0002" xmi.id="end720">
+                            <UML:AssociationEnd.participant/>
+                        </UML:AssociationEnd>
+                    </UML:Association.connection>
+                </UML:Association>
+            </UML:Namespace.ownedElement>
+        </UML:Model>
+    </XMI.content>
+</XMI>

@@ -1,0 +1,183 @@
+@startuml
+'https://plantuml.com/object-diagram
+left to right direction
+object "Renting:Contract" as o1
+o1 : description = House rental contract
+o1 : clauses = [renewContract]
+o1 : participants = [name1,name2]
+o1 : data = [ifAgreeRenew,renewalTime,duration,ifNotice,advanceNoticeTime,autoRenewTime,ifAgreeFinish,needAgreeRenewNum,needAgreeFinishNum,signDate]
+o1 : globalRestrictions = [validity]
+object "name1:Participant" as o2
+o2 : roleNames = [tenant]
+o2<..o1 : Partof
+object "name2:Participant" as o3
+o3 : roleNames = [landlord]
+o3<..o1 : Partof
+object "renewContract:Clause" as o4
+o4 : domain = rent
+o4 : exector = [landlord,tenant]
+o4 : activities = [renewCurrentContract]
+o4<..o1 : Partof
+object "validity:GlobalRestriction" as o5
+o5 : description = Verify the validity of the contract
+o5 : dataNames = [signDate,duration]
+o5<..o1 : Partof
+object "ifAgreeRenew:OnChainData" as o6
+o6 : type = int
+o6 : initialValue = 0
+o6 : ifPrivate = false
+o6 : ifMutable = true
+o6<..o1 : Partof
+object "renewalTime:OffChainData" as o7
+o7 : type = int
+o7 : source = null
+o7<..o1 : Partof
+object "duration:OnChainData" as o8
+o8 : type = int
+o8 : initialValue = 365
+o8 : ifPrivate = false
+o8 : ifMutable = true
+o8<..o1 : Partof
+object "advanceNoticeTime:OnChainData" as o9
+o9 : type = int
+o9 : initialValue = 30
+o9 : ifPrivate = false
+o9 : ifMutable = false
+o9<..o1 : Partof
+object "ifNotice:OnChainData" as o18
+o18 : type = int
+o18 : initialValue = 0
+o18 : ifPrivate = false
+o18 : ifMutable = true
+o18<..o1 : Partof
+object "autoRenewTime:OnChainData" as o19
+o19 : type = int
+o19 : initialValue = 365
+o19 : ifPrivate = false
+o19 : ifMutable = true
+o19 : ifDate = false
+o19<..o1 : Partof
+object "ifAgreeFinish:OnChainData" as o20
+o20 : type = int
+o20 : initialValue = 0
+o20 : ifPrivate = false
+o20 : ifMutable = true
+o20<..o1 : Partof
+object "needAgreeRenewNum:OnChainData" as o21
+o21 : type = int
+o21 : initialValue = 2
+o21 : ifPrivate = false
+o21 : ifMutable = false
+o21<..o1 : Partof
+object "needAgreeFinishNum:OnChainData" as o22
+o22 : type = int
+o22 : initialValue = 1
+o22 : ifPrivate = false
+o22 : ifMutable = false
+o22<..o1 : Partof
+object "signDate:Date" as o23
+o23 : type = int
+o23 : initialValue = 2020-06-07 17:16:53
+o23 : ifPrivate = false
+o23 : ifMutable = false
+o23 : standardTime = 2020-06-07 17:16:53
+o23<..o1 : Partof
+object "renewCurrentContract:Activity" as o10
+o10 : description = Renew the contract according to the intention of both parties. If neither party gives notice, the contract will be renewed automatically
+o10 : actions = [agreeFinish,agreeRenew,renewByConsult,autoRenew,sendMessage,finishContract]
+o10<..o4 : Partof
+object "agreeRenew:Action" as o11
+o11 : description = Agree to renew contract
+o11 : restricts = [checkNotice]
+o11 : GlobalRestrictionNames = [validity]
+o11 : roleRight = [landlord,tenant]
+o11 : ifInitializeContract = false
+o11 : ifUpdateData = true
+o11 : ifGenerateTransaction = false
+o11 : dataName = [ifAgreeRenew]
+o11 : logs = null
+o11 : result = null
+o11<..o10 : Partof
+object "agreeFinish:Action" as o28
+o28 : description = Agree to finish contract
+o28 : restricts = [checkNotice]
+o28 : GlobalRestrictionNames = [validity]
+o28 : roleRight = [landlord,tenant]
+o28 : ifInitializeContract = false
+o28 : ifUpdateData = true
+o28 : ifGenerateTransaction = false
+o28 : dataName = [ifAgreeFinish]
+o28 : logs = null
+o28 : result = null
+o28<..o10 : Partof
+
+object "renewByConsult:Action" as o12
+o12 : description = The contract is renewed after negotiation between the parties concerned
+o12 : restricts = [checkIfAgreeRenew]
+o12 : GlobalRestrictionNames = null
+o12 : roleRight = [landlord]
+o12 : ifInitializeContract = false
+o12 : ifUpdateData = true
+o12 : ifGenerateTransaction = false
+o12 : dataName = [renewalTime,duration]
+o12 : logs = null
+o12 : result = null
+o12<..o10 : Partof
+object "autoRenew:Action" as o13
+o13 : description = Automatic renewal upon expiration
+o13 : restricts = [checkNoNotice]
+o13 : GlobalRestrictionNames = null
+o13 : roleRight = [landlord,tenant]
+o13 : ifInitializeContract = false
+o13 : ifUpdateData = true
+o13 : ifGenerateTransaction = false
+o13 : dataName = [autoRenewTime,duration]
+o13 : logs = null
+o13 : result = null
+o13<..o10 : Partof
+object "sendMessage:Action" as o14
+o14 : description = Notify other contracting parties
+o14 : restricts = [checkNoticeTime]
+o14 : GlobalRestrictionNames = [validity]
+o14 : roleRight = [landlord,tenant]
+o14 : ifInitializeContract = false
+o14 : ifUpdateData = true
+o14 : ifGenerateTransaction = false
+o14 : dataName = [ifNotice]
+o14 : logs = null
+o14 : result = null
+o14<..o10 : Partof
+object "finishContract:Action" as o15
+o15 : description = Terminate a contract
+o15 : restricts = [checkIfAgreeFinish]
+o15 : GlobalRestrictionNames = null
+o15 : roleRight = [landlord]
+o15 : ifInitializeContract = false
+o15 : ifUpdateData = true
+o15 : ifGenerateTransaction = false
+o15 : dataName = null
+o15 : logs = null
+o15 : result = null
+o15<..o10 : Partof
+object "checkNotice:ActionRestriction" as o17
+o17 : description = Check the notification is sent
+o17 : dataNames = [ifNotice]
+o17<..o11 : Call
+o17<..o28 : Call
+object "checkNoNotice:ActionRestriction" as o24
+o24 : description = Check the notification is not sent
+o24 : dataNames = [ifNotice]
+o24<..o13 : Call
+object "checkNoticeTime:ActionRestriction" as o25
+o25 : description = Check the notification is not sent
+o25 : dataNames = [signDate,duration,advanceNoticeTime]
+o25<..o14 : Call
+object "checkIfAgreeRenew:ActionRestriction" as o26
+o26 : description = Check if the renewal is approved
+o26 : dataNames = [ifAgreeRenew,needAgreeRenewNum]
+o26<..o12 : Call
+object "checkIfAgreeFinish:ActionRestriction" as o27
+o27 : description = Check if agree to terminate the contract
+o27 : dataNames = [ifAgreeFinish,needAgreeFinishNum]
+o27<..o15 :Call
+@enduml
