@@ -2,13 +2,16 @@ import datetime
 import time
 import xml.dom.minidom
 import pymysql
+import os
 
 from codeGeneration import codeGenerate, outputCode
 from nlp import serviceSelectionByProcess
 
 
 def parsePUML():
-    dom = xml.dom.minidom.parse('plantUML_dia/test.xmi')
+    # 从plantuml文件转换到xmi文件
+    os.system("java -jar plantuml.jar .\\plantUML_dia\\a.puml -xmi:star")
+    dom = xml.dom.minidom.parse('plantUML_dia/a.xmi')
     root = dom.documentElement
     contents = root.getElementsByTagName('XMI.content')
     model = contents[0].getElementsByTagName('UML:Model')
@@ -53,7 +56,6 @@ def parsePUML():
 def convert():
     # 根据类名完成对象的转换
     # 合约对象的转换
-
     global newO
     objToClass = selectObjectByClass('Contract')
     Note = open('plantUML_dia/result.puml', mode='a')
@@ -956,7 +958,7 @@ def truncatePimDB():
 if __name__ == '__main__':
     truncateCimDB()
     parsePUML()
-    truncatePimDB()
-    convert()
-    codeGenerate()
-    outputCode()
+    # truncatePimDB()
+    # convert()
+    # codeGenerate()
+    # outputCode()
