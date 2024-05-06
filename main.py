@@ -1,4 +1,5 @@
 import datetime
+import json
 import time
 import xml.dom.minidom
 import pymysql
@@ -55,18 +56,19 @@ def parsePUML():
 # CIM到PIM的转换
 def convert():
     # 根据类名完成对象的转换
-    # 合约对象的转换
     global newO
     objToClass = selectObjectByClass('Contract')
-    Note = open('plantUML_dia/result.puml', mode='a')
+    Note = open('plantUML_dia/a_result.puml', mode='a')
     # 清空文件
     Note.seek(0)
     Note.truncate()
     Note.write('@startuml\n')
+    # 合约对象的转换
     annotation = ""
     clauses = ""
     participants = ""
     data = ""
+    globalRestrictions = ""
     for o in objToClass:
         # 合约对象名（CIM合约名）
         newO = o[0]
@@ -94,6 +96,10 @@ def convert():
                 case "data":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     data = newAttrValue
+                    Note.write(writeTxt)
+                case "globalRestrictions":
+                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
+                    globalRestrictions = newAttrValue
                     Note.write(writeTxt)
         insertSC(newO, annotation, clauses, participants, data)
     # 参与方对象转换
@@ -141,15 +147,15 @@ def convert():
                 case "exector":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     Note.write(writeTxt)
-                case "activities":
+                case "patterns":
                     writeTxt = newO + " : " + "processes" + " = " + newAttrValue + '\n'
                     processes = newAttrValue
                     Note.write(writeTxt)
         insertClause(newO, domain, processes)
-    # 活动对象转换
-    objToClass = selectObjectByClass('Activity')
+    # 模式对象转换
+    objToClass = selectObjectByClass('Pattern')
     for o in objToClass:
-        # 活动对象
+        # 模式对象
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Process\" " + "as " + newO
         Note.write(writeTxt + '\n')
@@ -166,13 +172,20 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
-                case "actions":
-                    writeTxt = newO + " : " + "functions" + " = " + newAttrValue + '\n'
-                    functions = newAttrValue
+                case "tasks":
+                    fixed_s = "[" + ",".join(f'"{item}"' for item in newAttrValue.strip("[]").split(",")) + "]"
+                    list_from_string = json.loads(fixed_s)
+                    functions = "["
+                    for value in list_from_string:
+                        if judgeTaskType(value):
+                            functions += value
+                            functions += ","
+                    functions = functions.rstrip(',')
+                    writeTxt = newO + " : " + "functions" + " = " + functions + '\n'
                     Note.write(writeTxt)
         insertProcess(newO, description, functions)
-    # 动作对象转换
-    objToClass = selectObjectByClass('Action')
+    # 合约任务对象转换
+    objToClass = selectObjectByClass('ContractTask')
     for o in objToClass:
         # 动作对象
         newO = o[0]
@@ -202,13 +215,6 @@ def convert():
                     description = newAttrValue
                     Note.write(writeTxt)
                 case "restricts":
-                    if newAttrValue != "null":
-                        restrictionString = newAttrValue.strip('[')
-                        restrictionString = restrictionString.strip(']')
-                        restrictionList = restrictionString.split(',')
-                        for r in restrictionList:
-                            restrictions.append(r)
-                case "GlobalRestrictionNames":
                     if newAttrValue != "null":
                         restrictionString = newAttrValue.strip('[')
                         restrictionString = restrictionString.strip(']')
@@ -274,7 +280,7 @@ def convert():
                     writeTxt = newO + " : " + "logs" + " = " + newAttrValue + '\n'
                     logs = newAttrValue
                     Note.write(writeTxt)
-                case "result":
+                case "outputType":
                     writeTxt = newO + " : " + "output" + " = " + newAttrValue + '\n'
                     output = newAttrValue
                     Note.write(writeTxt)
@@ -290,62 +296,7 @@ def convert():
                            dataNames, params, logs, output)
             writeRestriction += 'null' + '\n'
             Note.write(writeRestriction)
-
-    # 全局约束
-    objToClass = selectObjectByClass('GlobalRestriction')
-    for o in objToClass:
-        # 约束对象
-        newO = o[0]
-        writeTxt = "object " + "\"" + newO + ":" + "Restriction\" " + "as " + newO
-        Note.write(writeTxt + '\n')
-        xmiId = o[1]
-        description = ""
-        dataNames = ""
-        params = ""
-        # 对象属性
-        attributions = selectAttrsById(xmiId)
-        for a in attributions:
-            newAttrName = a[0]
-            newAttrValue = a[1]
-            match newAttrName:
-                case "description":
-                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
-                    description = newAttrValue
-                    Note.write(writeTxt)
-                case "dataNames":
-                    dataString = newAttrValue.strip('[')
-                    dataString = dataString.strip(']')
-                    # 数据列表
-                    dataList = dataString.split(',')
-                    # 参数列表
-                    param = []
-                    # 链上数据列表
-                    onChain = []
-                    for d in dataList:
-                        flag = selectDataType(d)
-                        if flag == 0:
-                            param.append(d)
-                        else:
-                            onChain.append(d)
-                    if len(onChain) != 0:
-                        writeTxt = newO + " : " + "dataNames" + " = " + str(onChain) + '\n'
-                        dataNames = str(onChain)
-                        Note.write(writeTxt)
-                    else:
-                        writeTxt = newO + " : " + "dataNames" + " = " + "null" + '\n'
-                        dataNames = "null"
-                        Note.write(writeTxt)
-                    if len(param) != 0:
-                        writeTxt = newO + " : " + "params" + " = " + str(param) + '\n'
-                        params = str(param)
-                        Note.write(writeTxt)
-                    else:
-                        writeTxt = newO + " : " + "params" + " = " + "null" + '\n'
-                        params = "null"
-                        Note.write(writeTxt)
-        # print(newO + "," + description + "," + dataNames + "," + params)
-        insertRes(newO, description, dataNames, params)
-    # 行为约束
+    # 约束
     objToClass = selectObjectByClass('ActionRestriction')
     for o in objToClass:
         # 约束对象
@@ -400,7 +351,7 @@ def convert():
                         Note.write(writeTxt)
         insertRes(newO, description, dataNames, params)
     # 链上数据
-    objToClass = selectObjectByClass('OnChainData')
+    objToClass = selectObjectByClass('SimpleData')
     for o in objToClass:
         # 数据对象
         newO = o[0]
@@ -458,7 +409,7 @@ def convert():
         Note.write(writeTxt + '\n')
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
-        c_type = ""
+        c_type = "null"
         visibility = ""
         value = ""
         ifConstant = ""
@@ -469,10 +420,6 @@ def convert():
             newAttrName = a[0]
             newAttrValue = a[1]
             match newAttrName:
-                case "type":
-                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
-                    c_type = newAttrValue
-                    Note.write(writeTxt)
                 case "initialValue":
                     writeTxt = newO + " : " + "value" + " = " + newAttrValue + '\n'
                     value = newAttrValue
@@ -503,7 +450,7 @@ def convert():
         Note.write(writeTxt + '\n')
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
-        c_type = ""
+        c_type = "null"
         visibility = ""
         value = ""
         ifConstant = ""
@@ -513,10 +460,6 @@ def convert():
             newAttrName = a[0]
             newAttrValue = a[1]
             match newAttrName:
-                case "type":
-                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
-                    c_type = newAttrValue
-                    Note.write(writeTxt)
                 case "initialValue":
                     writeTxt = newO + " : " + "value" + " = " + newAttrValue + '\n'
                     value = newAttrValue
@@ -570,9 +513,6 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     p_type = newAttrValue
                     Note.write(writeTxt)
-                case "source":
-                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
-                    Note.write(writeTxt)
                 case "description":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     description = newAttrValue
@@ -625,14 +565,14 @@ def convert():
             # className_end = objAndCla_end[0][1]
             writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
             Note.write(writeTxt)
-        if className == 'Activity':
+        if className == 'Pattern':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
             objName_end = objAndCla_end[0][0]
             # className_end = objAndCla_end[0][1]
             writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
             Note.write(writeTxt)
-        if className == 'Action':
+        if className == 'ContractTask':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
             objName_end = objAndCla_end[0][0]
@@ -955,10 +895,25 @@ def truncatePimDB():
     conn.close()
 
 
+def judgeTaskType(name):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select class_name from objects where obj_name = '%s'" % \
+          name
+    cur.execute(sql)
+    typeName = cur.fetchall()
+    cur.close()
+    conn.close()
+    if typeName[0][0] == "ContractTask":
+        return True
+    else:
+        return False
+
+
 if __name__ == '__main__':
     truncateCimDB()
     parsePUML()
-    # truncatePimDB()
-    # convert()
+    truncatePimDB()
+    convert()
     # codeGenerate()
     # outputCode()
