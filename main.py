@@ -297,7 +297,7 @@ def convert():
             writeRestriction += 'null' + '\n'
             Note.write(writeRestriction)
     # 约束
-    objToClass = selectObjectByClass('ActionRestriction')
+    objToClass = selectObjectByClass('Restriction')
     for o in objToClass:
         # 约束对象
         newO = o[0]
@@ -554,7 +554,7 @@ def convert():
             objAndCla_end = selectObjAndClaById(end)
             objName_end = objAndCla_end[0][0]
             className_end = objAndCla_end[0][1]
-            if className_end != 'GlobalRestriction':
+            if className_end != 'OffChainData':
                 # o18 <..o1: Partof
                 writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
                 Note.write(writeTxt)
@@ -569,9 +569,10 @@ def convert():
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
             objName_end = objAndCla_end[0][0]
-            # className_end = objAndCla_end[0][1]
-            writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
-            Note.write(writeTxt)
+            className_end = objAndCla_end[0][1]
+            if className_end != 'UserTask':
+                writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
+                Note.write(writeTxt)
         if className == 'ContractTask':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
@@ -594,6 +595,20 @@ def convert():
             if res in allList:
                 writeTxt = res + "<.. " + functionName + ": " + "Call" + '\n'
                 Note.write(writeTxt)
+    # 在函数和参数之间增加流
+    objToClass = selectObjectByClass('ContractTask')
+    for o in objToClass:
+        # 动作对象
+        newO = o[0]
+        paramListStr = selectParamByFunction(newO)
+        paramStr = paramListStr[0][0]
+        paramStr = paramStr.strip('[')
+        paramStr = paramStr.strip(']')
+        paramList = paramStr.split(',')
+        for p in paramList:
+            p = p.strip('\'')
+            writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
+            Note.write(writeTxt)
     Note.write('@enduml\n')
     Note.close()
 
@@ -908,6 +923,18 @@ def judgeTaskType(name):
         return True
     else:
         return False
+
+
+def selectParamByFunction(functionName):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select params from allfunctions where name = '%s'" % \
+          functionName
+    cur.execute(sql)
+    params = cur.fetchall()
+    cur.close()
+    conn.close()
+    return params
 
 
 if __name__ == '__main__':

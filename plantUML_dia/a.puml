@@ -1,6 +1,5 @@
 @startuml
 'https://plantuml.com/object-diagram
-'left to right direction
 object "License:Contract" as o1
 o1 : description = TRADEMARK LICENSE AGREEMENT
 o1 : clauses = [grantPermission]
@@ -43,7 +42,6 @@ o6<..o5 : Partof
 object "ifPermissionAuthorization:ContractTask" as o7
 o7 : description = Determine if permission is granted
 o7 : restricts = [checkIfWithinTimePeriod]
-o7 : GlobalRestrictionNames = [validity]
 o7 : roleRight = [licensor]
 o7 : ifInitializeContract = false
 o7 : ifUpdateData = false
@@ -60,7 +58,7 @@ object "addr:OffChainData" as o63
 o63 : type = address
 o63 : source = null
 o63 : description = Account address on the blockchain
-o63<..o1 : Partof
+o1..>o63 : Partof
 object "current_licensee:OffChainData" as o64
 o64 : type = address
 o64 : source = null
@@ -79,19 +77,21 @@ o66 : description = All those who have the right of permission
 o66 : initialValue = null
 o66 : ifPrivate = true
 o66 : ifMutable = true
-o1..>o66 : Partof
+o66<..o1 : Partof
 object "permissionRightStart:SimpleData" as o61
 o61 : type = uint
 o61 : description = The start time of the permission
 o61 : initialValue = 0
 o61 : ifPrivate = true
 o61 : ifMutable = true
-o1..>o61 : Partof
+o61<..o1 : Partof
 object "permissionRightEnd:SimpleData" as o62
 o62 : type = uint
 o62 : description = The end time of the permission
 o62 : initialValue = 0
 o62 : ifPrivate = true
 o62 : ifMutable = true
-o1<..o62 : Partof
+o62<..o1 : Partof
+o1 --[hidden] o62
+o1 --[hidden] o61
 @enduml
