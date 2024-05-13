@@ -6,9 +6,6 @@ import pymysql
 # 合约信息（合约名、合约注释、继承关系）
 from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier
 
-
-# 合约的状态变量
-contractVariable = ""
 # 合约的函数
 contractFunction = ""
 # 合约的约束
@@ -22,10 +19,15 @@ contractAnnotation = ""
 contractClauses = ""
 contractParties = ""
 # 链上和链下数据
-contractAllData = ""
+contractAllData = ''
 
 
 def GenerateContractInfo():
+    global contractName
+    global contractAnnotation
+    global contractClauses
+    global contractParties
+    global contractAllData
     conInfo = selectContractInfo()
     contractName = conInfo[0][0]
     contractAnnotation = conInfo[0][1]
@@ -36,30 +38,15 @@ def GenerateContractInfo():
     return contractInfo
 
 
-# 生成代码
-def codeGenerate():
-    # global contractInfo
-    global contractVariable
-    global contractFunction
-    global contractModifier
-    global contractEvent
-    conInfo = selectContractInfo()
-    # contractName = conInfo[0][0]
-    # contractAnnotation = conInfo[0][1]
-    # contractClauses = conInfo[0][2]
-    # contractParties = conInfo[0][3]
-    # 链上和链下数据
-    # contractAllData = conInfo[0][4]
-    # 生成合约的最外框的合约描述和合约名字
-    # contractInfo += "//" + contractAnnotation + "\n" + "contract " + contractName + " "
-    # 合约数据的生成
+# 生成合约链上的数据
+def GenerateContractData():
+    global contractAllData
     allDataList = contractAllData.strip('[').strip(']').split(',')
-    # ['ifAgreeRenew', 'renewalTime', 'duration', 'advanceNoticetime', 'ifNotice']
+    contractVariable = ""
     for d in allDataList:
         variableInfo = selectOnchainData(d)
         # 筛选出非参数的数据，即变量
         if len(variableInfo) != 0:
-            # print(variableInfo)
             # (('int', 'public', '0', 'false', '0','[a,b,c]'),)
             # uint256 ifNotice = 0;
             if variableInfo[0][0] == 'struct':
@@ -81,7 +68,6 @@ def codeGenerate():
                 else:
                     contractVariable += '= ' + variableInfo[0][4]
                 contractVariable += ';\n'
-    # print(contractVariable)
     # 合约方的地址生成
     addrParty = contractParties.strip('[').strip(']').split(',')
     # print(addrParty) ['name1', 'name2']
@@ -100,13 +86,87 @@ def codeGenerate():
     for role in rolesList:
         contractVariable += 'address ' + role + ';\n'
         # 生成角色地址的函数
-        contractFunction += 'function set_' + role + '_address(address newAddr) public {\n' + tab + 'require(' \
+        contractVariable += 'function set_' + role + '_address(address newAddr) public {\n' + tab + 'require(' \
                                                                                                     'msg.sender ==' \
                                                                                                     ' ' + role + \
                             ');\n' + tab + role + ' = newAddr;\n}\n'
         # 生成对角色检查的modifier
-        contractModifier += 'modifier check_' + role + '(){\n' + tab + 'require(msg.sender == ' + role + ');\n' \
+        contractVariable += 'modifier check_' + role + '(){\n' + tab + 'require(msg.sender == ' + role + ');\n' \
                             + tab + '_;\n}\n'
+    return contractVariable
+
+
+# 生成代码
+def codeGenerate():
+    # global contractInfo
+    # global contractVariable
+    global contractFunction
+    global contractModifier
+    global contractEvent
+    conInfo = selectContractInfo()
+    # contractName = conInfo[0][0]
+    # contractAnnotation = conInfo[0][1]
+    # contractClauses = conInfo[0][2]
+    # contractParties = conInfo[0][3]
+    # 链上和链下数据
+    # contractAllData = conInfo[0][4]
+    # 生成合约的最外框的合约描述和合约名字
+    # contractInfo += "//" + contractAnnotation + "\n" + "contract " + contractName + " "
+    # 合约数据的生成
+    # allDataList = contractAllData.strip('[').strip(']').split(',')
+    # ['ifAgreeRenew', 'renewalTime', 'duration', 'advanceNoticetime', 'ifNotice']
+    # for d in allDataList:
+    #     variableInfo = selectOnchainData(d)
+    #     # 筛选出非参数的数据，即变量
+    #     if len(variableInfo) != 0:
+    #         # print(variableInfo)
+    #         # (('int', 'public', '0', 'false', '0','[a,b,c]'),)
+    #         # uint256 ifNotice = 0;
+    #         if variableInfo[0][0] == 'struct':
+    #             contractVariable += 'struct ' + d + '{\n\t'
+    #             contentList = variableInfo[0][5].strip('[').strip(']').split(',')
+    #             for c in contentList:
+    #                 contractVariable += c + ';\n\t'
+    #             contractVariable = contractVariable[:-1]
+    #             contractVariable += '}\n'
+    #         else:
+    #             contractVariable += variableInfo[0][0] + " " + variableInfo[0][1] + " "
+    #             if variableInfo[0][3] == 'true':
+    #                 contractVariable += 'constant ' + d + ' '
+    #             else:
+    #                 contractVariable += d + ' '
+    #             if variableInfo[0][4] == '0':
+    #                 if variableInfo[0][2] != 'null':
+    #                     contractVariable += '= ' + variableInfo[0][2]
+    #             else:
+    #                 contractVariable += '= ' + variableInfo[0][4]
+    #             contractVariable += ';\n'
+    # print(contractVariable)
+    # 合约方的地址生成
+    # addrParty = contractParties.strip('[').strip(']').split(',')
+    # # print(addrParty) ['name1', 'name2']
+    # rolesList = []
+    # for p in addrParty:
+    #     roles = selectParty(p)
+    #     for r in roles:
+    #         # print(r) ('[tenant]',)
+    #         rlist = r[0].strip('[').strip(']').split(',')
+    #         for rl in rlist:
+    #             if rl in rolesList:
+    #                 pass
+    #             else:
+    #                 rolesList.append(rl)
+    # # print(rolesList) ['tenant', 'landlord']
+    # for role in rolesList:
+    #     contractVariable += 'address ' + role + ';\n'
+    #     # 生成角色地址的函数
+    #     contractFunction += 'function set_' + role + '_address(address newAddr) public {\n' + tab + 'require(' \
+    #                                                                                                 'msg.sender ==' \
+    #                                                                                                 ' ' + role + \
+    #                         ');\n' + tab + role + ' = newAddr;\n}\n'
+    #     # 生成对角色检查的modifier
+    #     contractModifier += 'modifier check_' + role + '(){\n' + tab + 'require(msg.sender == ' + role + ');\n' \
+    #                         + tab + '_;\n}\n'
     # 不需要复用库的部分已经生成结束，下面遍历条款内容
     clausesList = contractClauses.strip('[').strip(']').split(',')
     # 为了避免重复生成modifier和function，需要添加标识
@@ -749,7 +809,7 @@ def replaceDataName(code, reuseName, pimName):
 # 组装生成的结果，输出到文件
 def outputCode():
     contractInfo = GenerateContractInfo()
-    global contractVariable
+    contractVariable = GenerateContractData()
     global contractFunction
     global contractModifier
     global contractEvent
