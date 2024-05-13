@@ -6,7 +6,7 @@ import pymysql
 # 合约信息（合约名、合约注释、继承关系）
 from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier
 
-contractInfo = ""
+
 # 合约的状态变量
 contractVariable = ""
 # 合约的函数
@@ -16,24 +16,42 @@ contractModifier = ""
 # 合约日志
 contractEvent = ""
 
+tab = '    '
+contractName = ""
+contractAnnotation = ""
+contractClauses = ""
+contractParties = ""
+# 链上和链下数据
+contractAllData = ""
 
-# 生成代码
-def codeGenerate():
-    global contractInfo
-    global contractVariable
-    global contractFunction
-    global contractModifier
-    global contractEvent
-    tab = '    '
+
+def GenerateContractInfo():
     conInfo = selectContractInfo()
     contractName = conInfo[0][0]
     contractAnnotation = conInfo[0][1]
     contractClauses = conInfo[0][2]
     contractParties = conInfo[0][3]
-    # 链上和链下数据
     contractAllData = conInfo[0][4]
+    contractInfo = "//" + contractAnnotation + "\n" + "contract " + contractName + " "
+    return contractInfo
+
+
+# 生成代码
+def codeGenerate():
+    # global contractInfo
+    global contractVariable
+    global contractFunction
+    global contractModifier
+    global contractEvent
+    conInfo = selectContractInfo()
+    # contractName = conInfo[0][0]
+    # contractAnnotation = conInfo[0][1]
+    # contractClauses = conInfo[0][2]
+    # contractParties = conInfo[0][3]
+    # 链上和链下数据
+    # contractAllData = conInfo[0][4]
     # 生成合约的最外框的合约描述和合约名字
-    contractInfo += "//" + contractAnnotation + "\n" + "contract " + contractName + " "
+    # contractInfo += "//" + contractAnnotation + "\n" + "contract " + contractName + " "
     # 合约数据的生成
     allDataList = contractAllData.strip('[').strip(']').split(',')
     # ['ifAgreeRenew', 'renewalTime', 'duration', 'advanceNoticetime', 'ifNotice']
@@ -730,12 +748,11 @@ def replaceDataName(code, reuseName, pimName):
 
 # 组装生成的结果，输出到文件
 def outputCode():
-    global contractInfo
+    contractInfo = GenerateContractInfo()
     global contractVariable
     global contractFunction
     global contractModifier
     global contractEvent
-    tab = '    '
     contractVariable = tab + contractVariable.replace('\n', '\n' + tab)
     contractModifier = tab + contractModifier.replace('\n', '\n' + tab)
     contractFunction = tab + contractFunction.replace('\n', '\n' + tab)

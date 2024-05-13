@@ -943,4 +943,4 @@ if __name__ == '__main__':
     truncatePimDB()
     convert()
     # codeGenerate()
-    # outputCode()
+    outputCode()
