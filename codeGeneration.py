@@ -10,16 +10,17 @@ from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMat
 contractFunction = ""
 # 合约的约束
 contractModifier = ""
-# 合约日志
-contractEvent = ""
 
 tab = '    '
 contractName = ""
 contractAnnotation = ""
 contractClauses = ""
 contractParties = ""
-# 链上和链下数据
 contractAllData = ''
+# 为了避免重复生成modifier和function，需要添加标识
+allModifierFlag = {}
+allFunctionFlag = {}
+allEventFlag = {}
 
 
 def GenerateContractInfo():
@@ -96,14 +97,81 @@ def GenerateContractData():
     return contractVariable
 
 
+def AddFlagsForLMF():
+    global allModifierFlag
+    global allFunctionFlag
+    global allEventFlag
+    clausesList = contractClauses.strip('[').strip(']').split(',')
+    for clause in clausesList:
+        activities = selectActivityByClause(clause)
+        processList = activities[0][0].strip('[').strip(']').split(',')
+        for p in processList:
+            process = selectProcessByName(p)
+            pro_function = process[0][1]
+            pro_functionList = pro_function.strip('[').strip(']').split(',')
+            for fun in pro_functionList:
+                if fun in allFunctionFlag:
+                    pass
+                else:
+                    allFunctionFlag[fun] = False
+                res = selectResByFuncName(fun)
+                # print(res)
+                if res[0][0] != 'null':
+                    res_list = eval(res[0][0].strip('\"'))
+                    for r in res_list:
+                        if r in allModifierFlag:
+                            pass
+                        else:
+                            allModifierFlag[r] = False
+                logs = selectLogByFuncName(fun)
+                # print(logs)
+                if logs[0][0] != 'null':
+                    logs_list = logs[0][0].strip('[').strip(']').split(',')
+                    for log in logs_list:
+                        if log not in allEventFlag:
+                            allEventFlag[log] = False
+
+
+def GenerateLog():
+    global contractClauses
+    clausesList = contractClauses.strip('[').strip(']').split(',')
+    contractEvent = ""
+    for clause in clausesList:
+        activities = selectActivityByClause(clause)
+        processList = activities[0][0].strip('[').strip(']').split(',')
+        for p in processList:
+            process = selectProcessByName(p)
+            pro_function_list = process[0][1].strip('[').strip(']').split(',')
+            for f in pro_function_list:
+                events = selectLogByFuncName(f)
+                if events[0][0] != 'null':
+                    eventsList = events[0][0].strip('[').strip(']').split(',')
+                    for e in eventsList:
+                        if not allEventFlag[e]:
+                            currentEvent = 'event ' + e + '('
+                            logInfo = selectLogInfoByName(e)
+                            if logInfo[0][0] != 'null':
+                                param = ""
+                                logParams = logInfo[0][0].strip('[').strip(']').split(',')
+                                for lp in logParams:
+                                    param += lp + ', '
+                                param = param.strip(' ').strip(',')
+                                currentEvent += param + ');\n\n'
+                            else:
+                                currentEvent += ');\n\n'
+                            contractEvent += currentEvent
+                            allEventFlag[e] = True
+    return contractEvent
+
+
 # 生成代码
 def codeGenerate():
     # global contractInfo
     # global contractVariable
     global contractFunction
     global contractModifier
-    global contractEvent
-    conInfo = selectContractInfo()
+    # global contractEvent
+    # conInfo = selectContractInfo()
     # contractName = conInfo[0][0]
     # contractAnnotation = conInfo[0][1]
     # contractClauses = conInfo[0][2]
@@ -168,63 +236,62 @@ def codeGenerate():
     #     contractModifier += 'modifier check_' + role + '(){\n' + tab + 'require(msg.sender == ' + role + ');\n' \
     #                         + tab + '_;\n}\n'
     # 不需要复用库的部分已经生成结束，下面遍历条款内容
-    clausesList = contractClauses.strip('[').strip(']').split(',')
-    # 为了避免重复生成modifier和function，需要添加标识
-    allModifierFlag = {}
-    allFunctionFlag = {}
-    allEventFlag = {}
-    for clause in clausesList:
-        activities = selectActivityByClause(clause)
-        processList = activities[0][0].strip('[').strip(']').split(',')
-        for p in processList:
-            process = selectProcessByName(p)
-            pro_function = process[0][1]
-            pro_functionList = pro_function.strip('[').strip(']').split(',')
-            for fun in pro_functionList:
-                if fun in allFunctionFlag:
-                    pass
-                else:
-                    allFunctionFlag[fun] = False
-                res = selectResByFuncName(fun)
-                # print(res)
-                if res[0][0] != 'null':
-                    res_list = eval(res[0][0].strip('\"'))
-                    for r in res_list:
-                        if r in allModifierFlag:
-                            pass
-                        else:
-                            allModifierFlag[r] = False
-                logs = selectLogByFuncName(fun)
-                # print(logs)
-                if logs[0][0] != 'null':
-                    logs_list = logs[0][0].strip('[').strip(']').split(',')
-                    for log in logs_list:
-                        if log not in allEventFlag:
-                            allEventFlag[log] = False
+    # allModifierFlag = {}
+    # allFunctionFlag = {}
+    # allEventFlag = {}
+    # for clause in clausesList:
+    #     activities = selectActivityByClause(clause)
+    #     processList = activities[0][0].strip('[').strip(']').split(',')
+    #     for p in processList:
+    #         process = selectProcessByName(p)
+    #         pro_function = process[0][1]
+    #         pro_functionList = pro_function.strip('[').strip(']').split(',')
+    #         for fun in pro_functionList:
+    #             if fun in allFunctionFlag:
+    #                 pass
+    #             else:
+    #                 allFunctionFlag[fun] = False
+    #             res = selectResByFuncName(fun)
+    #             # print(res)
+    #             if res[0][0] != 'null':
+    #                 res_list = eval(res[0][0].strip('\"'))
+    #                 for r in res_list:
+    #                     if r in allModifierFlag:
+    #                         pass
+    #                     else:
+    #                         allModifierFlag[r] = False
+    #             logs = selectLogByFuncName(fun)
+    #             # print(logs)
+    #             if logs[0][0] != 'null':
+    #                 logs_list = logs[0][0].strip('[').strip(']').split(',')
+    #                 for log in logs_list:
+    #                     if log not in allEventFlag:
+    #                         allEventFlag[log] = False
     # 生成所有的event
-    for clause in clausesList:
-        activities = selectActivityByClause(clause)
-        processList = activities[0][0].strip('[').strip(']').split(',')
-        for p in processList:
-            process = selectProcessByName(p)
-            pro_function_list = process[0][1].strip('[').strip(']').split(',')
-            for f in pro_function_list:
-                events = selectLogByFuncName(f)
-                if events[0][0] != 'null':
-                    eventsList = events[0][0].strip('[').strip(']').split(',')
-                    for e in eventsList:
-                        currentEvent = 'event ' + e + '('
-                        logInfo = selectLogInfoByName(e)
-                        if logInfo[0][0] != 'null':
-                            param = ""
-                            logParams = logInfo[0][0].strip('[').strip(']').split(',')
-                            for lp in logParams:
-                                param += lp + ', '
-                            param = param.strip(' ').strip(',')
-                            currentEvent += param + ');\n\n'
-                        else:
-                            currentEvent += ');\n\n'
-                        contractEvent += currentEvent
+    # for clause in clausesList:
+    #     activities = selectActivityByClause(clause)
+    #     processList = activities[0][0].strip('[').strip(']').split(',')
+    #     for p in processList:
+    #         process = selectProcessByName(p)
+    #         pro_function_list = process[0][1].strip('[').strip(']').split(',')
+    #         for f in pro_function_list:
+    #             events = selectLogByFuncName(f)
+    #             if events[0][0] != 'null':
+    #                 eventsList = events[0][0].strip('[').strip(']').split(',')
+    #                 for e in eventsList:
+    #                     currentEvent = 'event ' + e + '('
+    #                     logInfo = selectLogInfoByName(e)
+    #                     if logInfo[0][0] != 'null':
+    #                         param = ""
+    #                         logParams = logInfo[0][0].strip('[').strip(']').split(',')
+    #                         for lp in logParams:
+    #                             param += lp + ', '
+    #                         param = param.strip(' ').strip(',')
+    #                         currentEvent += param + ');\n\n'
+    #                     else:
+    #                         currentEvent += ');\n\n'
+    #                     contractEvent += currentEvent
+    clausesList = contractClauses.strip('[').strip(']').split(',')
     for clause in clausesList:
         activities = selectActivityByClause(clause)
         # 每一个条款中包含的流程，也就是activity
@@ -810,9 +877,10 @@ def replaceDataName(code, reuseName, pimName):
 def outputCode():
     contractInfo = GenerateContractInfo()
     contractVariable = GenerateContractData()
+    contractEvent = GenerateLog()
     global contractFunction
     global contractModifier
-    global contractEvent
+    # global contractEvent
     contractVariable = tab + contractVariable.replace('\n', '\n' + tab)
     contractModifier = tab + contractModifier.replace('\n', '\n' + tab)
     contractFunction = tab + contractFunction.replace('\n', '\n' + tab)
