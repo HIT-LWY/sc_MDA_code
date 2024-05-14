@@ -16,7 +16,8 @@ grantPermission : exector = [licensor,licensee]
 grantPermission : processes = [grantPermissionToLicensee]
 object "grantPermissionToLicensee:Process" as grantPermissionToLicensee
 grantPermissionToLicensee : description = The licensor Grants licensee worldwide royalty-free rights
-grantPermissionToLicensee : functions = [oneAuthorizePermissionOther,ifPermissionAuthorization
+grantPermissionToLicensee : type = Grant A Right
+grantPermissionToLicensee : functions = [oneAuthorizePermissionOther,ifPermissionAuthorization]
 object "oneAuthorizePermissionOther:Function" as oneAuthorizePermissionOther
 oneAuthorizePermissionOther : annotation = Granting a permission right
 oneAuthorizePermissionOther : right = [licensor]

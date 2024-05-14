@@ -162,6 +162,7 @@ def convert():
         xmiId = o[1]
         description = ""
         functions = ""
+        type_name = ""
         # 对象属性
         attributions = selectAttrsById(xmiId)
         for a in attributions:
@@ -181,9 +182,13 @@ def convert():
                             functions += value
                             functions += ","
                     functions = functions.rstrip(',')
-                    writeTxt = newO + " : " + "functions" + " = " + functions + '\n'
+                    writeTxt = newO + " : " + "functions" + " = " + functions + ']' + '\n'
                     Note.write(writeTxt)
-        insertProcess(newO, description, functions)
+                case "type":
+                    writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
+                    type_name = newAttrValue
+                    Note.write(writeTxt)
+        insertProcess(newO, type_name, description, functions)
     # 合约任务对象转换
     objToClass = selectObjectByClass('ContractTask')
     for o in objToClass:
@@ -781,13 +786,13 @@ def insertRes(name, description, dataNames, params):
 
 
 # 插入流程表
-def insertProcess(name, description, functions):
+def insertProcess(name, type_name, description, functions):
     conn = connectDB()
     cur = conn.cursor()
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = """insert into process (name, description, functions, create_time, update_time) 
-        values ("%s","%s","%s","%s","%s")""" % \
-          (name, description, functions, dt, dt)
+    sql = """insert into process (name, type_name, description, functions, create_time, update_time) 
+        values ("%s","%s","%s","%s","%s","%s")""" % \
+          (name, type_name, description, functions, dt, dt)
     cur.execute(sql)
     conn.commit()
     cur.close()

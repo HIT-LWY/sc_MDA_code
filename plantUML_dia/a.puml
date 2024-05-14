@@ -18,6 +18,7 @@ o4 : patterns = [grantPermissionToLicensee]
 o4<..o1 : Partof
 object "grantPermissionToLicensee:Pattern" as o5
 o5 : description = The licensor Grants licensee worldwide royalty-free rights
+o5 : type = Grant A Right
 o5 : tasks = [oneAuthorizePermissionOther,ifPermissionAuthorization]
 o5<..o4 : Partof
 object "initiateGrantPermission:UserTask" as o9

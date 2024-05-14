@@ -164,6 +164,12 @@ def GenerateLog():
     return contractEvent
 
 
+def GenerateFunction():
+    contractFunction = ""
+    global contractClauses
+    clausesList = contractClauses.strip('[').strip(']').split(',')
+
+
 # 生成代码
 def codeGenerate():
     # global contractInfo
