@@ -4,7 +4,8 @@ import pymysql
 
 # 生成的代码内容
 # 合约信息（合约名、合约注释、继承关系）
-from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier
+from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier, \
+    matchFunction
 
 # 合约的函数
 # contractFunction = ""
@@ -181,14 +182,24 @@ def GenerateFunction():
             # print(patternType) Grant A Right
             patternFunction = patternContent[0][2]
             patternFunctionList = patternFunction.strip('[').strip(']').split(',')
-            patternFunctionNum = len(patternFunctionList)
             # 判断模式类型是否在复用库中包含
             process_info = selectProcessInLib(connection, patternType)
             # ！复用库中包含了该类型的模式
             if len(process_info) != 0:
                 function_reuse_list = process_info[0][5].strip('[').strip(']').split(',')
+                func_desc_list = []
+                func_id = []
                 for function_reuse in function_reuse_list:
-                    
+                    result = selectIdAndDescInLib(connection, function_reuse)
+                    func_id.append(result[0][0])
+                    func_desc_list.append(result[0][1])
+                # 将模型中的function的description与复用库description数组进行一对多匹配
+                for functionModel in patternFunctionList:
+                    sentence = selectDescByName(functionModel)
+                    # 语义相似度匹配，获取对应的模式中的哪个函数
+                    index = matchFunction(sentence[0][0], func_desc_list)
+                    code = selectCodeInLib(connection, func_id[index])
+                    # print(code) (('allXXXRight[_address].hasXXXRight = true;',),)
 
     return contractFunction
 
@@ -826,6 +837,24 @@ def selectProcessInLib(conn, name):
     dataInfo = cur.fetchall()
     cur.close()
     return dataInfo
+
+
+def selectIdAndDescInLib(conn, function_reuse):
+    cur = conn.cursor()
+    sql = "select function_id, description from reusable_function_service where function_name = '%s'" % function_reuse
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
+def selectCodeInLib(conn, func_id):
+    cur = conn.cursor()
+    sql = "select code from reusable_function_service where function_id = '%s'" % func_id
+    cur.execute(sql)
+    code = cur.fetchall()
+    cur.close()
+    return code
 
 
 # 查找合约信息

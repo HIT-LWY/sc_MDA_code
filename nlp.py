@@ -6,6 +6,20 @@ from sympy.tensor import tensor
 model = SentenceTransformer('./model/all-MiniLM-L6-v2')
 
 
+def matchFunction(sentence, sentenceList):
+    sentence_cur = [sentence]
+    embeddings = model.encode(sentenceList, convert_to_tensor=True)
+    embeddings_cur = model.encode(sentence_cur, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(embeddings, embeddings_cur)
+    max_scores = cosine_scores.max()
+    if max_scores > 0.55:
+        max_index = cosine_scores.argmax()
+        return max_index
+    else:
+        print("未找到满足要求的")
+        return -1
+
+
 # 流程模板层的匹配
 def serviceSelectionByProcess(processDesc):
     # 获取复用库的所有描述和对应的Id
