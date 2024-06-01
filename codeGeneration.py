@@ -198,8 +198,24 @@ def GenerateFunction():
                     sentence = selectDescByName(functionModel)
                     # 语义相似度匹配，获取对应的模式中的哪个函数
                     index = matchFunction(sentence[0][0], func_desc_list)
-                    code = selectCodeInLib(connection, func_id[index])
-                    # print(code) (('allXXXRight[_address].hasXXXRight = true;',),)
+                    # 参数、返回值、数据、view、code
+                    code_Info = selectCodeInLib(connection, func_id[index])
+                    # print(code_Info) (('[_address]', 'bool', '[XXXRight,allXXXRight]', '[view]', 'return allXXXRight[_address].hasXXXRight;'),)
+                    # 对code实现数据替换
+                    data_lib = code_Info[0][2]
+                    if data_lib != "null":
+                        data_lib_list = data_lib..strip('[').strip(']').split(',')
+                        data_desc_list = []
+                        data_id = []
+                        data_type = []
+                        for on_chain_data in data_lib_list:
+                            # id,desc,type
+                            result = selectDataByNameInLib(on_chain_data)
+                            data_id.append(result[0][0])
+                            data_desc_list.append(result[0][1])
+                            data_type.append(result[0][2])
+                    # 得到该模型函数内部的数据内容，参数，返回值，数据
+
 
     return contractFunction
 
@@ -850,7 +866,8 @@ def selectIdAndDescInLib(conn, function_reuse):
 
 def selectCodeInLib(conn, func_id):
     cur = conn.cursor()
-    sql = "select code from reusable_function_service where function_id = '%s'" % func_id
+    sql = "select params, output, on_chain_data, optimizes, code from reusable_function_service " \
+          "where function_id = %s" % func_id
     cur.execute(sql)
     code = cur.fetchall()
     cur.close()
@@ -1059,7 +1076,7 @@ def selectDataByNameInLib(dataname):
     conn = connectReusableLib()
     cur = conn.cursor()
     # print(dataname)
-    sql = "select data_desc, type from con_data where data_name = '%s'" % dataname
+    sql = "select data_id, data_desc, type from con_data where data_name = '%s'" % dataname
     cur.execute(sql)
     data_name = cur.fetchall()
     cur.close()
