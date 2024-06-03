@@ -49,7 +49,7 @@ o7 : ifUpdateData = false
 o7 : ifGenerateTransaction = false
 o7 : dataName = [addr,allPermissionPartyNum,allPermissionParty]
 o7 : logs = null
-o7 : result = [bool]
+o7 : outputType = [bool]
 o7<..o5 : Partof
 object "checkIfWithinTimePeriod:Restriction" as o8
 o8 : description = Check if it is within the specified time period

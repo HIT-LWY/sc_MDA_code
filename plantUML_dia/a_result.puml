@@ -38,6 +38,7 @@ ifPermissionAuthorization : ifGenerateTransaction = false
 ifPermissionAuthorization : dataNames = ['allPermissionPartyNum', 'allPermissionParty']
 ifPermissionAuthorization : params = ['addr']
 ifPermissionAuthorization : logs = null
+ifPermissionAuthorization : output = [bool]
 ifPermissionAuthorization : functionRestriction = ['checkIfWithinTimePeriod']
 object "checkIfWithinTimePeriod:Restriction" as checkIfWithinTimePeriod
 checkIfWithinTimePeriod : description = Check if it is within the specified time period

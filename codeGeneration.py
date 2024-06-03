@@ -204,7 +204,7 @@ def GenerateFunction():
                     # 对code实现数据替换
                     data_lib = code_Info[0][2]
                     if data_lib != "null":
-                        data_lib_list = data_lib..strip('[').strip(']').split(',')
+                        data_lib_list = data_lib.strip('[').strip(']').split(',')
                         data_desc_list = []
                         data_id = []
                         data_type = []
@@ -214,7 +214,12 @@ def GenerateFunction():
                             data_id.append(result[0][0])
                             data_desc_list.append(result[0][1])
                             data_type.append(result[0][2])
-                    # 得到该模型函数内部的数据内容，参数，返回值，数据
+                    # 得到该模型函数内部的数据内容，数据,参数,返回值
+                    dataParamReturnModel = selectDataParamReturn(functionModel)
+                    # print(dataParamReturnModel) (("['allPermissionPartyNum', 'allPermissionParty']", "['addr']", '[bool]'),)
+                    dataListModel = dataParamReturnModel[0][0].strip('[').strip(']').replace("'", "").replace(" ", "").split(',')
+                    for dataModel in dataListModel:
+                        # 开始针对code进行数据的匹配和替换
 
 
     return contractFunction
@@ -872,6 +877,17 @@ def selectCodeInLib(conn, func_id):
     code = cur.fetchall()
     cur.close()
     return code
+
+
+def selectDataParamReturn(functionModel):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select dataNames, params, output from allfunctions where name = '%s'" % functionModel
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    conn.close()
+    return res
 
 
 # 查找合约信息
