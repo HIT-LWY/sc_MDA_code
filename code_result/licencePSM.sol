@@ -1,9 +1,10 @@
 //TRADEMARK LICENSE AGREEMENT
 contract License  {
-    int private allPermissionPartyNum = 0;
-    mapping(int=>address) private allPermissionParty ;
-    uint private permissionRightStart = 0;
-    uint private permissionRightEnd = 0;
+    struct permissionRight{
+    	bool hasRight;
+    	bool isTransferable;
+    }
+    map private allPermissionParty ;
     address licensor;
     function set_licensor_address(address newAddr) public {
         require(msg.sender == licensor);

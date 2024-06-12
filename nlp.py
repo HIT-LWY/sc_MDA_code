@@ -20,6 +20,33 @@ def matchFunction(sentence, sentenceList):
         return -1
 
 
+def matchData(sentence, sentences):
+    index = 0
+    pro = ()
+    for s in sentences:
+        cur = (index, s)
+        pro = pro + (cur,)
+        index = index + 1
+    sentences_cur = [sentence]
+    embeddings = model.encode(sentences, convert_to_tensor=True)
+    embeddings_cur = model.encode(sentences_cur, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(embeddings, embeddings_cur)
+    pro_np = np.array(pro)
+    selected_tensor = cosine_scores[cosine_scores[:, 0] > 0.2]
+    res = []
+    if len(selected_tensor) == 0:
+        print('没有符合条件的数据')
+    elif len(selected_tensor) != 1:
+        sorted_indexes = np.argsort(-selected_tensor[:, 0])
+        sorted_ids = pro_np[cosine_scores[:, 0] > 0.2][sorted_indexes[0:len(sorted_indexes)]]
+        res = sorted_ids[:, 0].astype(int)
+    else:
+        max_index = cosine_scores.argmax()
+        res.append(pro[max_index][0])
+    print(res)
+    return res
+
+
 # 流程模板层的匹配
 def serviceSelectionByProcess(processDesc):
     # 获取复用库的所有描述和对应的Id

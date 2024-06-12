@@ -5,7 +5,7 @@ import pymysql
 # 生成的代码内容
 # 合约信息（合约名、合约注释、继承关系）
 from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier, \
-    matchFunction
+    matchFunction, matchData
 
 # 合约的函数
 # contractFunction = ""
@@ -171,6 +171,7 @@ def GenerateFunction():
     clausesList = contractClauses.strip('[').strip(']').split(',')
     # 连接复用库
     connection = connectReusableLib()
+    connDB = connectDB()
     for clause in clausesList:
         activities = selectActivityByClause(clause)
         processList = activities[0][0].strip('[').strip(']').split(',')
@@ -220,7 +221,8 @@ def GenerateFunction():
                     dataListModel = dataParamReturnModel[0][0].strip('[').strip(']').replace("'", "").replace(" ", "").split(',')
                     for dataModel in dataListModel:
                         # 开始针对code进行数据的匹配和替换
-
+                        desc = selectDescDataModel(connDB, dataModel)[0][0]
+                        matchData(desc, data_desc_list)
 
     return contractFunction
 
@@ -887,6 +889,15 @@ def selectDataParamReturn(functionModel):
     res = cur.fetchall()
     cur.close()
     conn.close()
+    return res
+
+
+def selectDescDataModel(connDB, model):
+    cur = connDB.cursor()
+    sql = "select description from contract_data where name = '%s'" % model
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
     return res
 
 

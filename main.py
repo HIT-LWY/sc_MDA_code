@@ -406,7 +406,7 @@ def convert():
                     Note.write(writeTxt)
         insertContractData(newO, c_type, visibility, value, ifConstant, unixTime, "null", description)
     # 链上struct复合数据
-    objToClass = selectObjectByClass('CombinedData')
+    objToClass = selectObjectByClass('CombineData')
     for o in objToClass:
         # 数据对象
         newO = o[0]
@@ -414,7 +414,7 @@ def convert():
         Note.write(writeTxt + '\n')
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
-        c_type = "null"
+        c_type = "struct"
         visibility = ""
         value = ""
         ifConstant = ""
