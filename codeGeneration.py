@@ -1,4 +1,5 @@
 import ast
+import re
 
 import pymysql
 
@@ -204,25 +205,65 @@ def GenerateFunction():
                     # print(code_Info) (('[_address]', 'bool', '[XXXRight,allXXXRight]', '[view]', 'return allXXXRight[_address].hasXXXRight;'),)
                     # 对code实现数据替换
                     data_lib = code_Info[0][2]
+                    data_desc_list = []
+                    data_id = []
+                    data_type = []
+                    data_name = []
+                    param_lib = code_Info[0][0]
+                    param_desc_list = []
+                    param_id = []
+                    param_type = []
+                    param_name = []
                     if data_lib != "null":
                         data_lib_list = data_lib.strip('[').strip(']').split(',')
-                        data_desc_list = []
-                        data_id = []
-                        data_type = []
                         for on_chain_data in data_lib_list:
-                            # id,desc,type
+                            # name,id,desc,type
+                            data_name.append(on_chain_data)
                             result = selectDataByNameInLib(on_chain_data)
                             data_id.append(result[0][0])
                             data_desc_list.append(result[0][1])
                             data_type.append(result[0][2])
+                    if param_lib != "null":
+                        param_lib_list = param_lib.strip('[').strip(']').split(',')
+                        for on_chain_param in param_lib_list:
+                            param_name.append(on_chain_param)
+                            result = selectParamByNameInLib(on_chain_param)
+                            param_id.append(result[0][0])
+                            param_desc_list.append(result[0][1])
+                            param_type.append(result[0][2])
                     # 得到该模型函数内部的数据内容，数据,参数,返回值
                     dataParamReturnModel = selectDataParamReturn(functionModel)
                     # print(dataParamReturnModel) (("['allPermissionPartyNum', 'allPermissionParty']", "['addr']", '[bool]'),)
-                    dataListModel = dataParamReturnModel[0][0].strip('[').strip(']').replace("'", "").replace(" ", "").split(',')
+                    dataListModel = dataParamReturnModel[0][0].strip('[').strip(']').replace("'", "").replace(" ",
+                                                                                                              "").split(
+                        ',')
+                    paramListModel = dataParamReturnModel[0][1].strip('[').strip(']').replace("'", "").replace(" ",
+                                                                                                              "").split(
+                        ',')
+                    code = code_Info[0][4]
                     for dataModel in dataListModel:
                         # 开始针对code进行数据的匹配和替换
-                        desc = selectDescDataModel(connDB, dataModel)[0][0]
-                        matchData(desc, data_desc_list)
+                        descAndType = selectDescDataModel(connDB, dataModel)
+                        desc = descAndType[0][0]
+                        typeDataModel = descAndType[0][1]
+                        resultList = matchData(desc, data_desc_list)
+                        for index in resultList:
+                            if data_type[index] == typeDataModel:
+                                data_in_lib = data_name[index]
+                                code = replace_non_alphabetic(code, data_in_lib, dataModel)
+                    for paramModel in paramListModel:
+                        # 开始针对code进行参数的匹配和替换
+                        descAndType = selectDescParamModel(connDB, paramModel)
+                        desc = descAndType[0][0]
+                        typeParamModel = descAndType[0][1]
+                        resultList = matchData(desc, param_desc_list)
+                        for index in resultList:
+                            if param_type[index] == typeParamModel:
+                                param_in_lib = param_name[index]
+                                code = replace_non_alphabetic(code, param_in_lib, paramModel)
+                    # print(code)
+                    # functionHead = 'function ' + functionModel + '('
+
 
     return contractFunction
 
@@ -823,6 +864,17 @@ def replaceDataName(code, reuseName, pimName):
     return code
 
 
+def replace_non_alphabetic(code, subcode, newcode):
+    pattern = re.compile(r'(?<![a-zA-Z])' + re.escape(subcode) + r'(?![a-zA-Z])')
+
+    def replace_func(match):
+        prefix = match.group()[:-len(subcode)]  # 获取前缀（如果有）
+        suffix = match.group()[len(subcode):]  # 获取后缀（如果有）
+        return prefix + newcode + suffix  # 拼接新的字符串
+
+    return pattern.sub(replace_func, code)
+
+
 # 组装生成的结果，输出到文件
 def outputCode():
     contractInfo = GenerateContractInfo()
@@ -894,7 +946,16 @@ def selectDataParamReturn(functionModel):
 
 def selectDescDataModel(connDB, model):
     cur = connDB.cursor()
-    sql = "select description from contract_data where name = '%s'" % model
+    sql = "select description, type from contract_data where name = '%s'" % model
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
+def selectDescParamModel(connDB, paramModel):
+    cur = connDB.cursor()
+    sql = "select description, type from param where name = '%s'" % paramModel
     cur.execute(sql)
     res = cur.fetchall()
     cur.close()
@@ -1079,7 +1140,7 @@ def selectFunctionInLibById(function_id):
 def selectParamByNameInLib(param_name):
     conn = connectReusableLib()
     cur = conn.cursor()
-    sql = "select param_desc, type from param_data where param_name = '%s'" % param_name
+    sql = "select param_id, param_desc, type from param_data where param_name = '%s'" % param_name
     cur.execute(sql)
     param_name = cur.fetchall()
     cur.close()

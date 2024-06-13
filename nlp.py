@@ -43,7 +43,6 @@ def matchData(sentence, sentences):
     else:
         max_index = cosine_scores.argmax()
         res.append(pro[max_index][0])
-    print(res)
     return res
 
 
