@@ -169,6 +169,7 @@ def GenerateLog():
 def GenerateFunction():
     contractFunction = ""
     global contractClauses
+    global tab
     clausesList = contractClauses.strip('[').strip(']').split(',')
     # 连接复用库
     connection = connectReusableLib()
@@ -197,9 +198,23 @@ def GenerateFunction():
                     func_desc_list.append(result[0][1])
                 # 将模型中的function的description与复用库description数组进行一对多匹配
                 for functionModel in patternFunctionList:
-                    sentence = selectDescByName(functionModel)
+                    allInfoFunction = selectDescByName(functionModel)
+                    # 函数约束 格式：[]
+                    funcRestriction = allInfoFunction[0][3]
+                    # 角色权限 []
+                    roleRight = allInfoFunction[0][4]
+                    # 构造函数 bool
+                    ifConstructor = allInfoFunction[0][5]
+                    # 更新数据 bool
+                    ifUpdateData = allInfoFunction[0][6]
+                    # 是否接收交易
+                    ifGenerateTransaction = allInfoFunction[0][7]
+                    # 日志
+                    # logs = allInfoFunction[0][10]
+                    # 返回值
+                    outputs = allInfoFunction[0][11]
                     # 语义相似度匹配，获取对应的模式中的哪个函数
-                    index = matchFunction(sentence[0][0], func_desc_list)
+                    index = matchFunction(allInfoFunction[0][2], func_desc_list)
                     # 参数、返回值、数据、view、code
                     code_Info = selectCodeInLib(connection, func_id[index])
                     # print(code_Info) (('[_address]', 'bool', '[XXXRight,allXXXRight]', '[view]', 'return allXXXRight[_address].hasXXXRight;'),)
@@ -238,7 +253,7 @@ def GenerateFunction():
                                                                                                               "").split(
                         ',')
                     paramListModel = dataParamReturnModel[0][1].strip('[').strip(']').replace("'", "").replace(" ",
-                                                                                                              "").split(
+                                                                                                               "").split(
                         ',')
                     code = code_Info[0][4]
                     for dataModel in dataListModel:
@@ -262,9 +277,51 @@ def GenerateFunction():
                                 param_in_lib = param_name[index]
                                 code = replace_non_alphabetic(code, param_in_lib, paramModel)
                     # print(code)
-                    # functionHead = 'function ' + functionModel + '('
-
-
+                    # 每一个函数内容，命名不太准确
+                    functionHead = ""
+                    if ifConstructor == "true":
+                        functionHead += 'constructor ' + '('
+                        for paramModel in paramListModel:
+                            functionHead += paramModel
+                        code = code.replace('\n', '\n\t')
+                        functionHead += '){\n' + tab + code + '\n' + '}'
+                    else:
+                        functionHead += 'function ' + functionModel + '('
+                        for paramModel in paramListModel:
+                            descAndType = selectDescParamModel(connDB, paramModel)
+                            typeParamModel = descAndType[0][1]
+                            if typeParamModel == 'string':
+                                functionHead += typeParamModel + ' memory ' + paramModel
+                            else:
+                                functionHead += typeParamModel + ' ' + paramModel
+                        functionHead += ') ' + 'public '
+                        if ifUpdateData == "false":
+                            functionHead += 'view '
+                        if ifGenerateTransaction == "true":
+                            functionHead += 'payable '
+                        if funcRestriction != 'null':
+                            funcRestrictionList = funcRestriction.strip('[').strip(']').replace("'", "").replace(" ",
+                                                                                                                 "").split(
+                                ',')
+                            for res in funcRestrictionList:
+                                functionHead += res + ' '
+                        if roleRight != 'null':
+                            roleRightList = roleRight.strip('[').strip(']').split(',')
+                            for r in roleRightList:
+                                functionHead += 'check_' + r + ' '
+                        if outputs != 'null':
+                            functionHead += 'returns ('
+                            outputsList = outputs.strip('[').strip(']').split(',')
+                            for o in outputsList:
+                                functionHead += o + ','
+                            functionHead = functionHead.rstrip(',')
+                            functionHead += ')'
+                        code = code.replace('\n', '\n\t')
+                        functionHead += '{\n' + tab + code + '\n' + '}'
+                    contractFunction += '\n'
+                    contractFunction += '// ' + allInfoFunction[0][2] + '\n'
+                    contractFunction += functionHead
+    print(contractFunction)
     return contractFunction
 
 
@@ -1190,7 +1247,7 @@ def selectDataTypeAndDescByName(name):
 def selectDescByName(name):
     conn = connectDB()
     cur = conn.cursor()
-    sql = "select description from allfunctions where name = '%s'" % name
+    sql = "select * from allfunctions where name = '%s'" % name
     cur.execute(sql)
     desc = cur.fetchall()
     cur.close()

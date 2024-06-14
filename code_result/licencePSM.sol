@@ -26,5 +26,14 @@ contract License  {
     
     
     
+    // Granting a permission right
+    function oneAuthorizePermissionOther(address addr) public check_licensor {
+        allPermissionParty[addr].hasRight = true;
+    	aaa;
+    }
+    // Determine if permission is granted
+    function ifPermissionAuthorization(address addr) public view checkIfWithinTimePeriod check_licensor returns (bool){
+        return allPermissionParty[addr].hasRight;
+    }
     
 }
