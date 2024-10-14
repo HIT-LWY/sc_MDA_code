@@ -355,6 +355,10 @@ def convert():
                         writeTxt = newO + " : " + "params" + " = " + "null" + '\n'
                         params = "null"
                         Note.write(writeTxt)
+                case "type":
+                    writeTxt = newO + " : " + "pattern" + " = " + newAttrValue + '\n'
+                    description = newAttrValue
+                    Note.write(writeTxt)
         insertRes(newO, description, dataNames, params)
     # 链上数据
     objToClass = selectObjectByClass('SimpleData')

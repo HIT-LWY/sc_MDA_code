@@ -42,6 +42,7 @@ ifPermissionAuthorization : output = [bool]
 ifPermissionAuthorization : functionRestriction = ['checkIfWithinTimePeriod']
 object "checkIfWithinTimePeriod:Restriction" as checkIfWithinTimePeriod
 checkIfWithinTimePeriod : description = Check if it is within the specified time period
+checkIfWithinTimePeriod : pattern = Timeout check for a specific moment
 checkIfWithinTimePeriod : dataNames = ['contractStart', 'contractEnd']
 checkIfWithinTimePeriod : params = null
 object "allPermissionParty:ContractData" as allPermissionParty
@@ -78,6 +79,7 @@ grantPermissionToLicensee<.. grantPermission: Partof
 oneAuthorizePermissionOther<.. grantPermissionToLicensee: Partof
 ifPermissionAuthorization<.. grantPermissionToLicensee: Partof
 checkIfWithinTimePeriod<.. ifPermissionAuthorization: Call
+checkIfWithinTimePeriod<.. License: Partof
 permissionRight<.. License: Partof
 allPermissionParty<.. License: Partof
 contractStart<.. License: Partof

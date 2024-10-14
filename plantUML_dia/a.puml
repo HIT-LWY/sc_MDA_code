@@ -53,8 +53,10 @@ o7 : outputType = [bool]
 o7<..o5 : Partof
 object "checkIfWithinTimePeriod:Restriction" as o8
 o8 : description = Check if it is within the specified time period
+o8 : type = Timeout check for a specific moment
 o8 : dataNames = [contractStart,contractEnd]
 o8<..o7 : Call
+o8<..o1 : Partof
 object "addr:OffChainData" as o63
 o63 : type = address
 o63 : source = null

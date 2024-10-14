@@ -11,7 +11,7 @@ from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMat
 # 合约的函数
 # contractFunction = ""
 # 合约的约束
-contractModifier = ""
+# contractModifier = ""
 
 tab = '    '
 contractName = ""
@@ -325,12 +325,18 @@ def GenerateFunction():
     return contractFunction
 
 
+def GenerateModifier():
+    contractModifier = ""
+
+    return contractModifier
+
+
 # 生成代码
 def codeGenerate():
     # global contractInfo
     # global contractVariable
     # global contractFunction
-    global contractModifier
+    # global contractModifier
     # global contractEvent
     # conInfo = selectContractInfo()
     # contractName = conInfo[0][0]
@@ -938,7 +944,7 @@ def outputCode():
     contractVariable = GenerateContractData()
     contractEvent = GenerateLog()
     contractFunction = GenerateFunction()
-    global contractModifier
+    contractModifier = GenerateModifier()
     # global contractEvent
     contractVariable = tab + contractVariable.replace('\n', '\n' + tab)
     contractModifier = tab + contractModifier.replace('\n', '\n' + tab)
