@@ -5,7 +5,7 @@ import xml.dom.minidom
 import pymysql
 import os
 import matplotlib.pyplot as plt
-
+import time
 from codeGeneration import codeGenerate, outputCode
 from nlp import serviceSelectionByProcess
 
@@ -375,17 +375,26 @@ def convert():
         ifConstant = ""
         unixTime = "0"
         description = ""
+        ifTimeType = False
         for a in attributions:
             newAttrName = a[0]
             newAttrValue = a[1]
             match newAttrName:
                 case "type":
+                    if newAttrValue == 'time':
+                        ifTimeType = True
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     c_type = newAttrValue
                     Note.write(writeTxt)
                 case "initialValue":
-                    writeTxt = newO + " : " + "value" + " = " + newAttrValue + '\n'
-                    value = newAttrValue
+                    # xxxx.xx.xx时间格式转unix时间
+                    if ifTimeType:
+                        year, month, day = map(int, newAttrValue.split('.'))
+                        time_tuple = (year, month, day, 0, 0, 0, 0, 0, 0)
+                        unix_timestamp = int(time.mktime(time_tuple))
+                        newAttrValue = unix_timestamp
+                    writeTxt = newO + " : " + "value" + " = " + f"{newAttrValue}" + '\n'
+                    value = f"{newAttrValue}"
                     Note.write(writeTxt)
                 case "ifPrivate":
                     if newAttrValue == "true":

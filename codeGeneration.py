@@ -321,7 +321,7 @@ def GenerateFunction():
                     contractFunction += '\n'
                     contractFunction += '// ' + allInfoFunction[0][2] + '\n'
                     contractFunction += functionHead
-    print(contractFunction)
+    # print(contractFunction)
     return contractFunction
 
 

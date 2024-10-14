@@ -54,13 +54,13 @@ allPermissionParty : ifConstant = false
 object "contractStart:ContractData" as contractStart
 contractStart : type = time
 contractStart : description = The time when the contract begins to take effect
-contractStart : value = 2012.08.01
+contractStart : value = 1343750400
 contractStart : visibility = private
 contractStart : ifConstant = true
 object "contractEnd:ContractData" as contractEnd
 contractEnd : type = time
 contractEnd : description = The time when the contract becomes invalid
-contractEnd : value = 2015.08.01
+contractEnd : value = 1438358400
 contractEnd : visibility = private
 contractEnd : ifConstant = false
 object "permissionRight:CombinedData" as permissionRight
