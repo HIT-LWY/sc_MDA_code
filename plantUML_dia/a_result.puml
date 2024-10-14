@@ -40,12 +40,28 @@ ifPermissionAuthorization : params = ['addr']
 ifPermissionAuthorization : logs = null
 ifPermissionAuthorization : output = [bool]
 ifPermissionAuthorization : functionRestriction = ['checkIfWithinTimePeriod']
+object "checkIfWithinTimePeriod:Restriction" as checkIfWithinTimePeriod
+checkIfWithinTimePeriod : description = Check if it is within the specified time period
+checkIfWithinTimePeriod : dataNames = ['contractStart', 'contractEnd']
+checkIfWithinTimePeriod : params = null
 object "allPermissionParty:ContractData" as allPermissionParty
 allPermissionParty : type = map
 allPermissionParty : description = All those who have the right of permission
 allPermissionParty : value = null
 allPermissionParty : visibility = private
 allPermissionParty : ifConstant = false
+object "contractStart:ContractData" as contractStart
+contractStart : type = time
+contractStart : description = The time when the contract begins to take effect
+contractStart : value = 2012.08.01
+contractStart : visibility = private
+contractStart : ifConstant = true
+object "contractEnd:ContractData" as contractEnd
+contractEnd : type = time
+contractEnd : description = The time when the contract becomes invalid
+contractEnd : value = 2015.08.01
+contractEnd : visibility = private
+contractEnd : ifConstant = false
 object "permissionRight:CombinedData" as permissionRight
 permissionRight : description = A structure that represents permission right
 permissionRight : value = null
@@ -61,8 +77,11 @@ grantPermission<.. License: Partof
 grantPermissionToLicensee<.. grantPermission: Partof
 oneAuthorizePermissionOther<.. grantPermissionToLicensee: Partof
 ifPermissionAuthorization<.. grantPermissionToLicensee: Partof
+checkIfWithinTimePeriod<.. ifPermissionAuthorization: Call
 permissionRight<.. License: Partof
 allPermissionParty<.. License: Partof
+contractStart<.. License: Partof
+contractEnd<.. License: Partof
 addr<..oneAuthorizePermissionOther: Accept
 addr<..ifPermissionAuthorization: Accept
 @enduml

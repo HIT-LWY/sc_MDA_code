@@ -4,6 +4,7 @@ import time
 import xml.dom.minidom
 import pymysql
 import os
+import matplotlib.pyplot as plt
 
 from codeGeneration import codeGenerate, outputCode
 from nlp import serviceSelectionByProcess
@@ -524,7 +525,7 @@ def convert():
                     Note.write(writeTxt)
         insertParam(newO, p_type, description)
     # 日志解析
-    objToClass = selectObjectByClass('Log')
+    objToClass = selectObjectByClass('-')
     for o in objToClass:
         # 日志对象
         newO = o[0]
@@ -949,3 +950,22 @@ if __name__ == '__main__':
     convert()
     # codeGenerate()
     outputCode()
+    # data = {
+    #     'Threshold value': [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7],
+    #     'Accuracy': [0.96, 0.96, 0.96, 0.96, 0.92, 0.8, 0.8, 0.76, 0.72, 0.6, 0.6, 0.52, 0.48],
+    #     'The number of correct matches': [24, 24, 24, 24, 23, 20, 20, 19, 18, 15, 15, 13, 12]
+    # }
+    #
+    # plt.figure(figsize=(10, 6))  # 设置图表大小
+    # plt.subplot(2, 1, 1)  # 创建第一个子图（2行1列，当前是第1个）
+    # plt.plot(data['Threshold value'], data['Accuracy'], marker='o')  # 绘制折线图，并添加数据点
+    # plt.title('The accuracy varies with the threshold')  # 设置图表标题
+    # plt.xlabel('Threshold value')  # 设置x轴标签
+    # plt.ylabel('Accuracy')  # 设置y轴标签
+    # plt.subplot(2, 1, 2)
+    # plt.plot(data['Threshold value'], data['The number of correct matches'], marker='o')
+    # plt.title('The number of correct matches varies with the threshold')  # 设置图表标题
+    # plt.xlabel('Threshold value')
+    # plt.ylabel('The number of correct matches')
+    # plt.tight_layout()
+    # plt.show()

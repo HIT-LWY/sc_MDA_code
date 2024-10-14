@@ -51,10 +51,10 @@ o7 : dataName = [addr,permissionRight,allPermissionParty]
 o7 : logs = null
 o7 : outputType = [bool]
 o7<..o5 : Partof
-'object "checkIfWithinTimePeriod:Restriction" as o8
-'o8 : description = Check if it is within the specified time period
-'o8 : dataNames = [permissionRightStart,permissionRightEnd]
-'o8<..o7 : Call
+object "checkIfWithinTimePeriod:Restriction" as o8
+o8 : description = Check if it is within the specified time period
+o8 : dataNames = [contractStart,contractEnd]
+o8<..o7 : Call
 object "addr:OffChainData" as o63
 o63 : type = address
 o63 : source = null
@@ -75,4 +75,18 @@ o66 : initialValue = null
 o66 : ifPrivate = true
 o66 : ifMutable = true
 o66<..o1 : Partof
+object "contractStart:SimpleData" as o67
+o67 : type = time
+o67 : description = The time when the contract begins to take effect
+o67 : initialValue = 2012.08.01
+o67 : ifPrivate = true
+o67 : ifMutable = false
+o67<..o1 : Partof
+object "contractEnd:SimpleData" as o68
+o68 : type = time
+o68 : description = The time when the contract becomes invalid
+o68 : initialValue = 2015.08.01
+o68 : ifPrivate = true
+o68 : ifMutable = true
+o68<..o1 : Partof
 @enduml

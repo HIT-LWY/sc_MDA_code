@@ -964,7 +964,7 @@ def connectReusableLib():
 
 def selectProcessInLib(conn, name):
     cur = conn.cursor()
-    sql = "select * from reusable_process_service where process_name = '%s'" % name
+    sql = "select * from reusable_pattern where process_name = '%s'" % name
     cur.execute(sql)
     dataInfo = cur.fetchall()
     cur.close()
@@ -973,7 +973,7 @@ def selectProcessInLib(conn, name):
 
 def selectIdAndDescInLib(conn, function_reuse):
     cur = conn.cursor()
-    sql = "select function_id, description from reusable_function_service where function_name = '%s'" % function_reuse
+    sql = "select function_id, description from reusable_function where function_name = '%s'" % function_reuse
     cur.execute(sql)
     res = cur.fetchall()
     cur.close()
@@ -982,7 +982,7 @@ def selectIdAndDescInLib(conn, function_reuse):
 
 def selectCodeInLib(conn, func_id):
     cur = conn.cursor()
-    sql = "select params, output, on_chain_data, optimizes, code from reusable_function_service " \
+    sql = "select params, output, on_chain_data, optimizes, code from reusable_function " \
           "where function_id = %s" % func_id
     cur.execute(sql)
     code = cur.fetchall()
