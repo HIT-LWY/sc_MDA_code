@@ -69,7 +69,7 @@ def convert():
     clauses = ""
     participants = ""
     data = ""
-    globalRestrictions = ""
+    restrictions = ""
     for o in objToClass:
         # 合约对象名（CIM合约名）
         newO = o[0]
@@ -98,11 +98,11 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     data = newAttrValue
                     Note.write(writeTxt)
-                case "globalRestrictions":
+                case "restrictions":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
-                    globalRestrictions = newAttrValue
+                    restrictions = newAttrValue
                     Note.write(writeTxt)
-        insertSC(newO, annotation, clauses, participants, data)
+        insertSC(newO, annotation, restrictions, clauses, participants, data)
     # 参与方对象转换
     objToClass = selectObjectByClass('Participant')
     for o in objToClass:
@@ -311,6 +311,7 @@ def convert():
         Note.write(writeTxt + '\n')
         xmiId = o[1]
         description = ""
+        res_type = ""
         dataNames = ""
         params = ""
         # 对象属性
@@ -357,9 +358,9 @@ def convert():
                         Note.write(writeTxt)
                 case "type":
                     writeTxt = newO + " : " + "pattern" + " = " + newAttrValue + '\n'
-                    description = newAttrValue
+                    res_type = newAttrValue
                     Note.write(writeTxt)
-        insertRes(newO, description, dataNames, params)
+        insertRes(newO, res_type, description, dataNames, params)
     # 链上数据
     objToClass = selectObjectByClass('SimpleData')
     for o in objToClass:
@@ -772,13 +773,13 @@ def truncateCimDB():
 
 # 保存PIM中生成代码的部分
 # 插入表smart_contract
-def insertSC(name, annotation, clauses, participants, data):
+def insertSC(name, annotation, restrictions, clauses, participants, data):
     conn = connectDB()
     cur = conn.cursor()
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = "insert into smart_contract (`name`, `annotation`, `clauses`, `participants`, `data`, `create_time`, " \
-          "`update_time`) values('%s','%s','%s','%s','%s','%s','%s')" % \
-          (name, annotation, clauses, participants, data, dt, dt)
+    sql = "insert into smart_contract (`name`, `annotation`, `restrictions`, `clauses`, `participants`, `data`, `create_time`, " \
+          "`update_time`) values('%s','%s','%s','%s','%s','%s','%s','%s')" % \
+          (name, annotation, restrictions, clauses, participants, data, dt, dt)
     cur.execute(sql)
     conn.commit()
     cur.close()
@@ -786,13 +787,13 @@ def insertSC(name, annotation, clauses, participants, data):
 
 
 # 插入表restriction
-def insertRes(name, description, dataNames, params):
+def insertRes(name, res_type, description, dataNames, params):
     conn = connectDB()
     cur = conn.cursor()
     dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    sql = """insert into restrictions (res_name, res_description, data_names, res_params, create_time, update_time) 
-    values ("%s","%s","%s","%s","%s","%s")""" % \
-          (name, description, dataNames, params, dt, dt)
+    sql = """insert into restrictions (res_name, type, res_description, data_names, res_params, create_time, update_time) 
+    values ("%s","%s","%s","%s","%s","%s","%s")""" % \
+          (name, res_type, description, dataNames, params, dt, dt)
     cur.execute(sql)
     conn.commit()
     cur.close()

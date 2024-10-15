@@ -5,6 +5,8 @@ contract License  {
     	bool isTransferable;
     }
     map private allPermissionParty ;
+    time private constant contractStart = 1343750400;
+    time private contractEnd = 1438358400;
     address licensor;
     function set_licensor_address(address newAddr) public {
         require(msg.sender == licensor);
@@ -24,6 +26,11 @@ contract License  {
         _;
     }
     
+    //Check if it is within the specified time period
+    modifier checkIfWithinTimePeriod() {
+        require(block.timestamp >= contractStart && block.timestamp <= contractEnd,"Not in authorized time!");
+    	_;
+    }
     
     
     // Granting a permission right

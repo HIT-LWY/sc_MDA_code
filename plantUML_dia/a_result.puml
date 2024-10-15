@@ -3,7 +3,8 @@ object "License:SmartContract" as License
 License : annotation = TRADEMARK LICENSE AGREEMENT
 License : clauses = [grantPermission]
 License : participants = [name1,name2]
-License : data = [permissionRight,allPermissionParty,addr]
+License : restrictions = [checkIfWithinTimePeriod]
+License : data = [permissionRight,allPermissionParty,addr,contractStart,contractEnd]
 object "name1:Participant" as name1
 name1 : address = null
 name1 : roleNames = [licensor]

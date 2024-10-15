@@ -4,7 +4,8 @@ object "License:Contract" as o1
 o1 : description = TRADEMARK LICENSE AGREEMENT
 o1 : clauses = [grantPermission]
 o1 : participants = [name1,name2]
-o1 : data = [permissionRight,allPermissionParty,addr]
+o1 : restrictions = [checkIfWithinTimePeriod]
+o1 : data = [permissionRight,allPermissionParty,addr,contractStart,contractEnd]
 object "name1:Participant" as o2
 o2 : roleNames = [licensor]
 o2<..o1 : Partof

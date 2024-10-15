@@ -8,10 +8,22 @@ import pymysql
 from nlp import serviceSelectionByProcess, serviceSelectionByFunction, selectMatchData, serviceSelectionByModifier, \
     matchFunction, matchData
 
+
 # 合约的函数
 # contractFunction = ""
 # 合约的约束
 # contractModifier = ""
+
+
+def connectDB():
+    conn = pymysql.connect(host='localhost', user='root', password='lwy2000712/', database='mda', charset='utf8')
+    return conn
+
+
+def connectReusableLib():
+    conn = pymysql.connect(host='localhost', user='root', password='lwy2000712/', database='reuse_lib', charset='utf8')
+    return conn
+
 
 tab = '    '
 contractName = ""
@@ -19,10 +31,13 @@ contractAnnotation = ""
 contractClauses = ""
 contractParties = ""
 contractAllData = ''
+contractRestriction = ""
 # 为了避免重复生成modifier和function，需要添加标识
 allModifierFlag = {}
 allFunctionFlag = {}
 allEventFlag = {}
+connection = connectReusableLib()
+connDB = connectDB()
 
 
 def GenerateContractInfo():
@@ -31,12 +46,14 @@ def GenerateContractInfo():
     global contractClauses
     global contractParties
     global contractAllData
+    global contractRestriction
     conInfo = selectContractInfo()
     contractName = conInfo[0][0]
     contractAnnotation = conInfo[0][1]
-    contractClauses = conInfo[0][2]
-    contractParties = conInfo[0][3]
-    contractAllData = conInfo[0][4]
+    contractRestriction = conInfo[0][2]
+    contractClauses = conInfo[0][3]
+    contractParties = conInfo[0][4]
+    contractAllData = conInfo[0][5]
     contractInfo = "//" + contractAnnotation + "\n" + "contract " + contractName + " "
     return contractInfo
 
@@ -170,10 +187,12 @@ def GenerateFunction():
     contractFunction = ""
     global contractClauses
     global tab
+    global connection
+    global connDB
     clausesList = contractClauses.strip('[').strip(']').split(',')
     # 连接复用库
-    connection = connectReusableLib()
-    connDB = connectDB()
+    # connection = connectReusableLib()
+    # connDB = connectDB()
     for clause in clausesList:
         activities = selectActivityByClause(clause)
         processList = activities[0][0].strip('[').strip(']').split(',')
@@ -266,6 +285,7 @@ def GenerateFunction():
                             if data_type[index] == typeDataModel:
                                 data_in_lib = data_name[index]
                                 code = replace_non_alphabetic(code, data_in_lib, dataModel)
+                                break
                     for paramModel in paramListModel:
                         # 开始针对code进行参数的匹配和替换
                         descAndType = selectDescParamModel(connDB, paramModel)
@@ -276,6 +296,7 @@ def GenerateFunction():
                             if param_type[index] == typeParamModel:
                                 param_in_lib = param_name[index]
                                 code = replace_non_alphabetic(code, param_in_lib, paramModel)
+                                break
                     # print(code)
                     # 每一个函数内容，命名不太准确
                     functionHead = ""
@@ -326,9 +347,91 @@ def GenerateFunction():
 
 
 def GenerateModifier():
-    contractModifier = ""
-
-    return contractModifier
+    contractModifiers = ""
+    global tab
+    global contractRestriction
+    # [checkIfWithinTimePeriod]
+    modifierList = contractRestriction.strip('[').strip(']').split(',')
+    for modifier in modifierList:
+        modifierInfo = selectContractModifierByName(connDB, modifier)
+        modifierPattern = modifierInfo[0][0]
+        modifierdesc = modifierInfo[0][1]
+        modifierData = modifierInfo[0][2]
+        modifierParam = modifierInfo[0][3]
+        contractModifiers += '//' + modifierdesc + '\n'
+        contractModifiers += 'modifier' + ' ' + modifier + '('
+        # 根据模式得到复用库中的修饰器信息
+        allModifierInfoInLib = selectContractResInLibByType(connection, modifierPattern)
+        paramsInLib = allModifierInfoInLib[0][0]
+        dataInLib = allModifierInfoInLib[0][1]
+        codeInLib = allModifierInfoInLib[0][2]
+        # 生成参数列表
+        if modifierParam == 'null':
+            contractModifiers += ') '
+        else:
+            param_desc_list = []
+            param_name = []
+            param_id = []
+            param_type = []
+            paramsInLibList = paramsInLib.strip('[').strip(']').split(',')
+            for param in paramsInLibList:
+                param_name.append(param)
+                result = selectParamByNameInLib(param)
+                param_id.append(result[0][0])
+                param_desc_list.append(result[0][1])
+                param_type.append(result[0][2])
+            # 参数进行数据替换
+            paramList = modifierParam.strip('[').strip(']').replace("'", "").replace(" ", "").split(',')
+            for paramModel in paramList:
+                descAndType = selectDescParamModel(connDB, paramModel)
+                desc = descAndType[0][0]
+                typeParamModel = descAndType[0][1]
+                resultList = matchData(desc, param_desc_list)
+                for index in resultList:
+                    if param_type[index] == typeParamModel:
+                        param_in_lib = param_name[index]
+                        codeInLib = replace_non_alphabetic(codeInLib, param_in_lib, paramModel)
+                        break
+            for paramModel in paramList:
+                descAndType = selectDescParamModel(connDB, paramModel)
+                typeParamModel = descAndType[0][1]
+                if typeParamModel == 'string':
+                    contractModifiers += typeParamModel + ' memory ' + paramModel
+                else:
+                    contractModifiers += typeParamModel + ' ' + paramModel
+                contractModifiers += ','
+            contractModifiers = contractModifiers[:-1]
+        # print(contractModifiers)
+        contractModifiers += '{\n' + tab
+        data_desc_list = []
+        data_id = []
+        data_type = []
+        data_name = []
+        if dataInLib != "null":
+            data_lib_list = dataInLib.strip('[').strip(']').split(',')
+            for on_chain_data in data_lib_list:
+                # name,id,desc,type
+                data_name.append(on_chain_data)
+                result = selectDataByNameInLib(on_chain_data)
+                data_id.append(result[0][0])
+                data_desc_list.append(result[0][1])
+                data_type.append(result[0][2])
+        dataListModel = modifierData.strip('[').strip(']').replace("'", "").replace(" ", "").split(',')
+        for dataModel in dataListModel:
+            descAndType = selectDescDataModel(connDB, dataModel)
+            desc = descAndType[0][0]
+            typeDataModel = descAndType[0][1]
+            resultList = matchData(desc, data_desc_list)
+            # print(resultList)
+            for index in resultList:
+                if data_type[index] == typeDataModel:
+                    data_in_lib = data_name[index]
+                    codeInLib = replace_non_alphabetic(codeInLib, data_in_lib, dataModel)
+                    break
+        codeInLib = codeInLib.replace('\n', '\n\t')
+        contractModifiers += codeInLib + '\n' + '}' + '\n'
+        # print(contractModifiers)
+    return contractModifiers
 
 
 # 生成代码
@@ -958,14 +1061,22 @@ def outputCode():
     Note.write(code)
 
 
-def connectDB():
-    conn = pymysql.connect(host='localhost', user='root', password='lwy2000712/', database='mda', charset='utf8')
-    return conn
+def selectContractResInLibByType(conn, res_type):
+    cur = conn.cursor()
+    sql = "select params, data_names, code from reusable_modifier where pattern = '%s'" % res_type
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
 
 
-def connectReusableLib():
-    conn = pymysql.connect(host='localhost', user='root', password='lwy2000712/', database='reuse_lib', charset='utf8')
-    return conn
+def selectContractModifierByName(conn, name):
+    cur = conn.cursor()
+    sql = "select type, res_description, data_names, res_params from restrictions where res_name = '%s'" % name
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
 
 
 def selectProcessInLib(conn, name):
@@ -1007,8 +1118,8 @@ def selectDataParamReturn(functionModel):
     return res
 
 
-def selectDescDataModel(connDB, model):
-    cur = connDB.cursor()
+def selectDescDataModel(conDB, model):
+    cur = conDB.cursor()
     sql = "select description, type from contract_data where name = '%s'" % model
     cur.execute(sql)
     res = cur.fetchall()
@@ -1016,8 +1127,8 @@ def selectDescDataModel(connDB, model):
     return res
 
 
-def selectDescParamModel(connDB, paramModel):
-    cur = connDB.cursor()
+def selectDescParamModel(conDB, paramModel):
+    cur = conDB.cursor()
     sql = "select description, type from param where name = '%s'" % paramModel
     cur.execute(sql)
     res = cur.fetchall()
@@ -1030,7 +1141,7 @@ def selectDescParamModel(connDB, paramModel):
 def selectContractInfo():
     conn = connectDB()
     cur = conn.cursor()
-    sql = "select name, annotation, clauses, participants, data from smart_contract"
+    sql = "select name, annotation, restrictions, clauses, participants, data from smart_contract"
     cur.execute(sql)
     conInfo = cur.fetchall()
     cur.close()
