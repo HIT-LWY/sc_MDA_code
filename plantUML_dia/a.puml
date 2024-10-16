@@ -70,26 +70,26 @@ o65 : initialValue = null
 o65 : ifPrivate = true
 o65 : ifMutable = true
 o65 : allTypeName = [bool hasRight,bool isTransferable]
-o65<..o1 : Partof
+o1..>o65 : Partof
 object "allPermissionParty:SimpleData" as o66
 o66 : type = map
 o66 : description = All those who have the right of permission
 o66 : initialValue = Party to permissionRight
 o66 : ifPrivate = true
 o66 : ifMutable = true
-o66<..o1 : Partof
+o1..>o66 : Partof
 object "contractStart:SimpleData" as o67
 o67 : type = time
 o67 : description = The time when the contract begins to take effect
 o67 : initialValue = 2012.08.01
 o67 : ifPrivate = true
 o67 : ifMutable = false
-o67<..o1 : Partof
+o1..>o67 : Partof
 object "contractEnd:SimpleData" as o68
 o68 : type = time
 o68 : description = The time when the contract becomes invalid
 o68 : initialValue = 2015.08.01
 o68 : ifPrivate = true
 o68 : ifMutable = true
-o68<..o1 : Partof
+o1..>o68 : Partof
 @enduml

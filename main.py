@@ -615,7 +615,7 @@ def convert():
             if res in allList:
                 writeTxt = res + "<.. " + functionName + ": " + "Call" + '\n'
                 Note.write(writeTxt)
-    # 在函数和参数之间增加流
+    # 在函数和数据之间增加流
     objToClass = selectObjectByClass('ContractTask')
     for o in objToClass:
         # 动作对象
@@ -627,8 +627,35 @@ def convert():
         paramList = paramStr.split(',')
         for p in paramList:
             p = p.strip('\'')
-            writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
+            if p != 'null':
+                writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
+                Note.write(writeTxt)
+        dataListStr = selectDataByFunction(newO)
+        dataList = dataListStr[0][0].strip('[').strip(']').replace("'", "").split(',')
+        for d in dataList:
+            writeTxt = d + "<.." + newO + ": " + "Accept" + '\n'
             Note.write(writeTxt)
+    # 在约束和数据之间增加流
+    objToClass = selectObjectByClass('Restriction')
+    for o in objToClass:
+        # 动作对象
+        newO = o[0]
+        paramListStr = selectParamByRes(newO)
+        paramStr = paramListStr[0][0]
+        paramStr = paramStr.strip('[')
+        paramStr = paramStr.strip(']')
+        paramList = paramStr.split(',')
+        for p in paramList:
+            p = p.strip('\'')
+            if p != 'null':
+                writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
+                Note.write(writeTxt)
+        dataListStr = selectDataByRes(newO)
+        dataList = dataListStr[0][0].strip('[').strip(']').replace("'", "").split(',')
+        for d in dataList:
+            if d != 'null':
+                writeTxt = d + "<.." + newO + ": " + "Accept" + '\n'
+                Note.write(writeTxt)
     Note.write('@enduml\n')
     Note.close()
 
@@ -950,6 +977,42 @@ def selectParamByFunction(functionName):
     cur = conn.cursor()
     sql = "select params from allfunctions where name = '%s'" % \
           functionName
+    cur.execute(sql)
+    params = cur.fetchall()
+    cur.close()
+    conn.close()
+    return params
+
+
+def selectDataByFunction(functionName):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select dataNames from allfunctions where name = '%s'" % \
+          functionName
+    cur.execute(sql)
+    params = cur.fetchall()
+    cur.close()
+    conn.close()
+    return params
+
+
+def selectParamByRes(resName):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select res_params from restrictions where res_name = '%s'" % \
+          resName
+    cur.execute(sql)
+    params = cur.fetchall()
+    cur.close()
+    conn.close()
+    return params
+
+
+def selectDataByRes(resName):
+    conn = connectDB()
+    cur = conn.cursor()
+    sql = "select data_names from restrictions where res_name = '%s'" % \
+          resName
     cur.execute(sql)
     params = cur.fetchall()
     cur.close()

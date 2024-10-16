@@ -81,10 +81,12 @@ oneAuthorizePermissionOther<.. grantPermissionToLicensee: Partof
 ifPermissionAuthorization<.. grantPermissionToLicensee: Partof
 checkIfWithinTimePeriod<.. ifPermissionAuthorization: Call
 checkIfWithinTimePeriod<.. License: Partof
-permissionRight<.. License: Partof
-allPermissionParty<.. License: Partof
-contractStart<.. License: Partof
-contractEnd<.. License: Partof
 addr<..oneAuthorizePermissionOther: Accept
+permissionRight<..oneAuthorizePermissionOther: Accept
+ allPermissionParty<..oneAuthorizePermissionOther: Accept
 addr<..ifPermissionAuthorization: Accept
+permissionRight<..ifPermissionAuthorization: Accept
+ allPermissionParty<..ifPermissionAuthorization: Accept
+contractStart<..checkIfWithinTimePeriod: Accept
+ contractEnd<..checkIfWithinTimePeriod: Accept
 @enduml
