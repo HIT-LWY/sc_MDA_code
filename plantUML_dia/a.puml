@@ -74,7 +74,7 @@ o65<..o1 : Partof
 object "allPermissionParty:SimpleData" as o66
 o66 : type = map
 o66 : description = All those who have the right of permission
-o66 : initialValue = null
+o66 : initialValue = Party to permissionRight
 o66 : ifPrivate = true
 o66 : ifMutable = true
 o66<..o1 : Partof

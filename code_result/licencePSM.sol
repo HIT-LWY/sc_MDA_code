@@ -4,9 +4,9 @@ contract License  {
     	bool hasRight;
     	bool isTransferable;
     }
-    map private allPermissionParty ;
-    time private constant contractStart = 1343750400;
-    time private contractEnd = 1438358400;
+    mapping(address=>permissionRight) private allPermissionParty;
+    uint private constant contractStart = 1343750400;
+    uint private contractEnd = 1438358400;
     address licensor;
     function set_licensor_address(address newAddr) public {
         require(msg.sender == licensor);

@@ -49,7 +49,7 @@ checkIfWithinTimePeriod : params = null
 object "allPermissionParty:ContractData" as allPermissionParty
 allPermissionParty : type = map
 allPermissionParty : description = All those who have the right of permission
-allPermissionParty : value = null
+allPermissionParty : value = Party to permissionRight
 allPermissionParty : visibility = private
 allPermissionParty : ifConstant = false
 object "contractStart:ContractData" as contractStart

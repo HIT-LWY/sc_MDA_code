@@ -76,6 +76,33 @@ def GenerateContractData():
                     contractVariable += c + ';\n\t'
                 contractVariable = contractVariable[:-1]
                 contractVariable += '}\n'
+            elif variableInfo[0][0] == 'map':
+                contractVariable += 'mapping('
+                keyToValue = variableInfo[0][2]
+                parts = keyToValue.split(" to ")
+                key = parts[0]
+                value = parts[1]
+                if key == 'Party':
+                    key = 'address'
+                contractVariable += key + '=>' + value + ') '
+                if variableInfo[0][1] == 'private':
+                    contractVariable += 'private '
+                if variableInfo[0][3] == 'true':
+                    contractVariable += 'constant ' + d + ';\n'
+                else:
+                    contractVariable += d + ';\n'
+            elif variableInfo[0][0] == 'time':
+                contractVariable += 'uint' + " " + variableInfo[0][1] + " "
+                if variableInfo[0][3] == 'true':
+                    contractVariable += 'constant ' + d + ' '
+                else:
+                    contractVariable += d + ' '
+                if variableInfo[0][4] == '0':
+                    if variableInfo[0][2] != 'null':
+                        contractVariable += '= ' + variableInfo[0][2]
+                else:
+                    contractVariable += '= ' + variableInfo[0][4]
+                contractVariable += ';\n'
             else:
                 contractVariable += variableInfo[0][0] + " " + variableInfo[0][1] + " "
                 if variableInfo[0][3] == 'true':
