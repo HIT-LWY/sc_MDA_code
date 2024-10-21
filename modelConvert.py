@@ -10,6 +10,15 @@ from codeGeneration import codeGenerate, outputCode
 from nlp import serviceSelectionByProcess
 
 
+def writeFile(content):
+    Note = open('tmp_cim/cim.txt', mode='a')
+    Note.seek(0)
+    Note.truncate()
+    Note.write(content)
+    Note.close()
+    os.system("java -jar plantuml.jar .\\tmp_cim\\cim.txt")
+
+
 def parsePUML():
     # 从plantuml文件转换到xmi文件
     os.system("java -jar plantuml.jar .\\plantUML_dia\\a.puml -xmi:star")
@@ -1020,13 +1029,13 @@ def selectDataByRes(resName):
     return params
 
 
-if __name__ == '__main__':
-    truncateCimDB()
-    parsePUML()
-    truncatePimDB()
-    convert()
-    # codeGenerate()
-    outputCode()
+# if __name__ == '__main__':
+#     truncateCimDB()
+#     parsePUML()
+#     truncatePimDB()
+#     convert()
+#     # codeGenerate()
+#     outputCode()
     # data = {
     #     'Threshold value': [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7],
     #     'Accuracy': [0.96, 0.96, 0.96, 0.96, 0.92, 0.8, 0.8, 0.76, 0.72, 0.6, 0.6, 0.52, 0.48],

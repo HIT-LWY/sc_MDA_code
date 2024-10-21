@@ -1,0 +1,95 @@
+@startuml
+'https://plantuml.com/object-diagram
+object "License:Contract" as o1
+o1 : description = TRADEMARK LICENSE AGREEMENT
+o1 : clauses = [grantPermission]
+o1 : participants = [name1,name2]
+o1 : restrictions = [checkIfWithinTimePeriod]
+o1 : data = [permissionRight,allPermissionParty,addr,contractStart,contractEnd]
+object "name1:Participant" as o2
+o2 : roleNames = [licensor]
+o2<..o1 : Partof
+object "name2:Participant" as o3
+o3 : roleNames = [licensee]
+o3<..o1 : Partof
+object "grantPermission:Clause" as o4
+o4 : domain = Authentic right
+o4 : exector = [licensor,licensee]
+o4 : patterns = [grantPermissionToLicensee]
+o4<..o1 : Partof
+object "grantPermissionToLicensee:Pattern" as o5
+o5 : description = The licensor Grants licensee worldwide royalty-free rights
+o5 : type = Grant A Right
+o5 : tasks = [oneAuthorizePermissionOther,ifPermissionAuthorization]
+o5<..o4 : Partof
+object "initiateGrantPermission:UserTask" as o9
+o9 : description = Licensor initiates a grant of authority
+o9 : user = licensor
+o9<..o5 : Partof
+object "initiateCheckPermission:UserTask" as o10
+o10 : description = Initiate permission check
+o10 : user = licensee
+o10<..o5 : Partof
+object "oneAuthorizePermissionOther:ContractTask" as o6
+o6 : description = Granting a permission right
+o6 : restricts = null
+o6 : roleRight = [licensor]
+o6 : ifInitializeContract = false
+o6 : ifUpdateData = true
+o6 : ifGenerateTransaction = false
+o6 : dataName = [addr,permissionRight,allPermissionParty]
+o6 : logs = null
+o6 : outputType = null
+o6<..o5 : Partof
+object "ifPermissionAuthorization:ContractTask" as o7
+o7 : description = Determine if permission is granted
+o7 : restricts = [checkIfWithinTimePeriod]
+o7 : roleRight = [licensor]
+o7 : ifInitializeContract = false
+o7 : ifUpdateData = false
+o7 : ifGenerateTransaction = false
+o7 : dataName = [addr,permissionRight,allPermissionParty]
+o7 : logs = null
+o7 : outputType = [bool]
+o7<..o5 : Partof
+object "checkIfWithinTimePeriod:Restriction" as o8
+o8 : description = Check if it is within the specified time period
+o8 : type = Timeout check for a specific moment
+o8 : dataNames = [contractStart,contractEnd]
+o8<..o7 : Call
+o8<..o1 : Partof
+object "addr:OffChainData" as o63
+o63 : type = address
+o63 : source = null
+o63 : description = Account address on the blockchain
+o1..>o63 : Partof
+object "permissionRight:CombineData" as o65
+o65 : type = struct
+o65 : description = A structure that represents permission right
+o65 : initialValue = null
+o65 : ifPrivate = true
+o65 : ifMutable = true
+o65 : allTypeName = [bool hasRight,bool isTransferable]
+o1..>o65 : Partof
+object "allPermissionParty:SimpleData" as o66
+o66 : type = map
+o66 : description = All those who have the right of permission
+o66 : initialValue = Party to permissionRight
+o66 : ifPrivate = true
+o66 : ifMutable = true
+o1..>o66 : Partof
+object "contractStart:SimpleData" as o67
+o67 : type = time
+o67 : description = The time when the contract begins to take effect
+o67 : initialValue = 2012.08.01
+o67 : ifPrivate = true
+o67 : ifMutable = false
+o1..>o67 : Partof
+object "contractEnd:SimpleData" as o68
+o68 : type = time
+o68 : description = The time when the contract becomes invalid
+o68 : initialValue = 2015.08.01
+o68 : ifPrivate = true
+o68 : ifMutable = true
+o1..>o68 : Partof
+@enduml
