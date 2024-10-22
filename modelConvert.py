@@ -11,18 +11,22 @@ from nlp import serviceSelectionByProcess
 
 
 def writeFile(content):
-    Note = open('tmp_cim/cim.txt', mode='a')
+    Note = open('D:\研\低代码工具\myPlantuml\public\cim.txt', mode='a')
     Note.seek(0)
     Note.truncate()
     Note.write(content)
     Note.close()
-    os.system("java -jar plantuml.jar .\\tmp_cim\\cim.txt")
+    os.system("java -jar plantuml.jar -tsvg D:\\研\\低代码工具\\myPlantuml\\public\\cim.txt")
 
 
 def parsePUML():
     # 从plantuml文件转换到xmi文件
-    os.system("java -jar plantuml.jar .\\plantUML_dia\\a.puml -xmi:star")
-    dom = xml.dom.minidom.parse('plantUML_dia/a.xmi')
+    # os.system("java -jar plantuml.jar .\\plantUML_dia\\a.puml -xmi:star")
+    os.system("java -jar plantuml.jar .\\tmp_cim\\cim.puml -xmi:star")
+
+    # dom = xml.dom.minidom.parse('plantUML_dia/a.xmi')
+    dom = xml.dom.minidom.parse('tmp_cim/cim.xmi')
+
     root = dom.documentElement
     contents = root.getElementsByTagName('XMI.content')
     model = contents[0].getElementsByTagName('UML:Model')
@@ -65,14 +69,20 @@ def parsePUML():
 
 # CIM到PIM的转换
 def convert():
+    # 返回给前端的值
+    result = ''
     # 根据类名完成对象的转换
     global newO
     objToClass = selectObjectByClass('Contract')
-    Note = open('plantUML_dia/a_result.puml', mode='a')
+
+    # Note = open('tmp_cim/pim.puml', mode='a')
+    Note = open('C:\\Users\\24476\Desktop\project-mda\pimfront\public\pim.txt', mode='a')
+
     # 清空文件
     Note.seek(0)
     Note.truncate()
     Note.write('@startuml\n')
+    result += '@startuml\n'
     # 合约对象的转换
     annotation = ""
     clauses = ""
@@ -84,6 +94,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "SmartContract\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         # 该对象的属性
         attributions = selectAttrsById(xmiId)
@@ -95,22 +106,27 @@ def convert():
                     writeTxt = newO + " : " + "annotation = " + newAttrValue + '\n'
                     annotation = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "clauses":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     clauses = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "participants":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     participants = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "data":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     data = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "restrictions":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     restrictions = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertSC(newO, annotation, restrictions, clauses, participants, data)
     # 参与方对象转换
     objToClass = selectObjectByClass('Participant')
@@ -119,6 +135,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Participant\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         role_names = ""
         # 该对象的属性
@@ -128,11 +145,13 @@ def convert():
             newAttrValue = a[1]
             writeTxt = newO + " : " + "address" + " = " + "null" + '\n'
             Note.write(writeTxt)
+            result += writeTxt
             match newAttrName:
                 case "roleNames":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     role_names = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertParticipants(newO, role_names)
     # 条款对象的转换
     objToClass = selectObjectByClass('Clause')
@@ -141,6 +160,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "ClauseInfo\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         # 对象属性
         attributions = selectAttrsById(xmiId)
@@ -154,13 +174,16 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     domain = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "exector":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "patterns":
                     writeTxt = newO + " : " + "processes" + " = " + newAttrValue + '\n'
                     processes = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertClause(newO, domain, processes)
     # 模式对象转换
     objToClass = selectObjectByClass('Pattern')
@@ -169,6 +192,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Process\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         description = ""
         functions = ""
@@ -183,6 +207,7 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "tasks":
                     fixed_s = "[" + ",".join(f'"{item}"' for item in newAttrValue.strip("[]").split(",")) + "]"
                     list_from_string = json.loads(fixed_s)
@@ -194,10 +219,12 @@ def convert():
                     functions = functions.rstrip(',')
                     writeTxt = newO + " : " + "functions" + " = " + functions + ']' + '\n'
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "type":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     type_name = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertProcess(newO, type_name, description, functions)
     # 合约任务对象转换
     objToClass = selectObjectByClass('ContractTask')
@@ -206,6 +233,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Function\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         # 对象属性
         attributions = selectAttrsById(xmiId)
@@ -229,6 +257,7 @@ def convert():
                     writeTxt = newO + " : " + "annotation" + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "restricts":
                     if newAttrValue != "null":
                         restrictionString = newAttrValue.strip('[')
@@ -240,18 +269,22 @@ def convert():
                     writeTxt = newO + " : " + "right" + " = " + newAttrValue + '\n'
                     right = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifInitializeContract":
                     writeTxt = newO + " : " + "ifConstructor" + " = " + newAttrValue + '\n'
                     ifConstructor = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifUpdateData":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     ifUpdateData = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifGenerateTransaction":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     ifGenerateTransaction = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "dataName":
                     if newAttrValue != "null":
                         dataString = newAttrValue.strip('[')
@@ -272,45 +305,55 @@ def convert():
                             writeTxt = newO + " : " + "dataNames" + " = " + str(onChain) + '\n'
                             dataNames = str(onChain)
                             Note.write(writeTxt)
+                            result += writeTxt
                         else:
                             writeTxt = newO + " : " + "dataNames" + " = " + "null" + '\n'
                             dataNames = "null"
                             Note.write(writeTxt)
+                            result += writeTxt
                         if len(param) != 0:
                             writeTxt = newO + " : " + "params" + " = " + str(param) + '\n'
                             params = str(param)
                             Note.write(writeTxt)
+                            result += writeTxt
                         else:
                             writeTxt = newO + " : " + "params" + " = " + "null" + '\n'
                             params = "null"
                             Note.write(writeTxt)
+                            result += writeTxt
                     else:
                         writeTxt = newO + " : " + "dataNames" + " = " + "null" + '\n'
                         dataNames = "null"
                         Note.write(writeTxt)
+                        result += writeTxt
                         writeTxt = newO + " : " + "params" + " = " + "null" + '\n'
                         params = "null"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "logs":
                     writeTxt = newO + " : " + "logs" + " = " + newAttrValue + '\n'
                     logs = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "outputType":
                     writeTxt = newO + " : " + "output" + " = " + newAttrValue + '\n'
                     output = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         if len(restrictions) != 0:
             insertFunction(newO, description, str(restrictions), right, ifConstructor, ifUpdateData,
                            ifGenerateTransaction,
                            dataNames, params, logs, output)
             writeRestriction += str(restrictions) + '\n'
             Note.write(writeRestriction)
+            result += writeRestriction
         else:
             insertFunction(newO, description, 'null', right, ifConstructor, ifUpdateData,
                            ifGenerateTransaction,
                            dataNames, params, logs, output)
             writeRestriction += 'null' + '\n'
             Note.write(writeRestriction)
+            result += writeRestriction
     # 约束
     objToClass = selectObjectByClass('Restriction')
     for o in objToClass:
@@ -318,6 +361,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Restriction\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         description = ""
         res_type = ""
@@ -333,6 +377,7 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "dataNames":
                     dataString = newAttrValue.strip('[')
                     dataString = dataString.strip(']')
@@ -352,23 +397,28 @@ def convert():
                         dataNames = str(onChain)
                         writeTxt = newO + " : " + "dataNames" + " = " + dataNames + '\n'
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "dataNames" + " = " + "null" + '\n'
                         dataNames = "null"
                         Note.write(writeTxt)
+                        result += writeTxt
                     if len(param) != 0:
                         params = str(param)
                         params.replace('\'', '')
                         writeTxt = newO + " : " + "params" + " = " + params + '\n'
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "params" + " = " + "null" + '\n'
                         params = "null"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "type":
                     writeTxt = newO + " : " + "pattern" + " = " + newAttrValue + '\n'
                     res_type = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertRes(newO, res_type, description, dataNames, params)
     # 链上数据
     objToClass = selectObjectByClass('SimpleData')
@@ -377,6 +427,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "ContractData\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
         c_type = ""
@@ -396,6 +447,7 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     c_type = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "initialValue":
                     # xxxx.xx.xx时间格式转unix时间
                     if ifTimeType:
@@ -406,28 +458,34 @@ def convert():
                     writeTxt = newO + " : " + "value" + " = " + f"{newAttrValue}" + '\n'
                     value = f"{newAttrValue}"
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifPrivate":
                     if newAttrValue == "true":
                         writeTxt = newO + " : " + "visibility" + " = " + "private" + '\n'
                         visibility = "private"
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "visibility" + " = " + "public" + '\n'
                         visibility = "public"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "ifMutable":
                     if newAttrValue == "true":
                         writeTxt = newO + " : " + "ifConstant" + " = " + "false" + '\n'
                         ifConstant = "false"
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "ifConstant" + " = " + "true" + '\n'
                         ifConstant = "true"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "description":
                     writeTxt = newO + " : " + "description" + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertContractData(newO, c_type, visibility, value, ifConstant, unixTime, "null", description)
     # 链上struct复合数据
     objToClass = selectObjectByClass('CombineData')
@@ -436,6 +494,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "CombinedData\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
         c_type = "struct"
@@ -453,22 +512,27 @@ def convert():
                     writeTxt = newO + " : " + "value" + " = " + newAttrValue + '\n'
                     value = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifPrivate":
                     writeTxt = newO + " : " + "visibility" + " = " + "null" + '\n'
                     visibility = "null"
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifMutable":
                     writeTxt = newO + " : " + "ifConstant" + " = " + "null" + '\n'
                     ifConstant = "null"
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "description":
                     writeTxt = newO + " : " + "description" + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "allTypeName":
                     writeTxt = newO + " : " + "allTypeName" + " = " + newAttrValue + '\n'
                     allTypeName = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertContractData(newO, c_type, visibility, value, ifConstant, unixTime, allTypeName, description)
     # 链上时间数据
     objToClass = selectObjectByClass('Date')
@@ -477,6 +541,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Date\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
         c_type = "null"
@@ -493,24 +558,29 @@ def convert():
                     writeTxt = newO + " : " + "value" + " = " + newAttrValue + '\n'
                     value = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "ifPrivate":
                     if newAttrValue == "true":
                         writeTxt = newO + " : " + "visibility" + " = " + "private" + '\n'
                         visibility = "private"
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "visibility" + " = " + "public" + '\n'
                         visibility = "public"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "ifMutable":
                     if newAttrValue == "true":
                         writeTxt = newO + " : " + "ifConstant" + " = " + "false" + '\n'
                         ifConstant = "false"
                         Note.write(writeTxt)
+                        result += writeTxt
                     else:
                         writeTxt = newO + " : " + "ifConstant" + " = " + "true" + '\n'
                         ifConstant = "true"
                         Note.write(writeTxt)
+                        result += writeTxt
                 case "standardTime":
                     x = time.strptime(newAttrValue, "%Y-%m-%d %H:%M:%S")
                     y = time.mktime(x)
@@ -518,10 +588,12 @@ def convert():
                     writeTxt = newO + " : " + "unixTime" + " = " + z + '\n'
                     unixTime = z
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "description":
                     writeTxt = newO + " : " + "description" + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertContractData(newO, c_type, visibility, value, ifConstant, unixTime, "null", description)
     # 链外数据，函数参数
     objToClass = selectObjectByClass('OffChainData')
@@ -530,6 +602,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Param\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
         p_type = ""
@@ -542,10 +615,12 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     p_type = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
                 case "description":
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     description = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertParam(newO, p_type, description)
     # 日志解析
     objToClass = selectObjectByClass('-')
@@ -554,6 +629,7 @@ def convert():
         newO = o[0]
         writeTxt = "object " + "\"" + newO + ":" + "Log\" " + "as " + newO
         Note.write(writeTxt + '\n')
+        result += writeTxt + '\n'
         xmiId = o[1]
         attributions = selectAttrsById(xmiId)
         params = ""
@@ -565,6 +641,7 @@ def convert():
                     writeTxt = newO + " : " + newAttrName + " = " + newAttrValue + '\n'
                     params = newAttrValue
                     Note.write(writeTxt)
+                    result += writeTxt
         insertLog(newO, params)
     # 对象及属性解析结束
     # 关联关系解析
@@ -587,6 +664,7 @@ def convert():
                 # o18 <..o1: Partof
                 writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
         if className == 'Clause':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
@@ -594,6 +672,7 @@ def convert():
             # className_end = objAndCla_end[0][1]
             writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
             Note.write(writeTxt)
+            result += writeTxt
         if className == 'Pattern':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
@@ -602,12 +681,14 @@ def convert():
             if className_end != 'UserTask':
                 writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
         if className == 'ContractTask':
             # 尾端的对象和类
             objAndCla_end = selectObjAndClaById(end)
             objName_end = objAndCla_end[0][0]
             writeTxt = objName_end + "<.. " + objName + ": " + label + '\n'
             Note.write(writeTxt)
+            result += writeTxt
     # 全局约束的关联
     globalRes = selectObjectByClass('GlobalRestriction')
     for g in globalRes:
@@ -624,6 +705,7 @@ def convert():
             if res in allList:
                 writeTxt = res + "<.. " + functionName + ": " + "Call" + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
     # 在函数和数据之间增加流
     objToClass = selectObjectByClass('ContractTask')
     for o in objToClass:
@@ -639,11 +721,13 @@ def convert():
             if p != 'null':
                 writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
         dataListStr = selectDataByFunction(newO)
         dataList = dataListStr[0][0].strip('[').strip(']').replace("'", "").split(',')
         for d in dataList:
             writeTxt = d + "<.." + newO + ": " + "Accept" + '\n'
             Note.write(writeTxt)
+            result += writeTxt
     # 在约束和数据之间增加流
     objToClass = selectObjectByClass('Restriction')
     for o in objToClass:
@@ -659,14 +743,19 @@ def convert():
             if p != 'null':
                 writeTxt = p + "<.." + newO + ": " + "Accept" + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
         dataListStr = selectDataByRes(newO)
         dataList = dataListStr[0][0].strip('[').strip(']').replace("'", "").split(',')
         for d in dataList:
             if d != 'null':
                 writeTxt = d + "<.." + newO + ": " + "Accept" + '\n'
                 Note.write(writeTxt)
+                result += writeTxt
     Note.write('@enduml\n')
+    result += '@enduml\n'
     Note.close()
+    os.system("java -jar plantuml.jar -tsvg C:\\Users\\24476\Desktop\project-mda\pimfront\public\pim.txt")
+    return result
 
 
 def connectDB():

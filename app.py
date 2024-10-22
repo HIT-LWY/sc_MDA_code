@@ -1,7 +1,7 @@
 from flask import *
 from flask import Flask
 
-from modelConvert import writeFile
+from modelConvert import writeFile, parsePUML, convert
 
 app = Flask(__name__)  # 初始化app
 
@@ -15,12 +15,22 @@ def hello():
 def modelShow():
     comment = request.json.get('cimCode')
     writeFile(comment)
-    return ''
+    return 'OK'
 
 
 @app.route('/convert')
 def convertModel():
-    return 'convert'
+    content = request.values.get('cimCode')
+    Note = open('tmp_cim\cim.puml', mode='a')
+    Note.seek(0)
+    Note.truncate()
+    Note.write(content)
+    Note.close()
+    # 解析CIM
+    parsePUML()
+    # 转换PIM
+    result = convert()
+    return result
 
 
 if __name__ == '__main__':
