@@ -58,6 +58,15 @@ def GenerateContractInfo():
     return contractInfo
 
 
+def getContractName():
+    res = {
+        'name': contractName,
+        'desc': contractAnnotation,
+        'party': contractParties
+    }
+    return res
+
+
 # 生成合约链上的数据
 def GenerateContractData():
     global contractAllData

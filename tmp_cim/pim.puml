@@ -1,0 +1,92 @@
+@startuml
+object "License:SmartContract" as License
+License : annotation = TRADEMARK LICENSE AGREEMENT
+License : clauses = [grantPermission]
+License : participants = [name1,name2]
+License : restrictions = [checkIfWithinTimePeriod]
+License : data = [permissionRight,allPermissionParty,addr,contractStart,contractEnd]
+object "name1:Participant" as name1
+name1 : address = null
+name1 : roleNames = [licensor]
+object "name2:Participant" as name2
+name2 : address = null
+name2 : roleNames = [licensee]
+object "grantPermission:ClauseInfo" as grantPermission
+grantPermission : domain = Authentic right
+grantPermission : exector = [licensor,licensee]
+grantPermission : processes = [grantPermissionToLicensee]
+object "grantPermissionToLicensee:Process" as grantPermissionToLicensee
+grantPermissionToLicensee : description = The licensor Grants licensee worldwide royalty-free rights
+grantPermissionToLicensee : type = Grant A Right
+grantPermissionToLicensee : functions = [oneAuthorizePermissionOther,ifPermissionAuthorization]
+object "oneAuthorizePermissionOther:Function" as oneAuthorizePermissionOther
+oneAuthorizePermissionOther : annotation = Granting a permission right
+oneAuthorizePermissionOther : right = [licensor]
+oneAuthorizePermissionOther : ifConstructor = false
+oneAuthorizePermissionOther : ifUpdateData = true
+oneAuthorizePermissionOther : ifGenerateTransaction = false
+oneAuthorizePermissionOther : dataNames = ['permissionRight', 'allPermissionParty']
+oneAuthorizePermissionOther : params = ['addr']
+oneAuthorizePermissionOther : logs = null
+oneAuthorizePermissionOther : output = null
+oneAuthorizePermissionOther : functionRestriction = null
+object "ifPermissionAuthorization:Function" as ifPermissionAuthorization
+ifPermissionAuthorization : annotation = Determine if permission is granted
+ifPermissionAuthorization : right = [licensor]
+ifPermissionAuthorization : ifConstructor = false
+ifPermissionAuthorization : ifUpdateData = false
+ifPermissionAuthorization : ifGenerateTransaction = false
+ifPermissionAuthorization : dataNames = ['permissionRight', 'allPermissionParty']
+ifPermissionAuthorization : params = ['addr']
+ifPermissionAuthorization : logs = null
+ifPermissionAuthorization : output = [bool]
+ifPermissionAuthorization : functionRestriction = ['checkIfWithinTimePeriod']
+object "checkIfWithinTimePeriod:Restriction" as checkIfWithinTimePeriod
+checkIfWithinTimePeriod : description = Check if it is within the specified time period
+checkIfWithinTimePeriod : pattern = Timeout check for a specific moment
+checkIfWithinTimePeriod : dataNames = ['contractStart', 'contractEnd']
+checkIfWithinTimePeriod : params = null
+object "allPermissionParty:ContractData" as allPermissionParty
+allPermissionParty : type = map
+allPermissionParty : description = All those who have the right of permission
+allPermissionParty : value = Party to permissionRight
+allPermissionParty : visibility = private
+allPermissionParty : ifConstant = false
+object "contractStart:ContractData" as contractStart
+contractStart : type = time
+contractStart : description = The time when the contract begins to take effect
+contractStart : value = 1343750400
+contractStart : visibility = private
+contractStart : ifConstant = true
+object "contractEnd:ContractData" as contractEnd
+contractEnd : type = time
+contractEnd : description = The time when the contract becomes invalid
+contractEnd : value = 1438358400
+contractEnd : visibility = private
+contractEnd : ifConstant = false
+object "permissionRight:CombinedData" as permissionRight
+permissionRight : description = A structure that represents permission right
+permissionRight : value = null
+permissionRight : visibility = null
+permissionRight : ifConstant = null
+permissionRight : allTypeName = [bool hasRight,bool isTransferable]
+object "addr:Param" as addr
+addr : type = address
+addr : description = Account address on the blockchain
+name1<.. License: Partof
+name2<.. License: Partof
+grantPermission<.. License: Partof
+grantPermissionToLicensee<.. grantPermission: Partof
+oneAuthorizePermissionOther<.. grantPermissionToLicensee: Partof
+ifPermissionAuthorization<.. grantPermissionToLicensee: Partof
+checkIfWithinTimePeriod<.. ifPermissionAuthorization: Call
+checkIfWithinTimePeriod<.. License: Partof
+addr<..oneAuthorizePermissionOther: Accept
+permissionRight<..oneAuthorizePermissionOther: Accept
+ allPermissionParty<..oneAuthorizePermissionOther: Accept
+addr<..ifPermissionAuthorization: Accept
+permissionRight<..ifPermissionAuthorization: Accept
+ allPermissionParty<..ifPermissionAuthorization: Accept
+contractStart<..checkIfWithinTimePeriod: Accept
+ contractEnd<..checkIfWithinTimePeriod: Accept
+@enduml

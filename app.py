@@ -1,9 +1,10 @@
 from flask import *
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import *
 import modelConvert
 from codeGeneration import outputCode
 from modelConvert import writeFile, parsePUML, convert
+import codeGeneration
 
 app = Flask(__name__)  # 初始化app
 CORS(app, resources=r'/*')
@@ -52,6 +53,26 @@ def generate():
     with open('code_result/licencePSM.sol', 'r', encoding='utf-8') as file:
         result = file.read()
         return result
+
+
+@app.route('/getInfo', methods=['GET'])
+@cross_origin()
+def getInfo():
+    contractInfo = codeGeneration.getContractName()
+    data = {
+        'contractInfo': [{
+            'contractKey': '合约名',
+            'contractValue': contractInfo.get('name')
+        }, {
+            'contractKey': '合约描述',
+            'contractValue': contractInfo.get('desc')
+        }, {
+            'contractKey': '合约参与方',
+            'contractValue': contractInfo.get('party')
+        }]
+    }
+    json_data = json.dumps(data)
+    return json_data
 
 
 if __name__ == '__main__':
