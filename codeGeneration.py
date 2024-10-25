@@ -67,6 +67,108 @@ def getContractName():
     return res
 
 
+def getContractData():
+    global contractAllData
+    allDataList = contractAllData.strip('[').strip(']').split(',')
+    res = []
+    for d in allDataList:
+        desc = selectDataDescByName(d)
+        if len(desc) == 0:
+            desc = selectParamDescByName(d)
+        cur = {
+            'dataName': d,
+            'dataDesc': desc
+        }
+        res.append(cur)
+    return res
+
+
+def getDataDetailInfo(name):
+    res = [{
+        'key': '数据名称',
+        'value': name
+    }]
+    variableInfo = selectOnchainData(name)
+    if len(variableInfo) != 0:
+        res.append({
+            'key': '数据类型',
+            'value': variableInfo[0][0]
+        })
+        res.append({
+            'key': '数据可见性',
+            'value': variableInfo[0][1]
+        })
+        res.append({
+            'key': '数据初始值',
+            'value': variableInfo[0][2]
+        })
+        res.append({
+            'key': '数据只读性',
+            'value': variableInfo[0][3]
+        })
+        res.append({
+            'key': '数据来源',
+            'value': '链上数据'
+        })
+    else:
+        variableInfo = selectParam(name)
+        res.append({
+            'key': '数据类型',
+            'value': variableInfo[0][0]
+        })
+        res.append({
+            'key': '数据可见性',
+            'value': '无'
+        })
+        res.append({
+            'key': '数据初始值',
+            'value': '无'
+        })
+        res.append({
+            'key': '数据只读性',
+            'value': '无'
+        })
+        res.append({
+            'key': '数据来源',
+            'value': '链外参数'
+        })
+    return res
+
+
+def getRestrictionInfo():
+    global contractRestriction
+    restrictionList = contractRestriction.strip('[').strip(']').split(',')
+    res = []
+    for r in restrictionList:
+        modifierInfo = selectContractModifierByName(connDB, r)
+        modifierdesc = modifierInfo[0][1]
+        cur = {
+            'restrictionName': r,
+            'restrictionDesc': modifierdesc
+        }
+        res.append(cur)
+    return res
+
+
+def getProcessInfo():
+    global contractClauses
+    clausesList = contractClauses.strip('[').strip(']').split(',')
+    processList = []
+    res = []
+    for clause in clausesList:
+        activities = selectActivityByClause(clause)[0][0].strip('[').strip(']').split(',')
+        for act in activities:
+            processList.append(act)
+    for p in processList:
+        patternDesc = selectProcessByName(p)[0][1]
+        cur = {
+            'patternName': p,
+            'patternDesc': patternDesc
+        }
+        res.append(cur)
+    return res
+
+
 # 生成合约链上的数据
 def GenerateContractData():
     global contractAllData
@@ -1198,6 +1300,15 @@ def selectOnchainData(name):
     return dataInfo
 
 
+def selectDataDescByName(name):
+    cur = connDB.cursor()
+    sql = "select description from contract_data where name = '%s'" % name
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
 # 查找参与方的角色
 def selectParty(name):
     conn = connectDB()
@@ -1462,3 +1573,12 @@ def selectLogInfoByName(name):
     cur.close()
     conn.close()
     return logs
+
+
+def selectParamDescByName(name):
+    cur = connDB.cursor()
+    sql = "select description from param where name = '%s'" % name
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res

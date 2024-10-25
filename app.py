@@ -59,6 +59,9 @@ def generate():
 @cross_origin()
 def getInfo():
     contractInfo = codeGeneration.getContractName()
+    contractData = codeGeneration.getContractData()
+    contractRes = codeGeneration.getRestrictionInfo()
+    contractPattern = codeGeneration.getProcessInfo()
     data = {
         'contractInfo': [{
             'contractKey': '合约名',
@@ -68,8 +71,23 @@ def getInfo():
             'contractValue': contractInfo.get('desc')
         }, {
             'contractKey': '合约参与方',
-            'contractValue': contractInfo.get('party')
-        }]
+            'contractValue': contractInfo.get('party').strip('[').strip(']')
+        }],
+        'dataInfo': contractData,
+        'restrictionInfo': contractRes,
+        'patternInfo': contractPattern
+    }
+    json_data = json.dumps(data)
+    return json_data
+
+
+@app.route('/getDataDetail', methods=['GET'])
+@cross_origin()
+def getDataDetail():
+    name = request.values.get('dataName')
+    detail = codeGeneration.getDataDetailInfo(name)
+    data = {
+        'dataDetail': detail
     }
     json_data = json.dumps(data)
     return json_data
