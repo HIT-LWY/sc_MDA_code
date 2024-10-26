@@ -93,6 +93,37 @@ def getDataDetail():
     return json_data
 
 
+@app.route('/getResDetail', methods=['GET'])
+@cross_origin()
+def getResDetail():
+    name = request.values.get('resName')
+    detail = codeGeneration.getResDetailInfo(name)
+    data = {
+        'resDetail': detail
+    }
+    json_data = json.dumps(data)
+    return json_data
+
+
+@app.route('/getPatternDetail', methods=['GET'])
+@cross_origin()
+def getPatternDetail():
+    name = request.values.get('patternName')
+    patternInfo = codeGeneration.getProcessDetailInfo(name)
+    functionInfo = []
+    pattern = codeGeneration.selectProcessByName(name)
+    functions = pattern[0][2].strip('[').strip(']').split(',')
+    for f in functions:
+        cur = codeGeneration.getFunctionDetailInfo(f)
+        functionInfo.append(cur)
+    data = {
+        'processDetail': patternInfo,
+        'functionDetail': functionInfo
+    }
+    json_data = json.dumps(data)
+    return json_data
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()

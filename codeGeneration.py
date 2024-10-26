@@ -150,6 +150,34 @@ def getRestrictionInfo():
     return res
 
 
+def getResDetailInfo(name):
+    # print(name)
+    res = [{
+        'key': '约束名称',
+        'value': name
+    }]
+    resInfo = selectContractModifierByName(connDB, name)
+    res.append({
+        'key': '约束模式',
+        'value': resInfo[0][0]
+    })
+    res.append({
+        'key': '关联链上数据',
+        'value': resInfo[0][2].strip('[').strip(']').replace("'", "").replace(" ", "")
+    })
+    if resInfo[0][3] == 'null':
+        res.append({
+            'key': '输入参数',
+            'value': '无'
+        })
+    else:
+        res.append({
+            'key': '输入参数',
+            'value': resInfo[0][3].strip('[').strip(']').replace("'", "").replace(" ", "")
+        })
+    return res
+
+
 def getProcessInfo():
     global contractClauses
     clausesList = contractClauses.strip('[').strip(']').split(',')
@@ -166,6 +194,41 @@ def getProcessInfo():
             'patternDesc': patternDesc
         }
         res.append(cur)
+    return res
+
+
+def getProcessDetailInfo(name):
+    res = [{
+        'key': '流程名称',
+        'value': name
+    }]
+    patternInfo = selectProcessByName(name)
+    res.append({
+        'key': '上链模式',
+        'value': patternInfo[0][0]
+    })
+    res.append({
+        'key': '包含函数',
+        'value': patternInfo[0][2].strip('[').strip(']')
+    })
+    return res
+
+
+def getFunctionDetailInfo(name):
+    functionInfo = selectFunctionInfo(name)
+    funcDesc = functionInfo[0][1]
+    funcData = functionInfo[0][2].strip('[').strip(']').replace("'", "").replace(" ", "")
+    funcParam = functionInfo[0][3].strip('[').strip(']').replace("'", "").replace(" ", "")
+    funcRes = functionInfo[0][4].strip('[').strip(']').replace("'", "").replace(" ", "")
+    funcOutput = functionInfo[0][5].strip('[').strip(']').replace("'", "").replace(" ", "")
+    res = {
+        'functionName': name,
+        'functionDesc': funcDesc,
+        'functionData': funcData,
+        'functionParam': funcParam,
+        'functionRes': funcRes,
+        'functionReturn': funcOutput
+    }
     return res
 
 
@@ -1578,6 +1641,16 @@ def selectLogInfoByName(name):
 def selectParamDescByName(name):
     cur = connDB.cursor()
     sql = "select description from param where name = '%s'" % name
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
+def selectFunctionInfo(name):
+    cur = connDB.cursor()
+    sql = "select name, description, dataNames, params, functionRestriction, output " \
+          "from allfunctions where name = '%s'" % name
     cur.execute(sql)
     res = cur.fetchall()
     cur.close()
