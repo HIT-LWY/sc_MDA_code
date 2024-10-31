@@ -5,6 +5,7 @@ import modelConvert
 from codeGeneration import outputCode
 from modelConvert import writeFile, parsePUML, convert
 import codeGeneration
+import reusableLibManage
 
 app = Flask(__name__)  # 初始化app
 CORS(app, resources=r'/*')
@@ -124,7 +125,51 @@ def getPatternDetail():
     return json_data
 
 
+@app.route('/getContractInLib', methods=['GET'])
+@cross_origin()
+def getAllContract():
+    contractInfo = reusableLibManage.getAllContract()
+    res = []
+    for c in contractInfo:
+        cur = {
+            'number': c[0],
+            'contractName': c[1],
+            'contractDesc': c[2]
+        }
+        res.append(cur)
+    return res
+
+
+@app.route('/getContractCode', methods=['GET'])
+@cross_origin()
+def getContractCode():
+    contractId = request.values.get('id')
+    code = reusableLibManage.getContractCode(contractId)
+    return code
+
+
+@app.route('/update/contract', methods=['GET'])
+@cross_origin()
+def updateContract():
+    contractId = request.values.get('id')
+    contractName = request.values.get('name')
+    contractDesc = request.values.get('desc')
+    contractCode = request.values.get('code')
+    reusableLibManage.updateContract(contractId, contractName, contractDesc, contractCode)
+    return 'Successful Update!'
+
+
+@app.route('/addContract', methods=['GET'])
+@cross_origin()
+def addContract():
+    contractName = request.values.get('name')
+    contractDesc = request.values.get('desc')
+    contractCode = request.values.get('code')
+    reusableLibManage.addContract(contractName, contractDesc, contractCode)
+    return 'Successful Add!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()
-    app.run(host='127.0.0.1', port=9014,)  # 运行app
+    app.run(host='127.0.0.1', port=9014, )  # 运行app
