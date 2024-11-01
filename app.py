@@ -227,6 +227,17 @@ def deletePattern():
     return 'Successful Delete!'
 
 
+@app.route('/addPatternInLib', methods=['GET'])
+@cross_origin()
+def addPattern():
+    patternName = request.values.get('name')
+    patternDomain = request.values.get('class')
+    patternDesc = request.values.get('desc')
+    patternFunctions = request.values.get('functions')
+    reusableLibManage.addPattern(patternName, patternDomain, patternDesc, patternFunctions)
+    return 'Successful Add!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()
