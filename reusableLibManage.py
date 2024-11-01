@@ -38,8 +38,43 @@ def updateContract(contractId, contractName, contractDesc, contractCode):
 
 def addContract(contractName, contractDesc, contractCode):
     cur = connection.cursor()
-    sql = "insert into contract (name, `desc`, code) values ('%s','%s','%s')" % (contractName, contractDesc, contractCode)
+    sql = "insert into contract (name, `desc`, code) values ('%s','%s','%s')" % (
+        contractName, contractDesc, contractCode)
     cur.execute(sql)
     connection.commit()
     cur.close()
 
+
+def getAllPattern():
+    cur = connection.cursor()
+    sql = "select process_id, process_name, domain, description, functions from reusable_pattern"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res
+
+
+def getAllClass():
+    cur = connection.cursor()
+    sql = "select DISTINCT domain from reusable_pattern where domain IS NOT NULL"
+    cur.execute(sql)
+    res = cur.fetchall()
+    return res
+
+
+def updatePattern(patternId, patternName, patternDomain, patternDesc, patternFunctions):
+    cur = connection.cursor()
+    sql = "update reusable_pattern set process_name = '%s', domain = '%s', description = '%s', " \
+          "functions = '%s' where process_id = '%s'" \
+          % (patternName, patternDomain, patternDesc, patternFunctions, patternId)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+
+
+def deletePattern(patternId):
+    cur = connection.cursor()
+    sql = "delete from reusable_pattern where process_id = '%s'" % patternId
+    cur.execute(sql)
+    connection.commit()
+    cur.close()

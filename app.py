@@ -169,6 +169,55 @@ def addContract():
     return 'Successful Add!'
 
 
+@app.route('/getPatternInLib', methods=['GET'])
+@cross_origin()
+def getPatternInfo():
+    patternInfo = reusableLibManage.getAllPattern()
+    pattern = []
+    domain = []
+    for r in patternInfo:
+        cur = {
+            'number': r[0],
+            'patternName': r[1],
+            'patternClass': r[2],
+            'patternDesc': r[3],
+            'allFunctions': r[4]
+        }
+        pattern.append(cur)
+    allClasses = reusableLibManage.getAllClass()
+    for c in allClasses:
+        cur = {
+            'value': c[0],
+            'label': c[0]
+        }
+        domain.append(cur)
+    res = {
+        'pattern': pattern,
+        'domain': domain
+    }
+    return res
+
+
+@app.route('/updatePatternInLib', methods=['GET'])
+@cross_origin()
+def updatePattern():
+    patternId = request.values.get('id')
+    patternName = request.values.get('name')
+    patternDomain = request.values.get('class')
+    patternDesc = request.values.get('desc')
+    patternFunctions = request.values.get('functions')
+    reusableLibManage.updatePattern(patternId, patternName, patternDomain, patternDesc, patternFunctions)
+    return 'Successful Update!'
+
+
+@app.route('/deletePatternInLib', methods=['GET'])
+@cross_origin()
+def deletePattern():
+    patternId = request.values.get('id')
+    reusableLibManage.deletePattern(patternId)
+    return 'Successful Delete!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()
