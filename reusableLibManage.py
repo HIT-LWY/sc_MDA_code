@@ -78,3 +78,12 @@ def deletePattern(patternId):
     cur.execute(sql)
     connection.commit()
     cur.close()
+
+
+def getAllFunctions():
+    cur = connection.cursor()
+    sql = "select function_name from reusable_function"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    return res

@@ -175,6 +175,7 @@ def getPatternInfo():
     patternInfo = reusableLibManage.getAllPattern()
     pattern = []
     domain = []
+    functions = []
     for r in patternInfo:
         cur = {
             'number': r[0],
@@ -191,9 +192,17 @@ def getPatternInfo():
             'label': c[0]
         }
         domain.append(cur)
+    allFunctions = reusableLibManage.getAllFunctions()
+    for f in allFunctions:
+        cur = {
+            'value': f[0],
+            'label': f[0]
+        }
+        functions.append(cur)
     res = {
         'pattern': pattern,
-        'domain': domain
+        'domain': domain,
+        'functions': functions
     }
     return res
 
