@@ -238,6 +238,88 @@ def addPattern():
     return 'Successful Add!'
 
 
+@app.route('/getFunctionInLib', methods=['GET'])
+@cross_origin()
+def getAllFunctionInfo():
+    functionInfo = reusableLibManage.getAllFunctionInfo()
+    functionArray = []
+    for f in functionInfo:
+        cur = {
+            'number': f[0],
+            'functionName': f[1],
+            'functionDesc': f[2],
+            'functionParam': f[3],
+            'output': f[4],
+            'onChainData': f[5]
+        }
+        functionArray.append(cur)
+    paramName = reusableLibManage.getAllParam()
+    param = []
+    for p in paramName:
+        cur = {
+            'value': p[0],
+            'label': p[0]
+        }
+        param.append(cur)
+    dataName = reusableLibManage.getAllChainData()
+    data = []
+    for d in dataName:
+        cur = {
+            'value': d[0],
+            'label': d[0]
+        }
+        data.append(cur)
+    res = {
+        'functionInfo': functionArray,
+        'param': param,
+        'data': data
+    }
+    return res
+
+
+@app.route('/getFunctionCodeInLib', methods=['GET'])
+@cross_origin()
+def getFunctionCode():
+    functionId = request.values.get('id')
+    code = reusableLibManage.getFunctionCode(functionId)
+    return code[0][0]
+
+
+@app.route('/deleteFunctionInLib', methods=['GET'])
+@cross_origin()
+def deleteFunction():
+    functionId = request.values.get('id')
+    reusableLibManage.deleteFunction(functionId)
+    return 'Successful Delete!'
+
+
+@app.route('/updateFunctionCodeInLib', methods=['GET'])
+@cross_origin()
+def updateFunction():
+    functionId = request.values.get('id')
+    functionName = request.values.get('functionName')
+    functionDesc = request.values.get('functionDesc')
+    functionParam = request.values.get('functionParam')
+    output = request.values.get('output')
+    chainData = request.values.get('chainData')
+    code = request.values.get('code')
+    reusableLibManage.updateFunction(functionId, functionName, functionDesc, functionParam, output, chainData, code)
+    return 'Successful Update!'
+
+
+@app.route('/addFunctionInLib', methods=['GET'])
+@cross_origin()
+def addFunction():
+    functionName = request.values.get('functionName')
+    functionDesc = request.values.get('functionDesc')
+    functionParam = request.values.get('functionParam')
+    output = request.values.get('output')
+    chainData = request.values.get('chainData')
+    code = request.values.get('code')
+    reusableLibManage.addFunction(functionName, functionDesc, functionParam, output, chainData, code)
+    return 'Successful Add!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()

@@ -114,3 +114,80 @@ def addPattern(patternName, patternDomain, patternDesc, patternFunctions):
     connection.commit()
     cur.close()
     connection.close()
+
+
+def getAllFunctionInfo():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select function_id, function_name, description, params, output, on_chain_data from reusable_function"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def getFunctionCode(functionId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select code from reusable_function where function_id = '%s'" % functionId
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def getAllParam():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select param_name from param_data"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def getAllChainData():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select data_name from con_data"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def deleteFunction(functionId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "delete from reusable_function where function_id = '%s'" % functionId
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def updateFunction(functionId, functionName, functionDesc, functionParam, output, chainData, code):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "update reusable_function set function_name = '%s', description = '%s', params = '%s', " \
+          "output = '%s', on_chain_data = '%s', code = '%s' where function_id = '%s'" \
+          % (functionName, functionDesc, functionParam, output, chainData, code, functionId)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def addFunction(functionName, functionDesc, functionParam, output, chainData, code):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "insert into reusable_function (function_name, description, params, output, on_chain_data, code) " \
+          "values ('%s', '%s', '%s', '%s', '%s', '%s')" % (functionName, functionDesc, functionParam, output, chainData, code)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
