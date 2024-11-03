@@ -402,6 +402,91 @@ def addRes():
     return 'Successful Add!'
 
 
+@app.route('/getData', methods=['GET'])
+@cross_origin()
+def getDataInfo():
+    data = reusableLibManage.getData()
+    param = reusableLibManage.getParam()
+    res = []
+    for d in data:
+        cur = {
+            'number': 'd' + str(d[0]),
+            'name': d[1],
+            'desc': d[2],
+            'type': d[3],
+            'source': 'on-chain'
+        }
+        res.append(cur)
+    for p in param:
+        cur = {
+            'number': 'p' + str(p[0]),
+            'name': p[1],
+            'desc': p[2],
+            'type': p[3],
+            'source': 'off-chain'
+        }
+        res.append(cur)
+    return res
+
+
+@app.route('/updateData', methods=['GET'])
+@cross_origin()
+def updateData():
+    dataId = request.values.get('id')
+    dataName = request.values.get('name')
+    dataDesc = request.values.get('desc')
+    dataType = request.values.get('type')
+    reusableLibManage.updateData(dataId, dataName, dataDesc, dataType)
+    return 'Successful Update!'
+
+
+@app.route('/updateParam', methods=['GET'])
+@cross_origin()
+def updateParam():
+    paramId = request.values.get('id')
+    paramName = request.values.get('name')
+    paramDesc = request.values.get('desc')
+    paramType = request.values.get('type')
+    reusableLibManage.updateParam(paramId, paramName, paramDesc, paramType)
+    return 'Successful Update!'
+
+
+@app.route('/deleteData', methods=['GET'])
+@cross_origin()
+def deleteData():
+    dataId = request.values.get('id')
+    reusableLibManage.deleteData(dataId)
+    return 'Successful Delete!'
+
+
+@app.route('/deleteParam', methods=['GET'])
+@cross_origin()
+def deleteParam():
+    paramId = request.values.get('id')
+    reusableLibManage.deleteParam(paramId)
+    return 'Successful Delete!'
+
+
+@app.route('/addData', methods=['GET'])
+@cross_origin()
+def addData():
+    dataName = request.values.get('name')
+    dataDesc = request.values.get('desc')
+    dataType = request.values.get('type')
+    reusableLibManage.addData(dataName, dataDesc, dataType)
+    return 'Successful Add!'
+
+
+@app.route('/addParam', methods=['GET'])
+@cross_origin()
+def addParam():
+    paramName = request.values.get('name')
+    paramDesc = request.values.get('desc')
+    paramType = request.values.get('type')
+    reusableLibManage.addParam(paramName, paramDesc, paramType)
+    return 'Successful Add!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()

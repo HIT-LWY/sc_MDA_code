@@ -186,7 +186,8 @@ def addFunction(functionName, functionDesc, functionParam, output, chainData, co
     connection = connectReusableLib()
     cur = connection.cursor()
     sql = "insert into reusable_function (function_name, description, params, output, on_chain_data, code) " \
-          "values ('%s', '%s', '%s', '%s', '%s', '%s')" % (functionName, functionDesc, functionParam, output, chainData, code)
+          "values ('%s', '%s', '%s', '%s', '%s', '%s')" % (
+          functionName, functionDesc, functionParam, output, chainData, code)
     cur.execute(sql)
     connection.commit()
     cur.close()
@@ -243,6 +244,92 @@ def addRes(resName, resPattern, resDesc, resParam, chainData, code):
     sql = "insert into reusable_modifier (modifier_name, pattern, description, params, data_names, code) " \
           "values ('%s', '%s', '%s', '%s', '%s', '%s')" % (
               resName, resPattern, resDesc, resParam, chainData, code)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def getData():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select data_id, data_name, data_desc, type from con_data"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def getParam():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select param_id, param_name, param_desc, type from param_data"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def updateData(dataId, dataName, dataDesc, dataType):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "update con_data set data_name = '%s', data_desc = '%s', type = '%s' where data_id = '%s'" \
+          % (dataName, dataDesc, dataType, dataId)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def updateParam(paramId, paramName, paramDesc, paramType):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "update param_data set param_name = '%s', param_desc = '%s', type = '%s' where param_id = '%s'" \
+          % (paramName, paramDesc, paramType, paramId)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def deleteData(dataId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "delete from con_data where data_id = '%s'" % dataId
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def deleteParam(paramId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "delete from param_data where param_id = '%s'" % paramId
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def addData(dataName, dataDesc, dataType):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "insert into con_data (data_name, data_desc, type) " \
+          "values ('%s', '%s', '%s')" % (dataName, dataDesc, dataType)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def addParam(paramName, paramDesc, paramType):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "insert into param_data (param_name, param_desc, type) " \
+          "values ('%s', '%s', '%s')" % (paramName, paramDesc, paramType)
     cur.execute(sql)
     connection.commit()
     cur.close()
