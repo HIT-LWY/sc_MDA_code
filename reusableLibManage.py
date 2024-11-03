@@ -191,3 +191,59 @@ def addFunction(functionName, functionDesc, functionParam, output, chainData, co
     connection.commit()
     cur.close()
     connection.close()
+
+
+def getAllResInfo():
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select modifier_id, modifier_name, pattern, description, params, data_names from reusable_modifier"
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def getResCode(resId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "select code from reusable_modifier where modifier_id = '%s'" % resId
+    cur.execute(sql)
+    res = cur.fetchall()
+    cur.close()
+    connection.close()
+    return res
+
+
+def updateRes(resId, resName, resPattern, resDesc, resParam, chainData, code):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "update reusable_modifier set modifier_name = '%s', pattern = '%s', description = '%s', params = '%s', " \
+          "data_names = '%s', code = '%s' where modifier_id = '%s'" \
+          % (resName, resPattern, resDesc, resParam, chainData, code, resId)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def deleteRes(resId):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "delete from reusable_modifier where modifier_id = '%s'" % resId
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()
+
+
+def addRes(resName, resPattern, resDesc, resParam, chainData, code):
+    connection = connectReusableLib()
+    cur = connection.cursor()
+    sql = "insert into reusable_modifier (modifier_name, pattern, description, params, data_names, code) " \
+          "values ('%s', '%s', '%s', '%s', '%s', '%s')" % (
+              resName, resPattern, resDesc, resParam, chainData, code)
+    cur.execute(sql)
+    connection.commit()
+    cur.close()
+    connection.close()

@@ -320,6 +320,88 @@ def addFunction():
     return 'Successful Add!'
 
 
+@app.route('/getResInLib', methods=['GET'])
+@cross_origin()
+def getAllResInfo():
+    resInfo = reusableLibManage.getAllResInfo()
+    resArray = []
+    for f in resInfo:
+        cur = {
+            'number': f[0],
+            'resName': f[1],
+            'resPattern': f[2],
+            'resDesc': f[3],
+            'resParam': f[4],
+            'resData': f[5]
+        }
+        resArray.append(cur)
+    paramName = reusableLibManage.getAllParam()
+    param = []
+    for p in paramName:
+        cur = {
+            'value': p[0],
+            'label': p[0]
+        }
+        param.append(cur)
+    dataName = reusableLibManage.getAllChainData()
+    data = []
+    for d in dataName:
+        cur = {
+            'value': d[0],
+            'label': d[0]
+        }
+        data.append(cur)
+    res = {
+        'resInfo': resArray,
+        'param': param,
+        'data': data
+    }
+    return res
+
+
+@app.route('/getResCodeInLib', methods=['GET'])
+@cross_origin()
+def getResCode():
+    resId = request.values.get('id')
+    code = reusableLibManage.getResCode(resId)
+    return code[0][0]
+
+
+@app.route('/updateResCodeInLib', methods=['GET'])
+@cross_origin()
+def updateRes():
+    resId = request.values.get('id')
+    resName = request.values.get('resName')
+    resPattern = request.values.get('resPattern')
+    resDesc = request.values.get('resDesc')
+    resParam = request.values.get('resParam')
+    chainData = request.values.get('chainData')
+    code = request.values.get('code')
+    reusableLibManage.updateRes(resId, resName, resPattern, resDesc, resParam, chainData, code)
+    return 'Successful Update!'
+
+
+@app.route('/deleteResInLib', methods=['GET'])
+@cross_origin()
+def deleteRes():
+    resId = request.values.get('id')
+    reusableLibManage.deleteRes(resId)
+    return 'Successful Delete!'
+
+
+@app.route('/addResInLib', methods=['GET'])
+@cross_origin()
+def addRes():
+    resName = request.values.get('resName')
+    resPattern = request.values.get('resPattern')
+    resDesc = request.values.get('resDesc')
+    resParam = request.values.get('resParam')
+    chainData = request.values.get('chainData')
+    code = request.values.get('code')
+    reusableLibManage.addRes(resName, resPattern, resDesc, resParam, chainData, code)
+    return 'Successful Add!'
+
+
 if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()
