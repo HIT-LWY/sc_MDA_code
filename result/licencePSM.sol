@@ -1,4 +1,5 @@
 //TRADEMARK LICENSE AGREEMENT
+pragma
 contract License  {
     uint private specSolveTime = 120 days;
     bool private ifContractIsValid = true;
@@ -62,22 +63,26 @@ contract License  {
         _;
     }
     modifier checkIfWithinTimePeriod(){
-        require(block.timestamp >= permissionRightStart || block.timestamp <= permissionRightEnd,"Not in authorized time!");
+        require(block.timestamp >= permissionRightStart || block.timestamp <= permissionRightEnd,"Not in authorized time!");
+
         _;
         _;
     }
     modifier checkIfLicensorIfCanTerminate(){
-        require(licensorIfCanTerminate);
+        require(licensorIfCanTerminate);
+
         _;
         _;
     }
     modifier checkIfLicenseeIfCanTerminate(){
-        require(licenseeIfCanTerminate);
+        require(licenseeIfCanTerminate);
+
         _;
         _;
     }
     modifier checkContractIsValid(){
-        require(ifContractIsValid);
+        require(ifContractIsValid);
+
         _;
         _;
     }
@@ -91,38 +96,55 @@ contract License  {
         licensee = newAddr;
     }
     function oneAuthorizePermissionOther(address current_licensee) public  validity check_licensor {
-        allPermissionPartyNum++;
+        allPermissionPartyNum++;
+
         allPermissionParty[allPermissionPartyNum] = current_licensee;
     }
     function ifPermissionAuthorization(address addr) public  view checkIfWithinTimePeriod validity check_licensor returns (bool) {
-        for(int i = 0; i < allPermissionPartyNum; i++){
-        	if(allPermissionParty[i] == addr){
-        		return true;
-        	}
-        }
+        for(int i = 0; i < allPermissionPartyNum; i++){
+
+        	if(allPermissionParty[i] == addr){
+
+        		return true;
+
+        	}
+
+        }
+
         return false;
     }
     constructor(address licensor, address licensee){
-        licensor_address = licensor;
-        licensee_address = licensee;
+        licensor_address = licensor;
+
+        licensee_address = licensee;
+
         allMonitorRight[1] = licensor;
     }
     function ifMonitorAuthorization(address addr) public  view validity returns (bool) {
-        for(int i = 0; i < allMonitorRightNum; i++){
-        	if(allMonitorRight[i] == addr){
-        		return true;
-        	}
-        }
+        for(int i = 0; i < allMonitorRightNum; i++){
+
+        	if(allMonitorRight[i] == addr){
+
+        		return true;
+
+        	}
+
+        }
+
         return false;
     }
     function provideGoods(int sampleId, string memory document) public  validity check_licensee {
-        provideGoodsNum++;
-        provideGood memory newProvideGood = provideGood(sampleId,block.timestamp,document);
+        provideGoodsNum++;
+
+        provideGood memory newProvideGood = provideGood(sampleId,block.timestamp,document);
+
         allProvideGood[provideGoodsNum] = newProvideGood;
     }
     function receiveGoods(int sampleId) public  validity check_licensor {
-        receiveGoodsNum++;
-        receiveGood memory newReceiveGood = receiveGood(sampleId,block.timestamp);
+        receiveGoodsNum++;
+
+        receiveGood memory newReceiveGood = receiveGood(sampleId,block.timestamp);
+
         allReceiveGood[receiveGoodsNum] = newReceiveGood;
     }
     function finishContractByLicensor() public  checkIfLicensorIfCanTerminate validity check_licensor {
@@ -132,28 +154,38 @@ contract License  {
         ifContractIsValid = false;
     }
     function sendProblemNotificationByLicensor(string memory document) public  validity check_licensor returns (int) {
-        problemNum++;
-        allProblems[provideGoodsNum] = problem(msg.sender,block.timestamp, document, false, 0,"");
+        problemNum++;
+
+        allProblems[provideGoodsNum] = problem(msg.sender,block.timestamp, document, false, 0,"");
+
         return problemNum;
     }
     function sendProblemNotificationByLicensee(string memory document) public  validity check_licensee returns (int) {
-        problemNum++;
-        allProblems[provideGoodsNum] = problem(msg.sender,block.timestamp, document, false, 0,"");
+        problemNum++;
+
+        allProblems[provideGoodsNum] = problem(msg.sender,block.timestamp, document, false, 0,"");
+
         return problemNum;
     }
     function resolveProblemByLicensee(int problemId, string memory document) public  validity check_licensee {
-        allProblems[problemId].resolveDocument = document;
-        allProblems[problemId].ifExist = true;
+        allProblems[problemId].resolveDocument = document;
+
+        allProblems[problemId].ifExist = true;
+
         allProblems[problemId].resolveTime = block.timestamp;
     }
     function resolveProblemByLicensor(int problemId, string memory document) public  validity check_licensor {
-        allProblems[problemId].resolveDocument = document;
-        allProblems[problemId].ifExist = true;
+        allProblems[problemId].resolveDocument = document;
+
+        allProblems[problemId].ifExist = true;
+
         allProblems[problemId].resolveTime = block.timestamp;
     }
     function setNeedReturnGood(string memory goodInformation, uint appointReturnTime) public  validity checkContractIsValid check_licensor returns (int) {
-        needReturnGoodsNum++;
-        allNeedReturnGood[needReturnGoodsNum] = needReturnGood(goodInformation,appointReturnTime,false,0,"");
+        needReturnGoodsNum++;
+
+        allNeedReturnGood[needReturnGoodsNum] = needReturnGood(goodInformation,appointReturnTime,false,0,"");
+
         return needReturnGoodsNum;
     }
     
