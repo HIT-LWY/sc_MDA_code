@@ -1254,7 +1254,9 @@ def outputCode():
     contractModifier = tab + contractModifier.replace('\n', '\n' + tab)
     contractFunction = tab + contractFunction.replace('\n', '\n' + tab)
     contractEvent = tab + contractEvent.replace('\n', '\n' + tab)
-    code = contractInfo + ' {\n' + contractVariable + '\n' + contractModifier + '\n' + \
+    code = '// SPDX - License - Identifier: GPL - 3.0\n'
+    code += 'pragma solidity >= 0.7.0 < 0.9.0;\n'
+    code += contractInfo + ' {\n' + contractVariable + '\n' + contractModifier + '\n' + \
            contractFunction + '\n' + contractEvent + '\n}'
     Note = open('code_result/licencePSM.sol', mode='a')
     Note.seek(0)

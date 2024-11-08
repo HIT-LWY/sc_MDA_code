@@ -1,7 +1,7 @@
 import paramiko
+import codeGeneration
 
-
-def sshConnection():
+def sshUploadFile():
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -17,5 +17,4 @@ def sshConnection():
     # res, err = stdout.read(), stderr.read()  # stdout.readline()
     # result = res if res else err
     # print(result.decode())
-
     ssh.close()

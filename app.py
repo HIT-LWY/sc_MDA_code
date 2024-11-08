@@ -488,8 +488,84 @@ def addParam():
     return 'Successful Add!'
 
 
+@app.route('/analysisModel', methods=['POST'])
+@cross_origin()
+def getAnalysisModel():
+    content = request.json.get('cim')
+    Note = open('tmp_cim\cim.puml', mode='a')
+    Note.seek(0)
+    Note.truncate()
+    Note.write(content)
+    Note.close()
+    parsePUML()
+    convert()
+    outputCode()
+    contractInfo = codeGeneration.getContractName()
+    contractData = codeGeneration.getContractData()
+    contractRes = codeGeneration.getRestrictionInfo()
+    dataInfo = []
+    for d in contractData:
+        name = d.get('dataName')
+        desc = d.get('dataDesc')
+        dataDetail = codeGeneration.getDataDetailInfo(name)
+        cur = {
+            'dataName': name,
+            'dataDesc': desc,
+            'dataType': dataDetail[1].get('value'),
+            'dataVisible': dataDetail[2].get('value'),
+            'dataConstant': dataDetail[4].get('value'),
+            'dataValue': dataDetail[3].get('value'),
+            'dataSource': dataDetail[5].get('value'),
+        }
+        dataInfo.append(cur)
+    resInfo = []
+    for r in contractRes:
+        name = r.get('restrictionName')
+        desc = r.get('restrictionDesc')
+        resDetail = codeGeneration.getResDetailInfo(name)
+        cur = {
+            'restrictionName': name,
+            'restrictionDesc': desc,
+            'restrictionData': resDetail[2].get('value'),
+            'restrictionparam': resDetail[3].get('value')
+        }
+        resInfo.append(cur)
+    taskInfo = []
+    processInfo = codeGeneration.getProcessInfo()
+    for p in processInfo:
+        patternName = p.get('patternName')
+        functionList = codeGeneration.getProcessDetailInfo(patternName)[2].get('value').split(',')
+        for f in functionList:
+            functionInfo = codeGeneration.getFunctionDetailInfo(f)
+            cur = {
+                'functionName': f,
+                'functionDesc': functionInfo.get('functionDesc'),
+                'functionData': functionInfo.get('functionData'),
+                'functionParam': functionInfo.get('functionParam'),
+                'functionRes': functionInfo.get('funcRes'),
+                'functionReturn': functionInfo.get('functionReturn')
+            }
+            taskInfo.append(cur)
+    data = {
+        'cimInfo': [{
+            'contractKey': '合同名',
+            'contractValue': contractInfo.get('name')
+        }, {
+            'contractKey': '合同描述',
+            'contractValue': contractInfo.get('desc')
+        }, {
+            'contractKey': '合同签约方',
+            'contractValue': contractInfo.get('party').strip('[').strip(']')
+        }],
+        'dataInfo': dataInfo,
+        'resInfo': resInfo,
+        'taskInfo': taskInfo
+    }
+    return data
+
+
 if __name__ == '__main__':
-    # modelConvert.truncateCimDB()
-    # modelConvert.truncatePimDB()
-    # app.run(host='127.0.0.1', port=9014, )  # 运行app
-    slither.sshConnection()
+    modelConvert.truncateCimDB()
+    modelConvert.truncatePimDB()
+    app.run(host='127.0.0.1', port=9014, )  # 运行app
+    # slither.sshConnection()
