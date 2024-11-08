@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.7.0 <0.9.0;
 //TRADEMARK LICENSE AGREEMENT
 contract License  {
     struct permissionRight{
@@ -28,7 +30,8 @@ contract License  {
     
     //Check if it is within the specified time period
     modifier checkIfWithinTimePeriod() {
-        require(block.timestamp >= contractStart && block.timestamp <= contractEnd,"Not in authorized time!");
+        require(block.timestamp >= contractStart && block.timestamp <= contractEnd,"Not in authorized time!");
+
     	_;
     }
     

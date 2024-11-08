@@ -568,4 +568,4 @@ if __name__ == '__main__':
     modelConvert.truncateCimDB()
     modelConvert.truncatePimDB()
     app.run(host='127.0.0.1', port=9014, )  # 运行app
-    # slither.sshConnection()
+    # slither.sshUploadFile()
